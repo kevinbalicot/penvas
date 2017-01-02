@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>Penvas</title>
+        <style>body { margin: 0 }</style>
+    </head>
+    <body>
+        <div id="fps-metter"></div>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/fpsmeter/0.3.1/fpsmeter.min.js"></script>
+        <script type="text/javascript" src="penvas.js"></script>
+        <script type="application/javascript">
+            var meter = new FPSMeter(document.getElementById('fps-metter'));
+            var homeLayer = {
+                create: function () {
+                    this.rects = [];
+
+                    for (var i = 2; i < 20; i ++) {
+                        let rect = new Model(this.width / i, this.height / 2, 100 / i, 200 / i);
+                        rect.rotate = 0;
+                        this.rects.push(rect);
+                    }
+
+                    const firefoxImage = this.loader.get('firefox');
+                    const animations = [{ frames: [9, 10, 11, 12], name: 'stand', loop: true }];
+                    this.firefox = new Sprite(10, 50, 96, 96, firefoxImage, animations);
+                    this.firefox.play('stand');
+
+                    const animations2 = [{ frames: [9, 10, 11, 12], name: 'stand', loop: true, flip: true }];
+                    this.firefoxClone = new Sprite(this.width - 96, 150, 96, 96, firefoxImage, animations2);
+                    this.firefoxClone.play('stand');
+
+                    this.ball = new Model(10, (this.height / 2) + 100, 50, 50);
+
+                    const hitbox = { x: 15, y: 15, width: 20, height: 20 };
+                    this.ball2 = new Model(this.width - 60, (this.height / 2) + 100, 50, 50, hitbox);
+                },
+
+                step: function (td) {
+                    // rect step
+                    this.rects.forEach(function (rect, index) {
+                        rect.rotate += index + 1;
+                        if (rect.rotate > 360) {
+                            rect.rotate = 0;
+                        }
+                    });
+
+                    // firefox step
+                    this.firefox.x += 2;
+                    this.firefox.step(td);
+
+                    if (this.firefox.x > this.width) {
+                        this.firefox.x = -this.firefox.width;
+                    }
+
+                    // firefox clone step
+                    this.firefoxClone.x -= 2;
+                    this.firefoxClone.step(td);
+
+                    if (this.firefoxClone.x < -this.firefoxClone.width) {
+                        this.firefoxClone.x = this.width;
+                    }
+
+                    // balls step
+                    this.ball.x += 2;
+                    if (this.ball.x > this.width) {
+                        this.ball.x = -this.ball.width;
+                    }
+
+                    this.ball2.x -= 2;
+                    if (this.ball2.x < -this.ball2.width) {
+                        this.ball2.x = this.width;
+
+                        let rand = Math.floor((Math.random() * 50) + 1);
+                        let marge = (50 - rand) / 2;
+
+                        this.ball2.hitbox = { x: marge, y: marge, width: rand, height: rand };
+                    }
+                },
+
+                render: function () {
+                    meter.tickStart();
+                    this.clearLayer();
+
+                    // rect render
+                    const ctx = this.ctx;
+                    this.rects.forEach(function (rect) {
+                        ctx.save();
+                        ctx.translate(rect.x, rect.y);
+                        ctx.rotate(rect.rotate * Math.PI/180);
+                        ctx.fillRect(-rect.width / 2, -rect.height / 2, rect.width, rect.height);
+                        ctx.restore();
+                    });
+
+                    // balls render
+                    this.ctx.save();
+                    this.ctx.beginPath();
+                    this.ctx.arc(this.ball.x + 25, this.ball.y + 25, 25, 0, 2 * Math.PI, false);
+                    this.ctx.arc(this.ball2.x + 25, this.ball2.y + 25, 25, 0, 2 * Math.PI, false);
+                    this.ctx.fillStyle = this.ball.hasCollisions(this.ball2) ? 'red' : 'green';
+                    this.ctx.fill();
+                    this.ctx.restore();
+
+                    // firefox and firefox clone rendre
+                    this.firefox.render();
+                    this.firefoxClone.render();
+
+                    this.debug([this.firefoxClone, this.ball2]);
+
+                    meter.tick();
+                }
+            };
+
+            var app = new Application({
+                create: function () {
+                    this.loader.add('img/firefox.png', 'firefox');
+                },
+
+                ready: function () {
+                    this.addLayer(homeLayer, 'home');
+                }
+            });
+        </script>
+    </body>
+</html>
