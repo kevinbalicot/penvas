@@ -242,9 +242,9 @@
                   "line": 3,
                   "column": 15
                 },
-                "identifierName": "Keyboard"
+                "identifierName": "keyboard"
               },
-              "name": "Keyboard"
+              "name": "keyboard"
             }
           }
         ],
@@ -311,9 +311,9 @@
                   "line": 4,
                   "column": 13
                 },
-                "identifierName": "Loader"
+                "identifierName": "loader"
               },
-              "name": "Loader"
+              "name": "loader"
             }
           }
         ],
@@ -910,7 +910,7 @@
                       "trailingComments": [
                         {
                           "type": "CommentBlock",
-                          "value": "* @type {Keyboard} ",
+                          "value": "* @type {keyboard} ",
                           "start": 1318,
                           "end": 1341,
                           "loc": {
@@ -1018,16 +1018,16 @@
                               "line": 44,
                               "column": 32
                             },
-                            "identifierName": "Keyboard"
+                            "identifierName": "keyboard"
                           },
-                          "name": "Keyboard"
+                          "name": "keyboard"
                         },
                         "leadingComments": null
                       },
                       "leadingComments": [
                         {
                           "type": "CommentBlock",
-                          "value": "* @type {Keyboard} ",
+                          "value": "* @type {keyboard} ",
                           "start": 1318,
                           "end": 1341,
                           "loc": {
@@ -1045,7 +1045,7 @@
                       "trailingComments": [
                         {
                           "type": "CommentBlock",
-                          "value": "* @type {Loader} ",
+                          "value": "* @type {loader} ",
                           "start": 1385,
                           "end": 1406,
                           "loc": {
@@ -1153,16 +1153,16 @@
                               "line": 47,
                               "column": 28
                             },
-                            "identifierName": "Loader"
+                            "identifierName": "loader"
                           },
-                          "name": "Loader"
+                          "name": "loader"
                         },
                         "leadingComments": null
                       },
                       "leadingComments": [
                         {
                           "type": "CommentBlock",
-                          "value": "* @type {Loader} ",
+                          "value": "* @type {loader} ",
                           "start": 1385,
                           "end": 1406,
                           "loc": {
@@ -14647,7 +14647,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "* @type {Keyboard} ",
+      "value": "* @type {keyboard} ",
       "start": 1318,
       "end": 1341,
       "loc": {
@@ -14663,7 +14663,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "* @type {Loader} ",
+      "value": "* @type {loader} ",
       "start": 1385,
       "end": 1406,
       "loc": {
@@ -15357,7 +15357,7 @@
         "postfix": false,
         "binop": null
       },
-      "value": "Keyboard",
+      "value": "keyboard",
       "start": 75,
       "end": 83,
       "loc": {
@@ -15490,7 +15490,7 @@
         "postfix": false,
         "binop": null
       },
-      "value": "Loader",
+      "value": "loader",
       "start": 110,
       "end": 116,
       "loc": {
@@ -16481,7 +16481,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "* @type {Keyboard} ",
+      "value": "* @type {keyboard} ",
       "start": 1318,
       "end": 1341,
       "loc": {
@@ -16614,7 +16614,7 @@
         "postfix": false,
         "binop": null
       },
-      "value": "Keyboard",
+      "value": "keyboard",
       "start": 1366,
       "end": 1374,
       "loc": {
@@ -16656,7 +16656,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "* @type {Loader} ",
+      "value": "* @type {loader} ",
       "start": 1385,
       "end": 1406,
       "loc": {
@@ -16789,7 +16789,7 @@
         "postfix": false,
         "binop": null
       },
-      "value": "Loader",
+      "value": "loader",
       "start": 1429,
       "end": 1435,
       "loc": {

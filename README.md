@@ -10,11 +10,7 @@ $ npm install --save penvas
 
 ## Demo
 
-```
-cd node_modules/penvas && make demo
-```
-
-Go to `http://localhost:8080`
+Go to `https://kevinbalicot.github.io/penvas/demo`
 
 ## How to use it
 

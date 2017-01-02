@@ -1,11 +1,16 @@
 {
-  "coverage": "70.1%",
-  "expectCount": 97,
-  "actualCount": 68,
+  "coverage": "76.92%",
+  "expectCount": 91,
+  "actualCount": 70,
   "files": {
     "src/application.js": {
       "expectCount": 21,
       "actualCount": 21,
+      "undocumentLines": []
+    },
+    "src/keyboard.js": {
+      "expectCount": 3,
+      "actualCount": 3,
       "undocumentLines": []
     },
     "src/container.js": {
@@ -18,20 +23,6 @@
       "actualCount": 4,
       "undocumentLines": [
         12
-      ]
-    },
-    "src/keyboard.js": {
-      "expectCount": 9,
-      "actualCount": 1,
-      "undocumentLines": [
-        6,
-        2,
-        3,
-        7,
-        4,
-        5,
-        1,
-        8
       ]
     },
     "src/loader.js": {

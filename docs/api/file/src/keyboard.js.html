@@ -40,57 +40,48 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/sprite.js~Sprite.html">Sprite</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ticker.js~Ticker.html">Ticker</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html">Tileset</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEY_B">KEY_B</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEY_DOWN">KEY_DOWN</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEY_LEFT">KEY_LEFT</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEY_N">KEY_N</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEY_RIGHT">KEY_RIGHT</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEY_SPACE">KEY_SPACE</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEY_UP">KEY_UP</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Keyboard">Keyboard</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LEFT_CLICK">LEFT_CLICK</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-CLICK">CLICK</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEYS">KEYS</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-keyboard">keyboard</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-loader">loader</a></span></span></li>
 </ul>
 </div>
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/keyboard.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">export const KEY_UP = 38;
-export const KEY_DOWN = 40;
-export const KEY_LEFT = 37;
-export const KEY_RIGHT = 39;
-export const KEY_SPACE = 32;
-export const KEY_B = 66;
-export const KEY_N = 78;
-export const LEFT_CLICK = &apos;left_click&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/** @type {Object} */
+export const KEYS = {
+    SPACE: 32,
+    LEFT: 37,
+    UP: 38,
+    RIGHT: 39,
+    DOWN: 40
+}
+
+/** @type {Object} */
+export const CLICK = {
+    LEFT: &apos;left_click&apos;,
+    RIGHT: &apos;right_click&apos;,
+    MIDDLE: &apos;middle_click&apos;
+}
 
 /** @type {Array&lt;number&gt;} */
-export const Keyboard = [];
-keyboard[KEY_UP] = false;
-keyboard[KEY_DOWN] = false;
-keyboard[KEY_LEFT] = false;
-keyboard[KEY_RIGHT] = false;
-keyboard[KEY_SPACE] = false;
-keyboard[KEY_B] = false;
-keyboard[KEY_N] = false;
-keyboard[LEFT_CLICK] = false;
+export const keyboard = [];
 
 document.addEventListener(&apos;keydown&apos;, (e) =&gt; {
-    //e.preventDefault();
     keyboard[e.keyCode] = true;
 });
 
 document.addEventListener(&apos;keyup&apos;, (e) =&gt; {
-    //e.preventDefault();
     keyboard[e.keyCode] = false;
 });
 
 document.addEventListener(&apos;mousedown&apos;, () =&gt; {
-    keyboard[LEFT_CLICK] = true;
+    keyboard[CLICK.LEFT] = true;
 });
 
 document.addEventListener(&apos;mouseup&apos;, () =&gt; {
-    keyboard[LEFT_CLICK] = false;
+    keyboard[CLICK.LEFT] = false;
 });
 
 export default keyboard;

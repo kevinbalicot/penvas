@@ -1,7 +1,7 @@
 import { Ticker } from './ticker';
 import { Model } from './model';
-import Keyboard from './keyboard';
-import Loader from './loader';
+import keyboard from './keyboard';
+import loader from './loader';
 
 /**
  * Create a new application
@@ -40,11 +40,11 @@ export class Application {
          */
         this.currentLayer = null;
 
-        /** @type {Keyboard} */
-        this.keyboard = Keyboard;
+        /** @type {keyboard} */
+        this.keyboard = keyboard;
 
-        /** @type {Loader} */
-        this.loader = Loader;
+        /** @type {loader} */
+        this.loader = loader;
 
         if (typeof options.container != 'object') {
             options.container = document.querySelector('body');

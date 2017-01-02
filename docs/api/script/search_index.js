@@ -6,6 +6,12 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
+    "penvas/src/keyboard.js~click",
+    "variable/index.html#static-variable-CLICK",
+    "<span>CLICK</span> <span class=\"search-result-import-path\">penvas/src/keyboard.js</span>",
+    "variable"
+  ],
+  [
     "penvas/src/container.js~container",
     "class/src/container.js~Container.html",
     "<span>Container</span> <span class=\"search-result-import-path\">penvas/src/container.js</span>",
@@ -18,57 +24,9 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
-    "penvas/src/keyboard.js~key_b",
-    "variable/index.html#static-variable-KEY_B",
-    "<span>KEY_B</span> <span class=\"search-result-import-path\">penvas/src/keyboard.js</span>",
-    "variable"
-  ],
-  [
-    "penvas/src/keyboard.js~key_down",
-    "variable/index.html#static-variable-KEY_DOWN",
-    "<span>KEY_DOWN</span> <span class=\"search-result-import-path\">penvas/src/keyboard.js</span>",
-    "variable"
-  ],
-  [
-    "penvas/src/keyboard.js~key_left",
-    "variable/index.html#static-variable-KEY_LEFT",
-    "<span>KEY_LEFT</span> <span class=\"search-result-import-path\">penvas/src/keyboard.js</span>",
-    "variable"
-  ],
-  [
-    "penvas/src/keyboard.js~key_n",
-    "variable/index.html#static-variable-KEY_N",
-    "<span>KEY_N</span> <span class=\"search-result-import-path\">penvas/src/keyboard.js</span>",
-    "variable"
-  ],
-  [
-    "penvas/src/keyboard.js~key_right",
-    "variable/index.html#static-variable-KEY_RIGHT",
-    "<span>KEY_RIGHT</span> <span class=\"search-result-import-path\">penvas/src/keyboard.js</span>",
-    "variable"
-  ],
-  [
-    "penvas/src/keyboard.js~key_space",
-    "variable/index.html#static-variable-KEY_SPACE",
-    "<span>KEY_SPACE</span> <span class=\"search-result-import-path\">penvas/src/keyboard.js</span>",
-    "variable"
-  ],
-  [
-    "penvas/src/keyboard.js~key_up",
-    "variable/index.html#static-variable-KEY_UP",
-    "<span>KEY_UP</span> <span class=\"search-result-import-path\">penvas/src/keyboard.js</span>",
-    "variable"
-  ],
-  [
-    "penvas/src/keyboard.js~keyboard",
-    "variable/index.html#static-variable-Keyboard",
-    "<span>Keyboard</span> <span class=\"search-result-import-path\">penvas/src/keyboard.js</span>",
-    "variable"
-  ],
-  [
-    "penvas/src/keyboard.js~left_click",
-    "variable/index.html#static-variable-LEFT_CLICK",
-    "<span>LEFT_CLICK</span> <span class=\"search-result-import-path\">penvas/src/keyboard.js</span>",
+    "penvas/src/keyboard.js~keys",
+    "variable/index.html#static-variable-KEYS",
+    "<span>KEYS</span> <span class=\"search-result-import-path\">penvas/src/keyboard.js</span>",
     "variable"
   ],
   [
@@ -100,6 +58,12 @@ window.esdocSearchIndex = [
     "class/src/tileset.js~Tileset.html",
     "<span>Tileset</span> <span class=\"search-result-import-path\">penvas/src/tileset.js</span>",
     "class"
+  ],
+  [
+    "penvas/src/keyboard.js~keyboard",
+    "variable/index.html#static-variable-keyboard",
+    "<span>keyboard</span> <span class=\"search-result-import-path\">penvas/src/keyboard.js</span>",
+    "variable"
   ],
   [
     "penvas/src/loader.js~loader",

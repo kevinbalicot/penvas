@@ -40,15 +40,9 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/sprite.js~Sprite.html">Sprite</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ticker.js~Ticker.html">Ticker</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html">Tileset</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEY_B">KEY_B</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEY_DOWN">KEY_DOWN</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEY_LEFT">KEY_LEFT</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEY_N">KEY_N</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEY_RIGHT">KEY_RIGHT</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEY_SPACE">KEY_SPACE</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEY_UP">KEY_UP</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Keyboard">Keyboard</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LEFT_CLICK">LEFT_CLICK</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-CLICK">CLICK</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEYS">KEYS</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-keyboard">keyboard</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-loader">loader</a></span></span></li>
 </ul>
 </div>
@@ -57,8 +51,8 @@
 <div class="content" data-ice="content"><h1 data-ice="title">src/application.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { Ticker } from &apos;./ticker&apos;;
 import { Model } from &apos;./model&apos;;
-import Keyboard from &apos;./keyboard&apos;;
-import Loader from &apos;./loader&apos;;
+import keyboard from &apos;./keyboard&apos;;
+import loader from &apos;./loader&apos;;
 
 /**
  * Create a new application
@@ -97,11 +91,11 @@ export class Application {
          */
         this.currentLayer = null;
 
-        /** @type {Keyboard} */
-        this.keyboard = Keyboard;
+        /** @type {keyboard} */
+        this.keyboard = keyboard;
 
-        /** @type {Loader} */
-        this.loader = Loader;
+        /** @type {loader} */
+        this.loader = loader;
 
         if (typeof options.container != &apos;object&apos;) {
             options.container = document.querySelector(&apos;body&apos;);
