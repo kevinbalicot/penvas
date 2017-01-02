@@ -1,36 +1,57 @@
-'use strict';
-
 import { Model } from './model';
 
+/**
+ * The class to use sprite image
+ * You can add animations
+ * @example
+ * const image = Loader.get('my-sprite'); // see Loader documentation
+ * const animation = [{ frames: [9, 10, 11, 12], name: 'walk', loop: true }];
+ * let sprite = new Sprite(10, 10, 20, 20, image, animation);
+ *
+ * sprite.play('walk');
+ * sprite.render();
+ */
 export class Sprite extends Model {
 
     /**
-     * @param x
-     * @param y
-     * @param width : width tile
-     * @param height : height tile
-     * @param image
-     * @param animations : list of animations
-     *                      example : { frames: [9, 10, 11, 12], name: 'walk', loop: true }
+     * @param {number} x
+     * @param {number} y
+     * @param {number} tileWidth - width tile
+     * @param {number} tileHeight - height tile
+     * @param {Image} image
+     * @param {Array<Object>} animations - list of animations
+     * @example
+     * new Sprite(0, 0, 20, 20, image, [{ frames: [9, 10, 11, 12], name: 'walk', loop: true, flip: false }]);
+     * @param {Object} [hitbox]
+     * @param {Object} [hitbox.x]
+     * @param {Object} [hitbox.y]
+     * @param {Object} [hitbox.width]
+     * @param {Object} [hitbox.height]
      */
-    constructor (x, y, width, height, image, animations, hitbox) {
-        super(x, y, width, height, hitbox);
+    constructor (x, y, tileWidth, tileHeight, image, animations, hitbox) {
+        super(x, y, tileWidth, tileHeight, hitbox);
+
+        /** @type {Image} */
         this.image = image;
+        /** @type {Array<Object>} */
         this.animations = animations;
+
         this.time = 1;
         this.stopped = true;
-
         this.frame = { x: 0, y: 0 };
         this.frames = {
-            width: image.width / width,
-            height: image.height / height,
-            total: (image.width / width) * (image.height / height)
+            width: image.width / tileWidth,
+            height: image.height / tileHeight,
+            total: (image.width / tileWidth) * (image.height / tileHeight)
         };
 
         this.currentAnimation = 0;
         this.currentFrame = 0;
     }
 
+    /**
+     * @private
+     */
     getNextFrame () {
         let currentAnimation = this.animations[this.currentAnimation];
         let currentFrame = currentAnimation.frames[this.currentFrame];
@@ -62,6 +83,9 @@ export class Sprite extends Model {
         }
     }
 
+    /**
+     * @param {number} dt - Delta between two frames
+     */
     step (dt) {
         this.time += dt;
 
@@ -71,6 +95,10 @@ export class Sprite extends Model {
         }
     }
 
+    /**
+     * Play animation
+     * @param {String} animation
+     */
     play (animation) {
         let currentAnimation = this.animations.filter(anim => anim.name === animation);
 
@@ -87,14 +115,24 @@ export class Sprite extends Model {
         }
     }
 
+    /**
+     * Stop animation
+     */
     stop () {
         this.stopped = true;
     }
 
+    /**
+     * Reset animation
+     */
     reset () {
         this.frame = { x: 0, y: 0 };
     }
 
+    /**
+     * Render the sprite
+     * @param {RenderingContext} context
+     */
     render (context = null) {
         let ctx = context || this.parent.ctx;
         let currentAnimation = this.animations[this.currentAnimation];
@@ -107,8 +145,8 @@ export class Sprite extends Model {
 
         ctx.drawImage(
             this.image,     // image
-            this.frame.x * this.width,              // pos x
-            this.frame.y * this.height,             // pos y
+            this.frame.x * this.width,  // pos x
+            this.frame.y * this.height, // pos y
             this.width,     // frame width
             this.height,    // frame height
             this.x,         // destination x

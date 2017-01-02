@@ -1,5 +1,3 @@
-'use strict';
-
 export const KEY_UP = 38;
 export const KEY_DOWN = 40;
 export const KEY_LEFT = 37;
@@ -9,7 +7,8 @@ export const KEY_B = 66;
 export const KEY_N = 78;
 export const LEFT_CLICK = 'left_click';
 
-export let keyboard = [];
+/** @type {Array<number>} */
+export const Keyboard = [];
 keyboard[KEY_UP] = false;
 keyboard[KEY_DOWN] = false;
 keyboard[KEY_LEFT] = false;

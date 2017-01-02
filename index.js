@@ -1,3 +1,18 @@
+import { Application } from  './src/application';
+import { Container } from  './src/container';
+import { EventEmitter } from  './src/event-emitter';
+import { Model } from  './src/model';
+import { Sprite } from  './src/sprite';
+import { Ticker } from  './src/ticker';
+import { Tileset } from  './src/tileset';
+
+import Keyboard from  './src/keyboard';
+import Loader from './src/loader';
+
+window.Application = Application;
+
+/*
+
 'use strict';
 
 import { Application } from './bin/application';
@@ -49,4 +64,4 @@ var app = new Application({
     //debug: true,
 });
 
-app.addLayer(homeLayer, 'home');
+app.addLayer(homeLayer, 'home');*/

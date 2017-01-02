@@ -1,7 +1,20 @@
-'use strict';
-
 import { EventEmitter } from './event-emitter';
 
+/**
+ * Service to load asset
+ * @example
+ * let layer = {
+ *     create: function() {
+ *         Loader.add('img/my-image.png', 'player-image');
+ *         Loader.add('config/my-config.json', 'player-config', 'json');
+ *     },
+ *     render: function() {
+ *          const image = Loader.get('player-image');
+ *          const config = Loader.get('player-config');
+ *          this.ctx.drawImage(image, config.x, config.y);
+ *     }
+ * }
+ */
 export class Loader extends EventEmitter {
 
     constructor () {
@@ -14,8 +27,13 @@ export class Loader extends EventEmitter {
         this.collection = [];
     }
 
+    /**
+     * Add asset to load
+     * @param {String} src
+     * @param {String} id
+     * @param {String} type - (image or json)
+     */
     add (src, id, type = 'image') {
-
         this.count++;
         this.queue++;
         this.ready = false;
@@ -30,6 +48,13 @@ export class Loader extends EventEmitter {
         }
     }
 
+    /**
+     * Add asset into the collection and dispatch event
+     * @param {mixed} el
+     * @param {String} id
+     * @emits {load} emit when asset is loaded
+     * @emits {ready} emit when all assets are loaded
+     */
     load (el, id) {
         this.queue--;
         this.progress = 1 - this.queue / this.count;
@@ -45,12 +70,24 @@ export class Loader extends EventEmitter {
         }
     }
 
+    /**
+     * Load image
+     * @private
+     * @param {String} src
+     * @param {String} id
+     */
     loadImage (src, id) {
         let img = new Image();
         img.src = src;
         img.onload = () => this.load(img, id);
     }
 
+    /**
+     * Load json file
+     * @private
+     * @param {String} src
+     * @param {String} id
+     */
     loadJson (src, id) {
         var request = new XMLHttpRequest();
 
@@ -63,6 +100,11 @@ export class Loader extends EventEmitter {
         request.send();
     }
 
+    /**
+     * Get asset by id
+     * @param {String} id
+     * @return {mixed}
+     */
     get (id) {
         let items = this.collection.filter(el => el.id === id);
 
@@ -75,5 +117,4 @@ export class Loader extends EventEmitter {
 }
 
 export const loader = new Loader();
-
 export default loader;

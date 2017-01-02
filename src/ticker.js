@@ -1,7 +1,9 @@
-'use strict';
-
 import { EventEmitter } from './event-emitter';
 
+/**
+ * Timer class
+ * You can stop and start the game
+ */
 export class Ticker extends EventEmitter {
 
     constructor () {
@@ -13,8 +15,10 @@ export class Ticker extends EventEmitter {
         this.frameskip = 1;
     }
 
+    /**
+     * @private
+     */
     loop () {
-
         if (this.stopped) {
             return;
         }
@@ -34,6 +38,9 @@ export class Ticker extends EventEmitter {
         this.render(dt);
     }
 
+    /**
+     * Start timer
+     */
     start () {
         if (this.stopped) {
             this.stopped = false;
@@ -41,14 +48,29 @@ export class Ticker extends EventEmitter {
         }
     }
 
+    /**
+     * Stop timer
+     */
     stop () {
         this.stopped = true;
     }
 
+    /**
+     * Called at every frame
+     * @private
+     * @param {number} dt
+     * @emits {step}
+     */
     step (dt) {
         this.dispatch('step', dt);
     }
 
+    /**
+     * Called at every frame
+     * @private
+     * @param {number} dt
+     * @emits {render}
+     */
     render (dt) {
         this.dispatch('render', dt);
     }

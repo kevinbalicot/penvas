@@ -1,35 +1,82 @@
-'use strict';
-
 import { Ticker } from './ticker';
 import { Model } from './model';
-import { keyboard } from './keyboard';
-import { loader } from './loader';
+import Keyboard from './keyboard';
+import Loader from './loader';
 
+/**
+ * Create a new application
+ * @example
+ * let app = new Application({ container: document.getElementById('my-canvas'), width: 500, height: 300 });
+ */
 export class Application {
 
+    /**
+     * @param {Object} [options]
+     * @param {HTMLElement} [options.container] - HTML container (default: body element)
+     * @param {number} [options.width] - canvas width (default: window width)
+     * @param {number} [options.height] - canvas height (default: window height)
+     * @param {hex} [options.background=0xffffff] - canvas background (default: 0xffffff)
+     * @param {function} [options.create] - called to load assets
+     * @param {function} [options.render] - called at every frame
+     * @param {function} [options.ready] - called when application is ready (need to use loader)
+     */
     constructor (options = {}) {
 
+        /**
+         * Object of options
+         * @type {Object}
+         */
         this.options = options;
+
+        /**
+         * List of layers
+         * @type {Array<Object>}
+         */
         this.layers = [];
+
+        /**
+         * Current layer rendered
+         * @type {Object}
+         */
         this.currentLayer = null;
-        this.keyboard = keyboard;
-        this.loader = loader;
-        //this.debug = options.debug || false;
+
+        /** @type {Keyboard} */
+        this.keyboard = Keyboard;
+
+        /** @type {Loader} */
+        this.loader = Loader;
 
         if (typeof options.container != 'object') {
             options.container = document.querySelector('body');
         }
 
+        /**
+         * Canvas width (default window width)
+         * @type {number}
+         */
         this.width = options.width || window.innerWidth;
+
+        /**
+         * Canvas height (default window height)
+         * @type {number}
+         */
         this.height = options.height || window.innerHeight;
+
+        /**
+         * Canvas background color
+         * @type {hex}
+         */
         this.background = options.background || 0xffffff;
 
+        /** @type {HTMLCanvasElement} */
         this.canvas = document.createElement('canvas');
         this.canvas.width = this.width;
         this.canvas.height = this.height;
         this.canvas.style.backgroundColor = this.background;
 
+        /** @type {CanvasRenderingContext2D} */
         this.context = this.canvas.getContext('2d');
+        /** @type {CanvasRenderingContext2D} */
         this.ctx = this.context;
 
         options.container.appendChild(this.canvas);
@@ -39,6 +86,7 @@ export class Application {
             this.loader.on('ready', () => this.ready());
         }
 
+        /** @type {Ticker} */
         this.ticker = new Ticker();
 
         this.ticker.on('step', this.step, this);
@@ -49,6 +97,11 @@ export class Application {
         }
     }
 
+    /**
+     * Callback called at every frame to calculate models x,y positions
+     * @protected
+     * @param {number} dt - Delta between two frames
+     */
     step (dt) {
         try {
             if (!!this.options.step) {
@@ -63,6 +116,11 @@ export class Application {
         }
     }
 
+    /**
+     * Callback called at every frame to render models
+     * @protected
+     * @param {number} dt - Delta between two frames
+     */
     render (dt) {
         try {
             if (!!this.options.render) {
@@ -75,17 +133,16 @@ export class Application {
         } catch(e) {
             this.handleError(e);
         }
-
-        // Render debug
-        /*if (this.debug) {
-            for (let prop in this) {
-                if (this[prop] instanceof Model) {
-                    this.renderDebug(this[prop]);
-                }
-            }
-        }*/
     }
 
+    /**
+     * Add layer to application
+     * @param {Object} layer
+     * @param {function} layer.create - called to create models
+     * @param {function} layer.step - called at every frame
+     * @param {function} layer.render - called at every frame
+     * @param {String} name
+     */
     addLayer (layer, name) {
         this.layers.push({ layer, name });
 
@@ -103,6 +160,10 @@ export class Application {
         }
     }
 
+    /**
+     * Switch the current layer
+     * @param {String} name
+     */
     changeLayer (name) {
         let layer = this.layers.find(layer => layer.name === name);
 
@@ -111,12 +172,19 @@ export class Application {
         }
     }
 
+    /**
+     * Reset canvas zone
+     */
     clearLayer () {
         this.ctx.save();
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.restore();
     }
 
+    /**
+     * Start timer and called application ready function
+     * @protected
+     */
     ready () {
         this.ticker.start();
 
@@ -125,6 +193,11 @@ export class Application {
         }
     }
 
+    /**
+     * Display model's x,y positions information
+     * @private
+     * @param {Model} model
+     */
     renderDebug (model) {
         this.ctx.save();
         this.ctx.font = '12px sans-serif';
@@ -141,6 +214,10 @@ export class Application {
         this.ctx.restore();
     }
 
+    /**
+     * Add models to debug
+     * @param {Array<Model>|Model} models
+     */
     debug (models = []) {
         [].concat(models).forEach(model => {
             if (model instanceof Model) {
@@ -149,6 +226,10 @@ export class Application {
         });
     }
 
+    /**
+     * @private
+     * @param {Error} err
+     */
     handleError (err) {
         this.ticker.stop();
         console.log(err);
