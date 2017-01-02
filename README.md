@@ -46,3 +46,6 @@ Go to `http://localhost:8080`
     app.addLayer(homeLayer, 'home');
 </script>
 ```
+## Documentation
+
+[Documentation](https://kevinbalicot.github.io/penvas/)
