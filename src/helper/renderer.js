@@ -1,5 +1,6 @@
-'use strict';
-
+/**
+ * @ignore
+ */
 export class Renderer {
 
     constructor (ctx) {
@@ -7,22 +8,22 @@ export class Renderer {
         this.ctx = ctx;
     }
 
-    add (models, zindex = 0) {
+    add (models, order = 0) {
 
         if (!Array.isArray(models)) {
             models = [models];
         }
 
         models.forEach(model => {
-            this.models.push({ model: model, zindex: model.zindex || zindex });
+            this.models.push({ model, order });
         });
     }
 
     sort () {
         return this.models.sort((a, b) => {
-            if (a.level < b.zindex) {
+            if (a.order < b.order) {
                 return -1;
-            } else if (a.zindex > b.zindex) {
+            } else if (a.order > b.order) {
                 return 1;
             }
 

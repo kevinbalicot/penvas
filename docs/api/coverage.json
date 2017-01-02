@@ -1,24 +1,12 @@
 {
-  "coverage": "61.81%",
-  "expectCount": 110,
+  "coverage": "70.1%",
+  "expectCount": 97,
   "actualCount": 68,
   "files": {
     "src/application.js": {
       "expectCount": 21,
       "actualCount": 21,
       "undocumentLines": []
-    },
-    "src/helper/collision-checker.js": {
-      "expectCount": 6,
-      "actualCount": 0,
-      "undocumentLines": [
-        3,
-        9,
-        18,
-        31,
-        5,
-        6
-      ]
     },
     "src/container.js": {
       "expectCount": 11,
@@ -65,19 +53,6 @@
       "undocumentLines": [
         30,
         31
-      ]
-    },
-    "src/helper/renderer.js": {
-      "expectCount": 7,
-      "actualCount": 0,
-      "undocumentLines": [
-        3,
-        10,
-        5,
-        7,
-        6,
-        33,
-        21
       ]
     },
     "src/sprite.js": {

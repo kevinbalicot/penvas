@@ -1080,7 +1080,7 @@
     "__docId__": 43,
     "kind": "file",
     "name": "src/helper/collision-checker.js",
-    "content": "'use strict';\n\nexport class CollisionChecker {\n\n    constructor () {\n        this.pair = [];\n    }\n\n    add (model, platforms, event) {\n\n        if (!Array.isArray(platforms)) {\n            platforms = [platforms];\n        }\n\n        this.pair.push({ model, platforms, event });\n    }\n\n    check (td) {\n        let model, platform;\n        this.pair.forEach(pair => {\n            model = Object.create(pair.model);\n            model.step(td);\n            platform = model.hasCollisions(pair.platforms);\n\n            if (!!platform) {\n                pair.event(pair.model, platform);\n            }\n        });\n    }\n\n    clear () {\n        this.pair = [];\n    }\n}\n",
+    "content": "/**\n * @ignore\n */\nexport class CollisionChecker {\n\n    constructor () {\n        this.pair = [];\n    }\n\n    add (model, platforms, event) {\n\n        if (!Array.isArray(platforms)) {\n            platforms = [platforms];\n        }\n\n        this.pair.push({ model, platforms, event });\n    }\n\n    check (td) {\n        let model, platform;\n        this.pair.forEach(pair => {\n            model = Object.create(pair.model);\n            model.step(td);\n            platform = model.hasCollisions(pair.platforms);\n\n            if (!!platform) {\n                pair.event(pair.model, platform);\n            }\n        });\n    }\n\n    clear () {\n        this.pair = [];\n    }\n}\n",
     "static": true,
     "longname": "src/helper/collision-checker.js",
     "access": null,
@@ -1098,15 +1098,9 @@
     "export": true,
     "importPath": "penvas/src/helper/collision-checker.js",
     "importStyle": "{CollisionChecker}",
-    "description": null,
-    "lineNumber": 3,
-    "undocument": true,
-    "unknown": [
-      {
-        "tagName": "@_undocument",
-        "tagValue": ""
-      }
-    ],
+    "description": "",
+    "lineNumber": 4,
+    "ignore": true,
     "interface": false
   },
   {
@@ -1120,7 +1114,7 @@
     "longname": "src/helper/collision-checker.js~CollisionChecker#constructor",
     "access": null,
     "description": null,
-    "lineNumber": 5,
+    "lineNumber": 6,
     "undocument": true,
     "unknown": [
       {
@@ -1139,7 +1133,7 @@
     "longname": "src/helper/collision-checker.js~CollisionChecker#pair",
     "access": null,
     "description": null,
-    "lineNumber": 6,
+    "lineNumber": 7,
     "undocument": true,
     "unknown": [
       {
@@ -1164,7 +1158,7 @@
     "longname": "src/helper/collision-checker.js~CollisionChecker#add",
     "access": null,
     "description": null,
-    "lineNumber": 9,
+    "lineNumber": 10,
     "undocument": true,
     "unknown": [
       {
@@ -1204,7 +1198,7 @@
     "longname": "src/helper/collision-checker.js~CollisionChecker#check",
     "access": null,
     "description": null,
-    "lineNumber": 18,
+    "lineNumber": 19,
     "undocument": true,
     "unknown": [
       {
@@ -1232,7 +1226,7 @@
     "longname": "src/helper/collision-checker.js~CollisionChecker#clear",
     "access": null,
     "description": null,
-    "lineNumber": 31,
+    "lineNumber": 32,
     "undocument": true,
     "unknown": [
       {
@@ -1251,7 +1245,7 @@
     "longname": "src/helper/collision-checker.js~CollisionChecker#pair",
     "access": null,
     "description": null,
-    "lineNumber": 32,
+    "lineNumber": 33,
     "undocument": true,
     "unknown": [
       {
@@ -1269,7 +1263,7 @@
     "__docId__": 51,
     "kind": "file",
     "name": "src/helper/renderer.js",
-    "content": "'use strict';\n\nexport class Renderer {\n\n    constructor (ctx) {\n        this.models = [];\n        this.ctx = ctx;\n    }\n\n    add (models, zindex = 0) {\n\n        if (!Array.isArray(models)) {\n            models = [models];\n        }\n\n        models.forEach(model => {\n            this.models.push({ model: model, zindex: model.zindex || zindex });\n        });\n    }\n\n    sort () {\n        return this.models.sort((a, b) => {\n            if (a.level < b.zindex) {\n                return -1;\n            } else if (a.zindex > b.zindex) {\n                return 1;\n            }\n\n            return 0;\n        });\n    }\n\n    render () {\n        this.sort();\n        this.models.forEach(el => {\n            if (!!el.model.render) {\n                el.model.render(this.ctx);\n            }\n        });\n    }\n}\n",
+    "content": "/**\n * @ignore\n */\nexport class Renderer {\n\n    constructor (ctx) {\n        this.models = [];\n        this.ctx = ctx;\n    }\n\n    add (models, order = 0) {\n\n        if (!Array.isArray(models)) {\n            models = [models];\n        }\n\n        models.forEach(model => {\n            this.models.push({ model, order });\n        });\n    }\n\n    sort () {\n        return this.models.sort((a, b) => {\n            if (a.order < b.order) {\n                return -1;\n            } else if (a.order > b.order) {\n                return 1;\n            }\n\n            return 0;\n        });\n    }\n\n    render () {\n        this.sort();\n        this.models.forEach(el => {\n            if (!!el.model.render) {\n                el.model.render(this.ctx);\n            }\n        });\n    }\n}\n",
     "static": true,
     "longname": "src/helper/renderer.js",
     "access": null,
@@ -1287,15 +1281,9 @@
     "export": true,
     "importPath": "penvas/src/helper/renderer.js",
     "importStyle": "{Renderer}",
-    "description": null,
-    "lineNumber": 3,
-    "undocument": true,
-    "unknown": [
-      {
-        "tagName": "@_undocument",
-        "tagValue": ""
-      }
-    ],
+    "description": "",
+    "lineNumber": 4,
+    "ignore": true,
     "interface": false
   },
   {
@@ -1309,7 +1297,7 @@
     "longname": "src/helper/renderer.js~Renderer#constructor",
     "access": null,
     "description": null,
-    "lineNumber": 5,
+    "lineNumber": 6,
     "undocument": true,
     "unknown": [
       {
@@ -1335,7 +1323,7 @@
     "longname": "src/helper/renderer.js~Renderer#models",
     "access": null,
     "description": null,
-    "lineNumber": 6,
+    "lineNumber": 7,
     "undocument": true,
     "unknown": [
       {
@@ -1358,7 +1346,7 @@
     "longname": "src/helper/renderer.js~Renderer#ctx",
     "access": null,
     "description": null,
-    "lineNumber": 7,
+    "lineNumber": 8,
     "undocument": true,
     "unknown": [
       {
@@ -1383,7 +1371,7 @@
     "longname": "src/helper/renderer.js~Renderer#add",
     "access": null,
     "description": null,
-    "lineNumber": 10,
+    "lineNumber": 11,
     "undocument": true,
     "unknown": [
       {
@@ -1399,7 +1387,7 @@
         ]
       },
       {
-        "name": "zindex",
+        "name": "order",
         "optional": true,
         "types": [
           "number"
@@ -1420,7 +1408,7 @@
     "longname": "src/helper/renderer.js~Renderer#sort",
     "access": null,
     "description": null,
-    "lineNumber": 21,
+    "lineNumber": 22,
     "undocument": true,
     "unknown": [
       {
@@ -1446,7 +1434,7 @@
     "longname": "src/helper/renderer.js~Renderer#render",
     "access": null,
     "description": null,
-    "lineNumber": 33,
+    "lineNumber": 34,
     "undocument": true,
     "unknown": [
       {

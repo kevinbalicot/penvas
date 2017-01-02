@@ -6,12 +6,6 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
-    "penvas/src/helper/collision-checker.js~collisionchecker",
-    "class/src/helper/collision-checker.js~CollisionChecker.html",
-    "<span>CollisionChecker</span> <span class=\"search-result-import-path\">penvas/src/helper/collision-checker.js</span>",
-    "class"
-  ],
-  [
     "penvas/src/container.js~container",
     "class/src/container.js~Container.html",
     "<span>Container</span> <span class=\"search-result-import-path\">penvas/src/container.js</span>",
@@ -87,12 +81,6 @@ window.esdocSearchIndex = [
     "penvas/src/model.js~model",
     "class/src/model.js~Model.html",
     "<span>Model</span> <span class=\"search-result-import-path\">penvas/src/model.js</span>",
-    "class"
-  ],
-  [
-    "penvas/src/helper/renderer.js~renderer",
-    "class/src/helper/renderer.js~Renderer.html",
-    "<span>Renderer</span> <span class=\"search-result-import-path\">penvas/src/helper/renderer.js</span>",
     "class"
   ],
   [
@@ -678,76 +666,10 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "src/helper/collision-checker.js~collisionchecker#add",
-    "class/src/helper/collision-checker.js~CollisionChecker.html#instance-method-add",
-    "src/helper/collision-checker.js~CollisionChecker#add",
-    "method"
-  ],
-  [
-    "src/helper/collision-checker.js~collisionchecker#check",
-    "class/src/helper/collision-checker.js~CollisionChecker.html#instance-method-check",
-    "src/helper/collision-checker.js~CollisionChecker#check",
-    "method"
-  ],
-  [
-    "src/helper/collision-checker.js~collisionchecker#clear",
-    "class/src/helper/collision-checker.js~CollisionChecker.html#instance-method-clear",
-    "src/helper/collision-checker.js~CollisionChecker#clear",
-    "method"
-  ],
-  [
-    "src/helper/collision-checker.js~collisionchecker#constructor",
-    "class/src/helper/collision-checker.js~CollisionChecker.html#instance-constructor-constructor",
-    "src/helper/collision-checker.js~CollisionChecker#constructor",
-    "method"
-  ],
-  [
-    "src/helper/collision-checker.js~collisionchecker#pair",
-    "class/src/helper/collision-checker.js~CollisionChecker.html#instance-member-pair",
-    "src/helper/collision-checker.js~CollisionChecker#pair",
-    "member"
-  ],
-  [
     "src/helper/renderer.js",
     "file/src/helper/renderer.js.html",
     "src/helper/renderer.js",
     "file"
-  ],
-  [
-    "src/helper/renderer.js~renderer#add",
-    "class/src/helper/renderer.js~Renderer.html#instance-method-add",
-    "src/helper/renderer.js~Renderer#add",
-    "method"
-  ],
-  [
-    "src/helper/renderer.js~renderer#constructor",
-    "class/src/helper/renderer.js~Renderer.html#instance-constructor-constructor",
-    "src/helper/renderer.js~Renderer#constructor",
-    "method"
-  ],
-  [
-    "src/helper/renderer.js~renderer#ctx",
-    "class/src/helper/renderer.js~Renderer.html#instance-member-ctx",
-    "src/helper/renderer.js~Renderer#ctx",
-    "member"
-  ],
-  [
-    "src/helper/renderer.js~renderer#models",
-    "class/src/helper/renderer.js~Renderer.html#instance-member-models",
-    "src/helper/renderer.js~Renderer#models",
-    "member"
-  ],
-  [
-    "src/helper/renderer.js~renderer#render",
-    "class/src/helper/renderer.js~Renderer.html#instance-method-render",
-    "src/helper/renderer.js~Renderer#render",
-    "method"
-  ],
-  [
-    "src/helper/renderer.js~renderer#sort",
-    "class/src/helper/renderer.js~Renderer.html#instance-method-sort",
-    "src/helper/renderer.js~Renderer#sort",
-    "method"
   ],
   [
     "src/index.js",
@@ -853,13 +775,13 @@ window.esdocSearchIndex = [
   ],
   [
     "src/model.js~model#hitbox",
-    "class/src/model.js~Model.html#instance-set-hitbox",
+    "class/src/model.js~Model.html#instance-get-hitbox",
     "src/model.js~Model#hitbox",
     "member"
   ],
   [
     "src/model.js~model#hitbox",
-    "class/src/model.js~Model.html#instance-get-hitbox",
+    "class/src/model.js~Model.html#instance-set-hitbox",
     "src/model.js~Model#hitbox",
     "member"
   ],

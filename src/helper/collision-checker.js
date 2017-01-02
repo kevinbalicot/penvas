@@ -1,5 +1,6 @@
-'use strict';
-
+/**
+ * @ignore
+ */
 export class CollisionChecker {
 
     constructor () {
