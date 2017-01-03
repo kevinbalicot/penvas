@@ -19,6 +19,9 @@
   "babel": {
     "presets": ["es2015"]
   },
+  "browserify": {
+    "transform": ["babelify"]
+  },
   "esdoc": {
     "title": "Penvas",
     "source": "./src",
