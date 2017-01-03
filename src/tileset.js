@@ -27,6 +27,7 @@ export class Tileset extends Model {
         this.tileHeight = tileHeight;
         /** @type {Image} */
         this.image = image;
+        this.tiles = 0;
     }
 
     /**
@@ -41,6 +42,7 @@ export class Tileset extends Model {
         const columns = this.image.width / this.tileWidth;
         const rows = this.image.height / this.tileHeight;
         const tiles = columns * rows;
+        this.tiles = tiles;
 
         id = id > tiles ? tiles : id;
 

@@ -739,13 +739,13 @@ window.esdocSearchIndex = [
   ],
   [
     "src/model.js~model#hitbox",
-    "class/src/model.js~Model.html#instance-get-hitbox",
+    "class/src/model.js~Model.html#instance-set-hitbox",
     "src/model.js~Model#hitbox",
     "member"
   ],
   [
     "src/model.js~model#hitbox",
-    "class/src/model.js~Model.html#instance-set-hitbox",
+    "class/src/model.js~Model.html#instance-get-hitbox",
     "src/model.js~Model#hitbox",
     "member"
   ],
@@ -969,6 +969,12 @@ window.esdocSearchIndex = [
     "src/tileset.js~tileset#tilewidth",
     "class/src/tileset.js~Tileset.html#instance-member-tileWidth",
     "src/tileset.js~Tileset#tileWidth",
+    "member"
+  ],
+  [
+    "src/tileset.js~tileset#tiles",
+    "class/src/tileset.js~Tileset.html#instance-member-tiles",
+    "src/tileset.js~Tileset#tiles",
     "member"
   ]
 ]

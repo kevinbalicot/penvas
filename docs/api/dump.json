@@ -4478,7 +4478,7 @@
     "__docId__": 179,
     "kind": "file",
     "name": "src/tileset.js",
-    "content": "import { Model } from './model';\n\n/**\n * The class to use tileset image\n * @example\n * const image = Loader.get('my-tileset'); // see Loader documentation\n * let tileset = new Tileset(0, 0, 32, 32, image);\n *\n * // render the first tile of tileset\n * tileset.render(1);\n */\nexport class Tileset extends Model {\n\n    /**\n     * @param {number} x\n     * @param {number} y\n     * @param {number} tileWidth\n     * @param {number} tileHeight\n     * @param {Image} image\n     */\n    constructor (x, y, tileWidth, tileHeight, image) {\n        super(x, y, tileWidth, tileHeight);\n\n        /** @type {number} */\n        this.tileWidth = tileWidth;\n        /** @type {number} */\n        this.tileHeight = tileHeight;\n        /** @type {Image} */\n        this.image = image;\n    }\n\n    /**\n     * Get tile x,y positions by id (exemple tile number 23)\n     * @private\n     * @param {number} id\n     * @return {Object}\n     * @property {number} x\n     * @property {number} y\n     */\n    getTilePosition (id) {\n        const columns = this.image.width / this.tileWidth;\n        const rows = this.image.height / this.tileHeight;\n        const tiles = columns * rows;\n\n        id = id > tiles ? tiles : id;\n\n        const percent = (id * this.tileWidth) / this.image.width;\n        const unit = Math.trunc(percent);\n        const decimal = percent - unit;\n\n        const x = (decimal * columns) - 1;\n        const y = Math.trunc((id * this.tileWidth) / this.image.width);\n\n        return { x: x < 0 ? columns : x, y};\n    }\n\n    /**\n     * Render a tile\n     * @param {number} id\n     * @param {RenderingContext} context\n     */\n    render (id, context = null) {\n        if (id > 0) {\n            let ctx = context || this.parent.ctx;\n            let tile = this.getTilePosition(id);\n\n            ctx.save();\n            ctx.drawImage(\n                this.image,     // image\n                tile.x * this.tileWidth,    // pos x\n                tile.y * this.tileHeight,   // pos y\n                this.tileWidth,     // frame width\n                this.tileHeight,    // frame height\n                this.x,         // destination x\n                this.y,         // destination y\n                this.width,     // destination frame width\n                this.height     // destination frame height\n            );\n            ctx.restore();\n        }\n    }\n}\n",
+    "content": "import { Model } from './model';\n\n/**\n * The class to use tileset image\n * @example\n * const image = Loader.get('my-tileset'); // see Loader documentation\n * let tileset = new Tileset(0, 0, 32, 32, image);\n *\n * // render the first tile of tileset\n * tileset.render(1);\n */\nexport class Tileset extends Model {\n\n    /**\n     * @param {number} x\n     * @param {number} y\n     * @param {number} tileWidth\n     * @param {number} tileHeight\n     * @param {Image} image\n     */\n    constructor (x, y, tileWidth, tileHeight, image) {\n        super(x, y, tileWidth, tileHeight);\n\n        /** @type {number} */\n        this.tileWidth = tileWidth;\n        /** @type {number} */\n        this.tileHeight = tileHeight;\n        /** @type {Image} */\n        this.image = image;\n        this.tiles = 0;\n    }\n\n    /**\n     * Get tile x,y positions by id (exemple tile number 23)\n     * @private\n     * @param {number} id\n     * @return {Object}\n     * @property {number} x\n     * @property {number} y\n     */\n    getTilePosition (id) {\n        const columns = this.image.width / this.tileWidth;\n        const rows = this.image.height / this.tileHeight;\n        const tiles = columns * rows;\n        this.tiles = tiles;\n\n        id = id > tiles ? tiles : id;\n\n        const percent = (id * this.tileWidth) / this.image.width;\n        const unit = Math.trunc(percent);\n        const decimal = percent - unit;\n\n        const x = (decimal * columns) - 1;\n        const y = Math.trunc((id * this.tileWidth) / this.image.width);\n\n        return { x: x < 0 ? columns : x, y};\n    }\n\n    /**\n     * Render a tile\n     * @param {number} id\n     * @param {RenderingContext} context\n     */\n    render (id, context = null) {\n        if (id > 0) {\n            let ctx = context || this.parent.ctx;\n            let tile = this.getTilePosition(id);\n\n            ctx.save();\n            ctx.drawImage(\n                this.image,     // image\n                tile.x * this.tileWidth,    // pos x\n                tile.y * this.tileHeight,   // pos y\n                this.tileWidth,     // frame width\n                this.tileHeight,    // frame height\n                this.x,         // destination x\n                this.y,         // destination y\n                this.width,     // destination frame width\n                this.height     // destination frame height\n            );\n            ctx.restore();\n        }\n    }\n}\n",
     "static": true,
     "longname": "src/tileset.js",
     "access": null,
@@ -4630,6 +4630,29 @@
   },
   {
     "__docId__": 185,
+    "kind": "member",
+    "name": "tiles",
+    "memberof": "src/tileset.js~Tileset",
+    "static": false,
+    "longname": "src/tileset.js~Tileset#tiles",
+    "access": null,
+    "description": null,
+    "lineNumber": 30,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "number"
+      ]
+    }
+  },
+  {
+    "__docId__": 186,
     "kind": "method",
     "name": "getTilePosition",
     "memberof": "src/tileset.js~Tileset",
@@ -4639,7 +4662,7 @@
     "longname": "src/tileset.js~Tileset#getTilePosition",
     "access": "private",
     "description": "Get tile x,y positions by id (exemple tile number 23)",
-    "lineNumber": 40,
+    "lineNumber": 41,
     "params": [
       {
         "nullable": null,
@@ -4684,7 +4707,30 @@
     }
   },
   {
-    "__docId__": 186,
+    "__docId__": 187,
+    "kind": "member",
+    "name": "tiles",
+    "memberof": "src/tileset.js~Tileset",
+    "static": false,
+    "longname": "src/tileset.js~Tileset#tiles",
+    "access": null,
+    "description": null,
+    "lineNumber": 45,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 188,
     "kind": "method",
     "name": "render",
     "memberof": "src/tileset.js~Tileset",
@@ -4694,7 +4740,7 @@
     "longname": "src/tileset.js~Tileset#render",
     "access": null,
     "description": "Render a tile",
-    "lineNumber": 62,
+    "lineNumber": 64,
     "params": [
       {
         "nullable": null,
@@ -4719,7 +4765,7 @@
     ]
   },
   {
-    "__docId__": 188,
+    "__docId__": 190,
     "kind": "external",
     "name": "Infinity",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Infinity",
@@ -4731,7 +4777,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 189,
+    "__docId__": 191,
     "kind": "external",
     "name": "NaN",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NaN",
@@ -4743,7 +4789,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 190,
+    "__docId__": 192,
     "kind": "external",
     "name": "undefined",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined",
@@ -4755,7 +4801,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 191,
+    "__docId__": 193,
     "kind": "external",
     "name": "null",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null",
@@ -4767,7 +4813,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 192,
+    "__docId__": 194,
     "kind": "external",
     "name": "Object",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
@@ -4779,7 +4825,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 193,
+    "__docId__": 195,
     "kind": "external",
     "name": "object",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
@@ -4791,7 +4837,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 194,
+    "__docId__": 196,
     "kind": "external",
     "name": "Function",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
@@ -4803,7 +4849,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 195,
+    "__docId__": 197,
     "kind": "external",
     "name": "function",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
@@ -4815,7 +4861,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 196,
+    "__docId__": 198,
     "kind": "external",
     "name": "Boolean",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
@@ -4827,7 +4873,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 197,
+    "__docId__": 199,
     "kind": "external",
     "name": "boolean",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
@@ -4839,7 +4885,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 198,
+    "__docId__": 200,
     "kind": "external",
     "name": "Symbol",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol",
@@ -4851,7 +4897,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 199,
+    "__docId__": 201,
     "kind": "external",
     "name": "Error",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error",
@@ -4863,7 +4909,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 200,
+    "__docId__": 202,
     "kind": "external",
     "name": "EvalError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/EvalError",
@@ -4875,7 +4921,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 201,
+    "__docId__": 203,
     "kind": "external",
     "name": "InternalError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/InternalError",
@@ -4887,7 +4933,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 202,
+    "__docId__": 204,
     "kind": "external",
     "name": "RangeError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RangeError",
@@ -4899,7 +4945,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 203,
+    "__docId__": 205,
     "kind": "external",
     "name": "ReferenceError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ReferenceError",
@@ -4911,7 +4957,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 204,
+    "__docId__": 206,
     "kind": "external",
     "name": "SyntaxError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SyntaxError",
@@ -4923,7 +4969,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 205,
+    "__docId__": 207,
     "kind": "external",
     "name": "TypeError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError",
@@ -4935,7 +4981,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 206,
+    "__docId__": 208,
     "kind": "external",
     "name": "URIError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/URIError",
@@ -4947,7 +4993,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 207,
+    "__docId__": 209,
     "kind": "external",
     "name": "Number",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
@@ -4959,7 +5005,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 208,
+    "__docId__": 210,
     "kind": "external",
     "name": "number",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
@@ -4971,7 +5017,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 209,
+    "__docId__": 211,
     "kind": "external",
     "name": "Date",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date",
@@ -4983,7 +5029,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 210,
+    "__docId__": 212,
     "kind": "external",
     "name": "String",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
@@ -4995,7 +5041,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 211,
+    "__docId__": 213,
     "kind": "external",
     "name": "string",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
@@ -5007,7 +5053,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 212,
+    "__docId__": 214,
     "kind": "external",
     "name": "RegExp",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp",
@@ -5019,7 +5065,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 213,
+    "__docId__": 215,
     "kind": "external",
     "name": "Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
@@ -5031,7 +5077,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 214,
+    "__docId__": 216,
     "kind": "external",
     "name": "Int8Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int8Array",
@@ -5043,7 +5089,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 215,
+    "__docId__": 217,
     "kind": "external",
     "name": "Uint8Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array",
@@ -5055,7 +5101,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 216,
+    "__docId__": 218,
     "kind": "external",
     "name": "Uint8ClampedArray",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray",
@@ -5067,7 +5113,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 217,
+    "__docId__": 219,
     "kind": "external",
     "name": "Int16Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int16Array",
@@ -5079,7 +5125,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 218,
+    "__docId__": 220,
     "kind": "external",
     "name": "Uint16Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint16Array",
@@ -5091,7 +5137,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 219,
+    "__docId__": 221,
     "kind": "external",
     "name": "Int32Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array",
@@ -5103,7 +5149,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 220,
+    "__docId__": 222,
     "kind": "external",
     "name": "Uint32Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array",
@@ -5115,7 +5161,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 221,
+    "__docId__": 223,
     "kind": "external",
     "name": "Float32Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array",
@@ -5127,7 +5173,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 222,
+    "__docId__": 224,
     "kind": "external",
     "name": "Float64Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array",
@@ -5139,7 +5185,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 223,
+    "__docId__": 225,
     "kind": "external",
     "name": "Map",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map",
@@ -5151,7 +5197,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 224,
+    "__docId__": 226,
     "kind": "external",
     "name": "Set",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set",
@@ -5163,7 +5209,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 225,
+    "__docId__": 227,
     "kind": "external",
     "name": "WeakMap",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap",
@@ -5175,7 +5221,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 226,
+    "__docId__": 228,
     "kind": "external",
     "name": "WeakSet",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet",
@@ -5187,7 +5233,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 227,
+    "__docId__": 229,
     "kind": "external",
     "name": "ArrayBuffer",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer",
@@ -5199,7 +5245,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 228,
+    "__docId__": 230,
     "kind": "external",
     "name": "DataView",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView",
@@ -5211,7 +5257,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 229,
+    "__docId__": 231,
     "kind": "external",
     "name": "JSON",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON",
@@ -5223,7 +5269,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 230,
+    "__docId__": 232,
     "kind": "external",
     "name": "Promise",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
@@ -5235,7 +5281,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 231,
+    "__docId__": 233,
     "kind": "external",
     "name": "Generator",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator",
@@ -5247,7 +5293,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 232,
+    "__docId__": 234,
     "kind": "external",
     "name": "GeneratorFunction",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/GeneratorFunction",
@@ -5259,7 +5305,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 233,
+    "__docId__": 235,
     "kind": "external",
     "name": "Reflect",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect",
@@ -5271,7 +5317,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 234,
+    "__docId__": 236,
     "kind": "external",
     "name": "Proxy",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy",
@@ -5284,7 +5330,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 236,
+    "__docId__": 238,
     "kind": "external",
     "name": "CanvasRenderingContext2D",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D",
@@ -5296,7 +5342,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 237,
+    "__docId__": 239,
     "kind": "external",
     "name": "DocumentFragment",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment",
@@ -5308,7 +5354,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 238,
+    "__docId__": 240,
     "kind": "external",
     "name": "Element",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Element",
@@ -5320,7 +5366,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 239,
+    "__docId__": 241,
     "kind": "external",
     "name": "Event",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Event",
@@ -5332,7 +5378,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 240,
+    "__docId__": 242,
     "kind": "external",
     "name": "Node",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Node",
@@ -5344,7 +5390,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 241,
+    "__docId__": 243,
     "kind": "external",
     "name": "NodeList",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/NodeList",
@@ -5356,7 +5402,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 242,
+    "__docId__": 244,
     "kind": "external",
     "name": "XMLHttpRequest",
     "externalLink": "https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest",
@@ -5368,7 +5414,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 243,
+    "__docId__": 245,
     "kind": "external",
     "name": "AudioContext",
     "externalLink": "https://developer.mozilla.org/en/docs/Web/API/AudioContext",

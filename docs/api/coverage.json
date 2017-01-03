@@ -1,6 +1,6 @@
 {
-  "coverage": "76.92%",
-  "expectCount": 91,
+  "coverage": "76.08%",
+  "expectCount": 92,
   "actualCount": 70,
   "files": {
     "src/application.js": {
@@ -70,9 +70,11 @@
       ]
     },
     "src/tileset.js": {
-      "expectCount": 6,
+      "expectCount": 7,
       "actualCount": 6,
-      "undocumentLines": []
+      "undocumentLines": [
+        30
+      ]
     }
   }
 }
