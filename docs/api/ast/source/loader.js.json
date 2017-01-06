@@ -116,7 +116,7 @@
         "trailingComments": [
           {
             "type": "CommentBlock",
-            "value": "*\n * Service to load asset\n * @example\n * let layer = {\n *     create: function() {\n *         Loader.add('img/my-image.png', 'player-image');\n *         Loader.add('config/my-config.json', 'player-config', 'json');\n *     },\n *     render: function() {\n *          const image = Loader.get('player-image');\n *          const config = Loader.get('player-config');\n *          this.ctx.drawImage(image, config.x, config.y);\n *     }\n * }\n ",
+            "value": "*\n * Service to load asset\n * @example\n * let layer = {\n *     create: function() {\n *         loader.add('img/my-image.png', 'player-image');\n *         loader.add('config/my-config.json', 'player-config', 'json');\n *     },\n *     render: function() {\n *          const image = loader.get('player-image');\n *          const config = loader.get('player-config');\n *          this.ctx.drawImage(image, config.x, config.y);\n *     }\n * }\n ",
             "start": 49,
             "end": 491,
             "loc": {
@@ -5228,7 +5228,7 @@
           "leadingComments": [
             {
               "type": "CommentBlock",
-              "value": "*\n * Service to load asset\n * @example\n * let layer = {\n *     create: function() {\n *         Loader.add('img/my-image.png', 'player-image');\n *         Loader.add('config/my-config.json', 'player-config', 'json');\n *     },\n *     render: function() {\n *          const image = Loader.get('player-image');\n *          const config = Loader.get('player-config');\n *          this.ctx.drawImage(image, config.x, config.y);\n *     }\n * }\n ",
+              "value": "*\n * Service to load asset\n * @example\n * let layer = {\n *     create: function() {\n *         loader.add('img/my-image.png', 'player-image');\n *         loader.add('config/my-config.json', 'player-config', 'json');\n *     },\n *     render: function() {\n *          const image = loader.get('player-image');\n *          const config = loader.get('player-config');\n *          this.ctx.drawImage(image, config.x, config.y);\n *     }\n * }\n ",
               "start": 49,
               "end": 491,
               "loc": {
@@ -5248,7 +5248,7 @@
         "leadingComments": [
           {
             "type": "CommentBlock",
-            "value": "*\n * Service to load asset\n * @example\n * let layer = {\n *     create: function() {\n *         Loader.add('img/my-image.png', 'player-image');\n *         Loader.add('config/my-config.json', 'player-config', 'json');\n *     },\n *     render: function() {\n *          const image = Loader.get('player-image');\n *          const config = Loader.get('player-config');\n *          this.ctx.drawImage(image, config.x, config.y);\n *     }\n * }\n ",
+            "value": "*\n * Service to load asset\n * @example\n * let layer = {\n *     create: function() {\n *         loader.add('img/my-image.png', 'player-image');\n *         loader.add('config/my-config.json', 'player-config', 'json');\n *     },\n *     render: function() {\n *          const image = loader.get('player-image');\n *          const config = loader.get('player-config');\n *          this.ctx.drawImage(image, config.x, config.y);\n *     }\n * }\n ",
             "start": 49,
             "end": 491,
             "loc": {
@@ -5406,7 +5406,7 @@
   "comments": [
     {
       "type": "CommentBlock",
-      "value": "*\n * Service to load asset\n * @example\n * let layer = {\n *     create: function() {\n *         Loader.add('img/my-image.png', 'player-image');\n *         Loader.add('config/my-config.json', 'player-config', 'json');\n *     },\n *     render: function() {\n *          const image = Loader.get('player-image');\n *          const config = Loader.get('player-config');\n *          this.ctx.drawImage(image, config.x, config.y);\n *     }\n * }\n ",
+      "value": "*\n * Service to load asset\n * @example\n * let layer = {\n *     create: function() {\n *         loader.add('img/my-image.png', 'player-image');\n *         loader.add('config/my-config.json', 'player-config', 'json');\n *     },\n *     render: function() {\n *          const image = loader.get('player-image');\n *          const config = loader.get('player-config');\n *          this.ctx.drawImage(image, config.x, config.y);\n *     }\n * }\n ",
       "start": 49,
       "end": 491,
       "loc": {
@@ -5687,7 +5687,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n * Service to load asset\n * @example\n * let layer = {\n *     create: function() {\n *         Loader.add('img/my-image.png', 'player-image');\n *         Loader.add('config/my-config.json', 'player-config', 'json');\n *     },\n *     render: function() {\n *          const image = Loader.get('player-image');\n *          const config = Loader.get('player-config');\n *          this.ctx.drawImage(image, config.x, config.y);\n *     }\n * }\n ",
+      "value": "*\n * Service to load asset\n * @example\n * let layer = {\n *     create: function() {\n *         loader.add('img/my-image.png', 'player-image');\n *         loader.add('config/my-config.json', 'player-config', 'json');\n *     },\n *     render: function() {\n *          const image = loader.get('player-image');\n *          const config = loader.get('player-config');\n *          this.ctx.drawImage(image, config.x, config.y);\n *     }\n * }\n ",
       "start": 49,
       "end": 491,
       "loc": {

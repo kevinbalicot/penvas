@@ -116,7 +116,7 @@
         "trailingComments": [
           {
             "type": "CommentBlock",
-            "value": "*\n * The class to use tileset image\n * @example\n * const image = Loader.get('my-tileset'); // see Loader documentation\n * let tileset = new Tileset(0, 0, 32, 32, image);\n *\n * // render the first tile of tileset\n * tileset.render(1);\n ",
+            "value": "*\n * The class to use tileset image\n * @example\n * const image = loader.get('my-tileset'); // see Loader documentation\n * let tileset = new Tileset(0, 0, 32, 32, image);\n *\n * // render the first tile of tileset\n * tileset.render(1);\n ",
             "start": 34,
             "end": 273,
             "loc": {
@@ -5200,7 +5200,7 @@
           "leadingComments": [
             {
               "type": "CommentBlock",
-              "value": "*\n * The class to use tileset image\n * @example\n * const image = Loader.get('my-tileset'); // see Loader documentation\n * let tileset = new Tileset(0, 0, 32, 32, image);\n *\n * // render the first tile of tileset\n * tileset.render(1);\n ",
+              "value": "*\n * The class to use tileset image\n * @example\n * const image = loader.get('my-tileset'); // see Loader documentation\n * let tileset = new Tileset(0, 0, 32, 32, image);\n *\n * // render the first tile of tileset\n * tileset.render(1);\n ",
               "start": 34,
               "end": 273,
               "loc": {
@@ -5220,7 +5220,7 @@
         "leadingComments": [
           {
             "type": "CommentBlock",
-            "value": "*\n * The class to use tileset image\n * @example\n * const image = Loader.get('my-tileset'); // see Loader documentation\n * let tileset = new Tileset(0, 0, 32, 32, image);\n *\n * // render the first tile of tileset\n * tileset.render(1);\n ",
+            "value": "*\n * The class to use tileset image\n * @example\n * const image = loader.get('my-tileset'); // see Loader documentation\n * let tileset = new Tileset(0, 0, 32, 32, image);\n *\n * // render the first tile of tileset\n * tileset.render(1);\n ",
             "start": 34,
             "end": 273,
             "loc": {
@@ -5242,7 +5242,7 @@
   "comments": [
     {
       "type": "CommentBlock",
-      "value": "*\n * The class to use tileset image\n * @example\n * const image = Loader.get('my-tileset'); // see Loader documentation\n * let tileset = new Tileset(0, 0, 32, 32, image);\n *\n * // render the first tile of tileset\n * tileset.render(1);\n ",
+      "value": "*\n * The class to use tileset image\n * @example\n * const image = loader.get('my-tileset'); // see Loader documentation\n * let tileset = new Tileset(0, 0, 32, 32, image);\n *\n * // render the first tile of tileset\n * tileset.render(1);\n ",
       "start": 34,
       "end": 273,
       "loc": {
@@ -5731,7 +5731,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n * The class to use tileset image\n * @example\n * const image = Loader.get('my-tileset'); // see Loader documentation\n * let tileset = new Tileset(0, 0, 32, 32, image);\n *\n * // render the first tile of tileset\n * tileset.render(1);\n ",
+      "value": "*\n * The class to use tileset image\n * @example\n * const image = loader.get('my-tileset'); // see Loader documentation\n * let tileset = new Tileset(0, 0, 32, 32, image);\n *\n * // render the first tile of tileset\n * tileset.render(1);\n ",
       "start": 34,
       "end": 273,
       "loc": {

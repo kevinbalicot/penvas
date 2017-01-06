@@ -94,12 +94,12 @@
       
       <pre class="prettyprint source-code"><code data-ice="exampleCode">let layer = {
     create: function() {
-        Loader.add(&apos;img/my-image.png&apos;, &apos;player-image&apos;);
-        Loader.add(&apos;config/my-config.json&apos;, &apos;player-config&apos;, &apos;json&apos;);
+        loader.add(&apos;img/my-image.png&apos;, &apos;player-image&apos;);
+        loader.add(&apos;config/my-config.json&apos;, &apos;player-config&apos;, &apos;json&apos;);
     },
     render: function() {
-         const image = Loader.get(&apos;player-image&apos;);
-         const config = Loader.get(&apos;player-config&apos;);
+         const image = loader.get(&apos;player-image&apos;);
+         const config = loader.get(&apos;player-config&apos;);
          this.ctx.drawImage(image, config.x, config.y);
     }
 }</code></pre>

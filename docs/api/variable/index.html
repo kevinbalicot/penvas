@@ -128,7 +128,8 @@
       <div>
         
         
-        
+        <div data-ice="description"><p>Array of Input</p>
+</div>
       </div>
     </td>
     <td>
@@ -207,18 +208,58 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/io.js.html#lineNumber2">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/io.js.html#lineNumber17">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {KEYS} from &apos;<span><a href="file/src/io.js.html#lineNumber2">penvas/src/io.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {KEYS} from &apos;<span><a href="file/src/io.js.html#lineNumber17">penvas/src/io.js</a></span>&apos;</code></pre></div>
   
   
   
 
   
 
-  <div data-ice="properties">
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Properties:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">KEYS.SPACE</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">KEYS.LEFT</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">KEYS.UP</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">KEYS.RIGHT</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">KEYS.DOWN</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+</tbody>
+  </table>
+</div>
 </div>
 
   
@@ -231,7 +272,20 @@
 
   
 
-  
+  <div data-ice="example">
+    <h4>Example:</h4>
+    
+  <div class="example-doc" data-ice="exampleDoc">
+      
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">if (true === io[KEYS.SPACE]) {
+    this.player.jump();
+}
+
+if (!!io[39]) {
+   this.player.walkRight();
+}</code></pre>
+    </div>
+</div>
 
   
 
@@ -250,18 +304,46 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/io.js.html#lineNumber11">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/io.js.html#lineNumber35">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {MOUSE} from &apos;<span><a href="file/src/io.js.html#lineNumber11">penvas/src/io.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {MOUSE} from &apos;<span><a href="file/src/io.js.html#lineNumber35">penvas/src/io.js</a></span>&apos;</code></pre></div>
   
   
   
 
   
 
-  <div data-ice="properties">
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Properties:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">MOUSE.LEFT_CLICK</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">MOUSE.RIGHT_CLICK</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">MOUSE.MIDDLE_CLICK</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+</tbody>
+  </table>
+</div>
 </div>
 
   
@@ -274,7 +356,16 @@
 
   
 
-  
+  <div data-ice="example">
+    <h4>Example:</h4>
+    
+  <div class="example-doc" data-ice="exampleDoc">
+      
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">if (io[MOUSE.LEFT_CLICK]) {
+    this.player.attack();
+}</code></pre>
+    </div>
+</div>
 
   
 
@@ -293,14 +384,15 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/io.js.html#lineNumber18">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/io.js.html#lineNumber45">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {io} from &apos;<span><a href="file/src/io.js.html#lineNumber18">penvas/src/io.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {io} from &apos;<span><a href="file/src/io.js.html#lineNumber45">penvas/src/io.js</a></span>&apos;</code></pre></div>
   
   
-  
+  <div data-ice="description"><p>Array of Input</p>
+</div>
 
   
 

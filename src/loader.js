@@ -5,12 +5,12 @@ import { EventEmitter } from './event-emitter';
  * @example
  * let layer = {
  *     create: function() {
- *         Loader.add('img/my-image.png', 'player-image');
- *         Loader.add('config/my-config.json', 'player-config', 'json');
+ *         loader.add('img/my-image.png', 'player-image');
+ *         loader.add('config/my-config.json', 'player-config', 'json');
  *     },
  *     render: function() {
- *          const image = Loader.get('player-image');
- *          const config = Loader.get('player-config');
+ *          const image = loader.get('player-image');
+ *          const config = loader.get('player-config');
  *          this.ctx.drawImage(image, config.x, config.y);
  *     }
  * }

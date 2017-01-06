@@ -3,7 +3,7 @@ import { Model } from './model';
 /**
  * The class to use tileset image
  * @example
- * const image = Loader.get('my-tileset'); // see Loader documentation
+ * const image = loader.get('my-tileset'); // see Loader documentation
  * let tileset = new Tileset(0, 0, 32, 32, image);
  *
  * // render the first tile of tileset

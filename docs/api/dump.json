@@ -1478,7 +1478,7 @@
     "__docId__": 61,
     "kind": "file",
     "name": "src/io.js",
-    "content": "/** @type {Object} */\nexport const KEYS = {\n    SPACE: 32,\n    LEFT: 37,\n    UP: 38,\n    RIGHT: 39,\n    DOWN: 40\n}\n\n/** @type {Object} */\nexport const MOUSE = {\n    LEFT_CLICK: 'left_click',\n    RIGHT_CLICK: 'right_click',\n    MIDDLE_CLICK: 'middle_click'\n}\n\n/** @type {Array<number>} */\nexport const io = [];\n\ndocument.addEventListener('keydown', (e) => {\n    io[e.keyCode] = true;\n});\n\ndocument.addEventListener('keyup', (e) => {\n    io[e.keyCode] = false;\n});\n\ndocument.addEventListener('mousedown', () => {\n    io[MOUSE.LEFT_CLICK] = true;\n});\n\ndocument.addEventListener('mouseup', () => {\n    io[MOUSE.LEFT_CLICK] = false;\n});\n\nexport default io;\n",
+    "content": "/**\n * @type {Object}\n * @property {number} KEYS.SPACE\n * @property {number} KEYS.LEFT\n * @property {number} KEYS.UP\n * @property {number} KEYS.RIGHT\n * @property {number} KEYS.DOWN\n * @example\n * if (true === io[KEYS.SPACE]) {\n *     this.player.jump();\n * }\n *\n * if (!!io[39]) {\n *    this.player.walkRight();\n * }\n */\nexport const KEYS = {\n    SPACE: 32,\n    LEFT: 37,\n    UP: 38,\n    RIGHT: 39,\n    DOWN: 40\n}\n\n/**\n * @type {Object}\n * @property {string} MOUSE.LEFT_CLICK\n * @property {string} MOUSE.RIGHT_CLICK\n * @property {string} MOUSE.MIDDLE_CLICK\n * @example\n * if (io[MOUSE.LEFT_CLICK]) {\n *     this.player.attack();\n * }\n */\nexport const MOUSE = {\n    LEFT_CLICK: 'left_click',\n    RIGHT_CLICK: 'right_click',\n    MIDDLE_CLICK: 'middle_click'\n}\n\n/**\n * Array of Input\n * @type {Array<number>}\n */\nexport const io = [];\n\ndocument.addEventListener('keydown', (e) => {\n    io[e.keyCode] = true;\n});\n\ndocument.addEventListener('keyup', (e) => {\n    io[e.keyCode] = false;\n});\n\ndocument.addEventListener('mousedown', () => {\n    io[MOUSE.LEFT_CLICK] = true;\n});\n\ndocument.addEventListener('mouseup', () => {\n    io[MOUSE.LEFT_CLICK] = false;\n});\n\nexport default io;\n",
     "static": true,
     "longname": "src/io.js",
     "access": null,
@@ -1496,8 +1496,63 @@
     "export": true,
     "importPath": "penvas/src/io.js",
     "importStyle": "{KEYS}",
-    "description": null,
-    "lineNumber": 2,
+    "description": "",
+    "examples": [
+      "if (true === io[KEYS.SPACE]) {\n    this.player.jump();\n}\n\nif (!!io[39]) {\n   this.player.walkRight();\n}"
+    ],
+    "lineNumber": 17,
+    "properties": [
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "KEYS.SPACE",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "KEYS.LEFT",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "KEYS.UP",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "KEYS.RIGHT",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "KEYS.DOWN",
+        "description": ""
+      }
+    ],
     "type": {
       "nullable": null,
       "types": [
@@ -1518,8 +1573,43 @@
     "export": true,
     "importPath": "penvas/src/io.js",
     "importStyle": "{MOUSE}",
-    "description": null,
-    "lineNumber": 11,
+    "description": "",
+    "examples": [
+      "if (io[MOUSE.LEFT_CLICK]) {\n    this.player.attack();\n}"
+    ],
+    "lineNumber": 35,
+    "properties": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "MOUSE.LEFT_CLICK",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "MOUSE.RIGHT_CLICK",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "MOUSE.MIDDLE_CLICK",
+        "description": ""
+      }
+    ],
     "type": {
       "nullable": null,
       "types": [
@@ -1540,8 +1630,8 @@
     "export": true,
     "importPath": "penvas/src/io.js",
     "importStyle": "{io}",
-    "description": null,
-    "lineNumber": 18,
+    "description": "Array of Input",
+    "lineNumber": 45,
     "type": {
       "nullable": null,
       "types": [
@@ -1555,7 +1645,7 @@
     "__docId__": 65,
     "kind": "file",
     "name": "src/loader.js",
-    "content": "import { EventEmitter } from './event-emitter';\n\n/**\n * Service to load asset\n * @example\n * let layer = {\n *     create: function() {\n *         Loader.add('img/my-image.png', 'player-image');\n *         Loader.add('config/my-config.json', 'player-config', 'json');\n *     },\n *     render: function() {\n *          const image = Loader.get('player-image');\n *          const config = Loader.get('player-config');\n *          this.ctx.drawImage(image, config.x, config.y);\n *     }\n * }\n */\nexport class Loader extends EventEmitter {\n\n    constructor () {\n        super();\n\n        this.count = 0;\n        this.queue = 0;\n        this.progress = 0;\n        this.ready = true;\n        this.collection = [];\n    }\n\n    /**\n     * Add asset to load\n     * @param {String} src\n     * @param {String} id\n     * @param {String} type - (image or json)\n     */\n    add (src, id, type = 'image') {\n        this.count++;\n        this.queue++;\n        this.ready = false;\n\n        switch (type) {\n            case 'image':\n                this.loadImage(src, id);\n                break;\n            case 'json':\n                this.loadJson(src, id);\n                break\n        }\n    }\n\n    /**\n     * Add asset into the collection and dispatch event\n     * @param {mixed} el\n     * @param {String} id\n     * @emits {load} emit when asset is loaded\n     * @emits {ready} emit when all assets are loaded\n     */\n    load (el, id) {\n        this.queue--;\n        this.progress = 1 - this.queue / this.count;\n\n        this.collection.push({ id: id, item: el });\n        this.dispatch('load', this.progress);\n\n        if (this.queue == 0) {\n            this.count = 0;\n            this.progress = 0;\n            this.ready = true;\n            this.dispatch('ready');\n        }\n    }\n\n    /**\n     * Load image\n     * @private\n     * @param {String} src\n     * @param {String} id\n     */\n    loadImage (src, id) {\n        let img = new Image();\n        img.src = src;\n        img.onload = () => this.load(img, id);\n    }\n\n    /**\n     * Load json file\n     * @private\n     * @param {String} src\n     * @param {String} id\n     */\n    loadJson (src, id) {\n        var request = new XMLHttpRequest();\n\n        request.open(\"GET\", src, true);\n        request.onload = e => {\n            let data = JSON.parse(e.target.response);\n            this.load(data, id);\n        }\n\n        request.send();\n    }\n\n    /**\n     * Get asset by id\n     * @param {String} id\n     * @return {mixed}\n     */\n    get (id) {\n        let items = this.collection.filter(el => el.id === id);\n\n        if (items.length == 0) {\n            return null;\n        }\n\n        return items.length > 1 ? items.map(el => el.item) : items[0].item;\n    }\n}\n\nexport const loader = new Loader();\nexport default loader;\n",
+    "content": "import { EventEmitter } from './event-emitter';\n\n/**\n * Service to load asset\n * @example\n * let layer = {\n *     create: function() {\n *         loader.add('img/my-image.png', 'player-image');\n *         loader.add('config/my-config.json', 'player-config', 'json');\n *     },\n *     render: function() {\n *          const image = loader.get('player-image');\n *          const config = loader.get('player-config');\n *          this.ctx.drawImage(image, config.x, config.y);\n *     }\n * }\n */\nexport class Loader extends EventEmitter {\n\n    constructor () {\n        super();\n\n        this.count = 0;\n        this.queue = 0;\n        this.progress = 0;\n        this.ready = true;\n        this.collection = [];\n    }\n\n    /**\n     * Add asset to load\n     * @param {String} src\n     * @param {String} id\n     * @param {String} type - (image or json)\n     */\n    add (src, id, type = 'image') {\n        this.count++;\n        this.queue++;\n        this.ready = false;\n\n        switch (type) {\n            case 'image':\n                this.loadImage(src, id);\n                break;\n            case 'json':\n                this.loadJson(src, id);\n                break\n        }\n    }\n\n    /**\n     * Add asset into the collection and dispatch event\n     * @param {mixed} el\n     * @param {String} id\n     * @emits {load} emit when asset is loaded\n     * @emits {ready} emit when all assets are loaded\n     */\n    load (el, id) {\n        this.queue--;\n        this.progress = 1 - this.queue / this.count;\n\n        this.collection.push({ id: id, item: el });\n        this.dispatch('load', this.progress);\n\n        if (this.queue == 0) {\n            this.count = 0;\n            this.progress = 0;\n            this.ready = true;\n            this.dispatch('ready');\n        }\n    }\n\n    /**\n     * Load image\n     * @private\n     * @param {String} src\n     * @param {String} id\n     */\n    loadImage (src, id) {\n        let img = new Image();\n        img.src = src;\n        img.onload = () => this.load(img, id);\n    }\n\n    /**\n     * Load json file\n     * @private\n     * @param {String} src\n     * @param {String} id\n     */\n    loadJson (src, id) {\n        var request = new XMLHttpRequest();\n\n        request.open(\"GET\", src, true);\n        request.onload = e => {\n            let data = JSON.parse(e.target.response);\n            this.load(data, id);\n        }\n\n        request.send();\n    }\n\n    /**\n     * Get asset by id\n     * @param {String} id\n     * @return {mixed}\n     */\n    get (id) {\n        let items = this.collection.filter(el => el.id === id);\n\n        if (items.length == 0) {\n            return null;\n        }\n\n        return items.length > 1 ? items.map(el => el.item) : items[0].item;\n    }\n}\n\nexport const loader = new Loader();\nexport default loader;\n",
     "static": true,
     "longname": "src/loader.js",
     "access": null,
@@ -1575,7 +1665,7 @@
     "importStyle": "{Loader}",
     "description": "Service to load asset",
     "examples": [
-      "let layer = {\n    create: function() {\n        Loader.add('img/my-image.png', 'player-image');\n        Loader.add('config/my-config.json', 'player-config', 'json');\n    },\n    render: function() {\n         const image = Loader.get('player-image');\n         const config = Loader.get('player-config');\n         this.ctx.drawImage(image, config.x, config.y);\n    }\n}"
+      "let layer = {\n    create: function() {\n        loader.add('img/my-image.png', 'player-image');\n        loader.add('config/my-config.json', 'player-config', 'json');\n    },\n    render: function() {\n         const image = loader.get('player-image');\n         const config = loader.get('player-config');\n         this.ctx.drawImage(image, config.x, config.y);\n    }\n}"
     ],
     "lineNumber": 18,
     "interface": false,
@@ -2532,7 +2622,7 @@
     "__docId__": 98,
     "kind": "file",
     "name": "src/mouse.js",
-    "content": "import { Model } from './model';\nimport { Container } from './container';\nimport { MOUSE, io } from './io';\n\n/**\n * Mouse service\n * @example\n * let tile = { x: 10, y: 10, width: 32, height: 32 };\n * if (mouse.isOver(tile)) {\n *     tile.backgroundColor = 'red';\n * }\n */\nclass Mouse {\n\n    constructor() {\n        this.x = 0;\n        this.y = 0;\n    }\n\n    /**\n     * Check if mouse coordinates has collisions with object\n     * @protected\n     * @param {Object} object\n     * @param {number} object.x\n     * @param {number} object.y\n     * @param {number} object.width\n     * @param {number} object.height\n     */\n    hasCollision(object) {\n\n        if (object.x === undefined || object.y === undefined || object.width === undefined || object.height === undefined) {\n            throw new Error(`Object ${object} is not valid, needs x, y, width and height parameters.`);\n        }\n\n        if (this.x <= object.x + object.width &&\n        object.x <= this.x &&\n        this.y <= object.y + object.height &&\n        object.y <= this.y) {\n            return true;\n        }\n\n        return false;\n    }\n\n    /**\n     * Check if mouse is over object\n     * @param {Object} object\n     * @param {number} object.x\n     * @param {number} object.y\n     * @param {number} object.width\n     * @param {number} object.height\n     * @return {boolean}\n     */\n    isOver(object) {\n        return this.hasCollision(object);\n    }\n\n    /**\n     * Check if mouse is out of object\n     * @param {Object} object\n     * @param {number} object.x\n     * @param {number} object.y\n     * @param {number} object.width\n     * @param {number} object.height\n     * @return {boolean}\n     */\n    isOut(object) {\n        return !this.hasCollision(object);\n    }\n\n    /**\n     * Check if mouse click and over object\n     * @param {Object} object\n     * @param {number} object.x\n     * @param {number} object.y\n     * @param {number} object.width\n     * @param {number} object.height\n     * @return {boolean}\n     */\n    isClickOn(object) {\n        return io[MOUSE.LEFT_CLICK] && this.isOver(object);\n    }\n\n    /**\n     * Check if mouse click and out of object\n     * @param {Object} object\n     * @param {number} object.x\n     * @param {number} object.y\n     * @param {number} object.width\n     * @param {number} object.height\n     * @return {boolean}\n     */\n    isClickOut(object) {\n        return io[MOUSE.LEFT_CLICK] && this.isOut(object);\n    }\n}\n\nexport const mouse = new Mouse();\nexport default mouse;\n",
+    "content": "import { Model } from './model';\nimport { Container } from './container';\nimport { MOUSE, io } from './io';\n\n/**\n * Mouse service\n * @example\n * let tile = { x: 10, y: 10, width: 32, height: 32 };\n * if (mouse.isOver(tile)) {\n *     tile.backgroundColor = 'red';\n * }\n */\nclass Mouse {\n\n    constructor() {\n        this.x = 0;\n        this.y = 0;\n    }\n\n    /**\n     * Check if mouse coordinates has collisions with object\n     * @protected\n     * @param {Object} object\n     * @param {number} object.x\n     * @param {number} object.y\n     * @param {number} object.width\n     * @param {number} object.height\n     */\n    hasCollision(object) {\n\n        if (object.x === undefined || object.y === undefined || object.width === undefined || object.height === undefined) {\n            throw new Error(`Object ${object} is not valid, needs x, y, width and height parameters.`);\n        }\n\n        if (this.x <= object.x + object.width &&\n        object.x <= this.x &&\n        this.y <= object.y + object.height &&\n        object.y <= this.y) {\n            return true;\n        }\n\n        return false;\n    }\n\n    /**\n     * Check if mouse is over object\n     * @param {Object} object\n     * @param {number} object.x\n     * @param {number} object.y\n     * @param {number} object.width\n     * @param {number} object.height\n     * @return {boolean}\n     */\n    isOver(object) {\n        return this.hasCollision(object);\n    }\n\n    /**\n     * Check if mouse is out of object\n     * @param {Object} object\n     * @param {number} object.x\n     * @param {number} object.y\n     * @param {number} object.width\n     * @param {number} object.height\n     * @return {boolean}\n     */\n    isOut(object) {\n        return !this.hasCollision(object);\n    }\n\n    /**\n     * Check if mouse click and is over object\n     * @param {Object} object\n     * @param {number} object.x\n     * @param {number} object.y\n     * @param {number} object.width\n     * @param {number} object.height\n     * @return {boolean}\n     */\n    isClickOn(object) {\n        return io[MOUSE.LEFT_CLICK] && this.isOver(object);\n    }\n\n    /**\n     * Check if mouse click and is out of object\n     * @param {Object} object\n     * @param {number} object.x\n     * @param {number} object.y\n     * @param {number} object.width\n     * @param {number} object.height\n     * @return {boolean}\n     */\n    isClickOut(object) {\n        return io[MOUSE.LEFT_CLICK] && this.isOut(object);\n    }\n}\n\nexport const mouse = new Mouse();\nexport default mouse;\n",
     "static": true,
     "longname": "src/mouse.js",
     "access": null,
@@ -2877,7 +2967,7 @@
     "static": false,
     "longname": "src/mouse.js~Mouse#isClickOn",
     "access": null,
-    "description": "Check if mouse click and over object",
+    "description": "Check if mouse click and is over object",
     "lineNumber": 80,
     "params": [
       {
@@ -2950,7 +3040,7 @@
     "static": false,
     "longname": "src/mouse.js~Mouse#isClickOut",
     "access": null,
-    "description": "Check if mouse click and out of object",
+    "description": "Check if mouse click and is out of object",
     "lineNumber": 93,
     "params": [
       {
@@ -3980,7 +4070,7 @@
     "__docId__": 149,
     "kind": "file",
     "name": "src/sprite.js",
-    "content": "import { Model } from './model';\n\n/**\n * The class to use sprite image\n * You can add animations\n * @example\n * const image = Loader.get('my-sprite'); // see Loader documentation\n * const animation = [{ frames: [9, 10, 11, 12], name: 'walk', loop: true }];\n * let sprite = new Sprite(10, 10, 20, 20, image, animation);\n *\n * sprite.play('walk');\n * sprite.render();\n */\nexport class Sprite extends Model {\n\n    /**\n     * @param {number} x\n     * @param {number} y\n     * @param {number} tileWidth - width tile\n     * @param {number} tileHeight - height tile\n     * @param {Image} image\n     * @param {Array<Object>} animations - list of animations\n     * @example\n     * new Sprite(0, 0, 20, 20, image, [{ frames: [9, 10, 11, 12], name: 'walk', loop: true, flip: false }]);\n     * @param {Object} [hitbox]\n     * @param {Object} [hitbox.x]\n     * @param {Object} [hitbox.y]\n     * @param {Object} [hitbox.width]\n     * @param {Object} [hitbox.height]\n     */\n    constructor (x, y, tileWidth, tileHeight, image, animations, hitbox) {\n        super(x, y, tileWidth, tileHeight, hitbox);\n\n        /** @type {Image} */\n        this.image = image;\n        /** @type {Array<Object>} */\n        this.animations = animations;\n\n        this.time = 1;\n        this.stopped = true;\n        this.frame = { x: 0, y: 0 };\n        this.frames = {\n            width: image.width / tileWidth,\n            height: image.height / tileHeight,\n            total: (image.width / tileWidth) * (image.height / tileHeight)\n        };\n\n        this.currentAnimation = 0;\n        this.currentFrame = 0;\n    }\n\n    /**\n     * @private\n     */\n    getNextFrame () {\n        let currentAnimation = this.animations[this.currentAnimation];\n        let currentFrame = currentAnimation.frames[this.currentFrame];\n\n        if (this.frames.width - currentFrame >= 0) {\n            this.frame.x = currentFrame - 1;\n            this.frame.y = 0;\n        } else {\n\n            let delta = currentFrame - this.frames.width;\n            this.frame.y = 1;\n\n            while (delta > this.frames.width) {\n                delta = delta - this.frames.width;\n                this.frame.y++;\n            }\n\n            this.frame.x = delta - 1;\n        }\n\n        this.currentFrame++;\n\n        if (this.currentFrame >= currentAnimation.frames.length) {\n            this.currentFrame = 0;\n\n            if (!currentAnimation.loop) {\n                this.stopped = true;\n            }\n        }\n    }\n\n    /**\n     * @param {number} dt - Delta between two frames\n     */\n    step (dt) {\n        this.time += dt;\n\n        if (this.time >= 0.25 && !this.stopped) {\n            this.getNextFrame();\n            this.time = 0;\n        }\n    }\n\n    /**\n     * Play animation\n     * @param {String} animation\n     */\n    play (animation) {\n        let currentAnimation = this.animations.filter(anim => anim.name === animation);\n\n        if (!!currentAnimation) {\n            let index = this.animations.indexOf(currentAnimation[0]);\n\n            if (this.currentAnimation != index) {\n                this.time = 1;\n                this.currentFrame = 0;\n            }\n\n            this.currentAnimation = index;\n            this.stopped = false;\n        }\n    }\n\n    /**\n     * Stop animation\n     */\n    stop () {\n        this.stopped = true;\n    }\n\n    /**\n     * Reset animation\n     */\n    reset () {\n        this.frame = { x: 0, y: 0 };\n    }\n\n    /**\n     * Render the sprite\n     * @param {RenderingContext} context\n     */\n    render (context = null) {\n        let ctx = context || this.parent.ctx;\n        let currentAnimation = this.animations[this.currentAnimation];\n        ctx.save();\n\n        if (!!currentAnimation && !!currentAnimation.flip) {\n            ctx.translate((this.x * 2) + this.width, 1);\n            ctx.scale(-1, 1);\n        }\n\n        ctx.drawImage(\n            this.image,     // image\n            this.frame.x * this.width,  // pos x\n            this.frame.y * this.height, // pos y\n            this.width,     // frame width\n            this.height,    // frame height\n            this.x,         // destination x\n            this.y,         // destination y\n            this.width,     // destination frame width\n            this.height     // destination frame height\n        );\n        ctx.restore();\n    }\n}\n",
+    "content": "import { Model } from './model';\n\n/**\n * The class to use sprite image\n * You can add animations\n * @example\n * const image = loader.get('my-sprite'); // see Loader documentation\n * const animation = [{ frames: [9, 10, 11, 12], name: 'walk', loop: true }];\n * let sprite = new Sprite(10, 10, 20, 20, image, animation);\n *\n * sprite.play('walk');\n * sprite.render();\n */\nexport class Sprite extends Model {\n\n    /**\n     * @param {number} x\n     * @param {number} y\n     * @param {number} tileWidth - width tile\n     * @param {number} tileHeight - height tile\n     * @param {Image} image\n     * @param {Array<Object>} animations - list of animations\n     * @example\n     * new Sprite(0, 0, 20, 20, image, [{ frames: [9, 10, 11, 12], name: 'walk', loop: true, flip: false }]);\n     * @param {Object} [hitbox]\n     * @param {Object} [hitbox.x]\n     * @param {Object} [hitbox.y]\n     * @param {Object} [hitbox.width]\n     * @param {Object} [hitbox.height]\n     */\n    constructor (x, y, tileWidth, tileHeight, image, animations, hitbox) {\n        super(x, y, tileWidth, tileHeight, hitbox);\n\n        /** @type {Image} */\n        this.image = image;\n        /** @type {Array<Object>} */\n        this.animations = animations;\n\n        this.time = 1;\n        this.stopped = true;\n        this.frame = { x: 0, y: 0 };\n        this.frames = {\n            width: image.width / tileWidth,\n            height: image.height / tileHeight,\n            total: (image.width / tileWidth) * (image.height / tileHeight)\n        };\n\n        this.currentAnimation = 0;\n        this.currentFrame = 0;\n    }\n\n    /**\n     * @private\n     */\n    getNextFrame () {\n        let currentAnimation = this.animations[this.currentAnimation];\n        let currentFrame = currentAnimation.frames[this.currentFrame];\n\n        if (this.frames.width - currentFrame >= 0) {\n            this.frame.x = currentFrame - 1;\n            this.frame.y = 0;\n        } else {\n\n            let delta = currentFrame - this.frames.width;\n            this.frame.y = 1;\n\n            while (delta > this.frames.width) {\n                delta = delta - this.frames.width;\n                this.frame.y++;\n            }\n\n            this.frame.x = delta - 1;\n        }\n\n        this.currentFrame++;\n\n        if (this.currentFrame >= currentAnimation.frames.length) {\n            this.currentFrame = 0;\n\n            if (!currentAnimation.loop) {\n                this.stopped = true;\n            }\n        }\n    }\n\n    /**\n     * @param {number} dt - Delta between two frames\n     */\n    step (dt) {\n        this.time += dt;\n\n        if (this.time >= 0.25 && !this.stopped) {\n            this.getNextFrame();\n            this.time = 0;\n        }\n    }\n\n    /**\n     * Play animation\n     * @param {String} animation\n     */\n    play (animation) {\n        let currentAnimation = this.animations.filter(anim => anim.name === animation);\n\n        if (!!currentAnimation) {\n            let index = this.animations.indexOf(currentAnimation[0]);\n\n            if (this.currentAnimation != index) {\n                this.time = 1;\n                this.currentFrame = 0;\n            }\n\n            this.currentAnimation = index;\n            this.stopped = false;\n        }\n    }\n\n    /**\n     * Stop animation\n     */\n    stop () {\n        this.stopped = true;\n    }\n\n    /**\n     * Reset animation\n     */\n    reset () {\n        this.frame = { x: 0, y: 0 };\n    }\n\n    /**\n     * Render the sprite\n     * @param {RenderingContext} context\n     */\n    render (context = null) {\n        let ctx = context || this.parent.ctx;\n        let currentAnimation = this.animations[this.currentAnimation];\n        ctx.save();\n\n        if (!!currentAnimation && !!currentAnimation.flip) {\n            ctx.translate((this.x * 2) + this.width, 1);\n            ctx.scale(-1, 1);\n        }\n\n        ctx.drawImage(\n            this.image,     // image\n            this.frame.x * this.width,  // pos x\n            this.frame.y * this.height, // pos y\n            this.width,     // frame width\n            this.height,    // frame height\n            this.x,         // destination x\n            this.y,         // destination y\n            this.width,     // destination frame width\n            this.height     // destination frame height\n        );\n        ctx.restore();\n    }\n}\n",
     "static": true,
     "longname": "src/sprite.js",
     "access": null,
@@ -4000,7 +4090,7 @@
     "importStyle": "{Sprite}",
     "description": "The class to use sprite image\nYou can add animations",
     "examples": [
-      "const image = Loader.get('my-sprite'); // see Loader documentation\nconst animation = [{ frames: [9, 10, 11, 12], name: 'walk', loop: true }];\nlet sprite = new Sprite(10, 10, 20, 20, image, animation);\n\nsprite.play('walk');\nsprite.render();"
+      "const image = loader.get('my-sprite'); // see Loader documentation\nconst animation = [{ frames: [9, 10, 11, 12], name: 'walk', loop: true }];\nlet sprite = new Sprite(10, 10, 20, 20, image, animation);\n\nsprite.play('walk');\nsprite.render();"
     ],
     "lineNumber": 14,
     "interface": false,
@@ -4982,7 +5072,7 @@
     "__docId__": 191,
     "kind": "file",
     "name": "src/tileset.js",
-    "content": "import { Model } from './model';\n\n/**\n * The class to use tileset image\n * @example\n * const image = Loader.get('my-tileset'); // see Loader documentation\n * let tileset = new Tileset(0, 0, 32, 32, image);\n *\n * // render the first tile of tileset\n * tileset.render(1);\n */\nexport class Tileset extends Model {\n\n    /**\n     * @param {number} x\n     * @param {number} y\n     * @param {number} tileWidth\n     * @param {number} tileHeight\n     * @param {Image} image\n     */\n    constructor (x, y, tileWidth, tileHeight, image) {\n        super(x, y, tileWidth, tileHeight);\n\n        /** @type {number} */\n        this.tileWidth = tileWidth;\n        /** @type {number} */\n        this.tileHeight = tileHeight;\n        /** @type {Image} */\n        this.image = image;\n        /** @type {number} */\n        this.columns = this.image.width / this.tileWidth;\n        /** @type {number} */\n        this.rows = this.image.height / this.tileHeight;\n        /** @type {number} */\n        this.tiles = this.columns * this.rows;\n    }\n\n    /**\n     * Get tile x,y positions by id (exemple tile number 23)\n     * @private\n     * @param {number} id\n     * @return {Object}\n     * @property {number} x\n     * @property {number} y\n     */\n    getTilePosition (id) {\n        id = id > this.tiles ? this.tiles : id;\n\n        const percent = (id * this.tileWidth) / this.image.width;\n        let x = 0;\n        let y = 0;\n\n        if (Number.isInteger(percent)) {\n            x = this.columns -1;\n            y = percent - 1;\n        } else {\n            const unit = Math.trunc(percent);\n            const decimal = percent - unit;\n            x = (decimal * this.columns) - 1;\n            y = Math.trunc((id * this.tileWidth) / this.image.width);\n        }\n\n        return { x: x < 0 ? this.columns : x, y};\n    }\n\n    /**\n     * Render a tile\n     * @param {number} id\n     * @param {RenderingContext} context\n     */\n    render (id, context = null) {\n        if (id > 0) {\n            let ctx = context || this.parent.ctx;\n            let tile = this.getTilePosition(id);\n\n            ctx.save();\n            ctx.drawImage(\n                this.image,     // image\n                tile.x * this.tileWidth,    // pos x\n                tile.y * this.tileHeight,   // pos y\n                this.tileWidth,     // frame width\n                this.tileHeight,    // frame height\n                this.x,         // destination x\n                this.y,         // destination y\n                this.width,     // destination frame width\n                this.height     // destination frame height\n            );\n            ctx.restore();\n        }\n    }\n}\n",
+    "content": "import { Model } from './model';\n\n/**\n * The class to use tileset image\n * @example\n * const image = loader.get('my-tileset'); // see Loader documentation\n * let tileset = new Tileset(0, 0, 32, 32, image);\n *\n * // render the first tile of tileset\n * tileset.render(1);\n */\nexport class Tileset extends Model {\n\n    /**\n     * @param {number} x\n     * @param {number} y\n     * @param {number} tileWidth\n     * @param {number} tileHeight\n     * @param {Image} image\n     */\n    constructor (x, y, tileWidth, tileHeight, image) {\n        super(x, y, tileWidth, tileHeight);\n\n        /** @type {number} */\n        this.tileWidth = tileWidth;\n        /** @type {number} */\n        this.tileHeight = tileHeight;\n        /** @type {Image} */\n        this.image = image;\n        /** @type {number} */\n        this.columns = this.image.width / this.tileWidth;\n        /** @type {number} */\n        this.rows = this.image.height / this.tileHeight;\n        /** @type {number} */\n        this.tiles = this.columns * this.rows;\n    }\n\n    /**\n     * Get tile x,y positions by id (exemple tile number 23)\n     * @private\n     * @param {number} id\n     * @return {Object}\n     * @property {number} x\n     * @property {number} y\n     */\n    getTilePosition (id) {\n        id = id > this.tiles ? this.tiles : id;\n\n        const percent = (id * this.tileWidth) / this.image.width;\n        let x = 0;\n        let y = 0;\n\n        if (Number.isInteger(percent)) {\n            x = this.columns -1;\n            y = percent - 1;\n        } else {\n            const unit = Math.trunc(percent);\n            const decimal = percent - unit;\n            x = (decimal * this.columns) - 1;\n            y = Math.trunc((id * this.tileWidth) / this.image.width);\n        }\n\n        return { x: x < 0 ? this.columns : x, y};\n    }\n\n    /**\n     * Render a tile\n     * @param {number} id\n     * @param {RenderingContext} context\n     */\n    render (id, context = null) {\n        if (id > 0) {\n            let ctx = context || this.parent.ctx;\n            let tile = this.getTilePosition(id);\n\n            ctx.save();\n            ctx.drawImage(\n                this.image,     // image\n                tile.x * this.tileWidth,    // pos x\n                tile.y * this.tileHeight,   // pos y\n                this.tileWidth,     // frame width\n                this.tileHeight,    // frame height\n                this.x,         // destination x\n                this.y,         // destination y\n                this.width,     // destination frame width\n                this.height     // destination frame height\n            );\n            ctx.restore();\n        }\n    }\n}\n",
     "static": true,
     "longname": "src/tileset.js",
     "access": null,
@@ -5002,7 +5092,7 @@
     "importStyle": "{Tileset}",
     "description": "The class to use tileset image",
     "examples": [
-      "const image = Loader.get('my-tileset'); // see Loader documentation\nlet tileset = new Tileset(0, 0, 32, 32, image);\n\n// render the first tile of tileset\ntileset.render(1);"
+      "const image = loader.get('my-tileset'); // see Loader documentation\nlet tileset = new Tileset(0, 0, 32, 32, image);\n\n// render the first tile of tileset\ntileset.render(1);"
     ],
     "lineNumber": 12,
     "interface": false,

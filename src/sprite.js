@@ -4,7 +4,7 @@ import { Model } from './model';
  * The class to use sprite image
  * You can add animations
  * @example
- * const image = Loader.get('my-sprite'); // see Loader documentation
+ * const image = loader.get('my-sprite'); // see Loader documentation
  * const animation = [{ frames: [9, 10, 11, 12], name: 'walk', loop: true }];
  * let sprite = new Sprite(10, 10, 20, 20, image, animation);
  *

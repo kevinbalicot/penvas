@@ -69,7 +69,7 @@ class Mouse {
     }
 
     /**
-     * Check if mouse click and over object
+     * Check if mouse click and is over object
      * @param {Object} object
      * @param {number} object.x
      * @param {number} object.y
@@ -82,7 +82,7 @@ class Mouse {
     }
 
     /**
-     * Check if mouse click and out of object
+     * Check if mouse click and is out of object
      * @param {Object} object
      * @param {number} object.x
      * @param {number} object.y

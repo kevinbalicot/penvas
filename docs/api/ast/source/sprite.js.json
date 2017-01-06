@@ -116,7 +116,7 @@
         "trailingComments": [
           {
             "type": "CommentBlock",
-            "value": "*\n * The class to use sprite image\n * You can add animations\n * @example\n * const image = Loader.get('my-sprite'); // see Loader documentation\n * const animation = [{ frames: [9, 10, 11, 12], name: 'walk', loop: true }];\n * let sprite = new Sprite(10, 10, 20, 20, image, animation);\n *\n * sprite.play('walk');\n * sprite.render();\n ",
+            "value": "*\n * The class to use sprite image\n * You can add animations\n * @example\n * const image = loader.get('my-sprite'); // see Loader documentation\n * const animation = [{ frames: [9, 10, 11, 12], name: 'walk', loop: true }];\n * let sprite = new Sprite(10, 10, 20, 20, image, animation);\n *\n * sprite.play('walk');\n * sprite.render();\n ",
             "start": 34,
             "end": 369,
             "loc": {
@@ -8704,7 +8704,7 @@
           "leadingComments": [
             {
               "type": "CommentBlock",
-              "value": "*\n * The class to use sprite image\n * You can add animations\n * @example\n * const image = Loader.get('my-sprite'); // see Loader documentation\n * const animation = [{ frames: [9, 10, 11, 12], name: 'walk', loop: true }];\n * let sprite = new Sprite(10, 10, 20, 20, image, animation);\n *\n * sprite.play('walk');\n * sprite.render();\n ",
+              "value": "*\n * The class to use sprite image\n * You can add animations\n * @example\n * const image = loader.get('my-sprite'); // see Loader documentation\n * const animation = [{ frames: [9, 10, 11, 12], name: 'walk', loop: true }];\n * let sprite = new Sprite(10, 10, 20, 20, image, animation);\n *\n * sprite.play('walk');\n * sprite.render();\n ",
               "start": 34,
               "end": 369,
               "loc": {
@@ -8724,7 +8724,7 @@
         "leadingComments": [
           {
             "type": "CommentBlock",
-            "value": "*\n * The class to use sprite image\n * You can add animations\n * @example\n * const image = Loader.get('my-sprite'); // see Loader documentation\n * const animation = [{ frames: [9, 10, 11, 12], name: 'walk', loop: true }];\n * let sprite = new Sprite(10, 10, 20, 20, image, animation);\n *\n * sprite.play('walk');\n * sprite.render();\n ",
+            "value": "*\n * The class to use sprite image\n * You can add animations\n * @example\n * const image = loader.get('my-sprite'); // see Loader documentation\n * const animation = [{ frames: [9, 10, 11, 12], name: 'walk', loop: true }];\n * let sprite = new Sprite(10, 10, 20, 20, image, animation);\n *\n * sprite.play('walk');\n * sprite.render();\n ",
             "start": 34,
             "end": 369,
             "loc": {
@@ -8746,7 +8746,7 @@
   "comments": [
     {
       "type": "CommentBlock",
-      "value": "*\n * The class to use sprite image\n * You can add animations\n * @example\n * const image = Loader.get('my-sprite'); // see Loader documentation\n * const animation = [{ frames: [9, 10, 11, 12], name: 'walk', loop: true }];\n * let sprite = new Sprite(10, 10, 20, 20, image, animation);\n *\n * sprite.play('walk');\n * sprite.render();\n ",
+      "value": "*\n * The class to use sprite image\n * You can add animations\n * @example\n * const image = loader.get('my-sprite'); // see Loader documentation\n * const animation = [{ frames: [9, 10, 11, 12], name: 'walk', loop: true }];\n * let sprite = new Sprite(10, 10, 20, 20, image, animation);\n *\n * sprite.play('walk');\n * sprite.render();\n ",
       "start": 34,
       "end": 369,
       "loc": {
@@ -9235,7 +9235,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n * The class to use sprite image\n * You can add animations\n * @example\n * const image = Loader.get('my-sprite'); // see Loader documentation\n * const animation = [{ frames: [9, 10, 11, 12], name: 'walk', loop: true }];\n * let sprite = new Sprite(10, 10, 20, 20, image, animation);\n *\n * sprite.play('walk');\n * sprite.render();\n ",
+      "value": "*\n * The class to use sprite image\n * You can add animations\n * @example\n * const image = loader.get('my-sprite'); // see Loader documentation\n * const animation = [{ frames: [9, 10, 11, 12], name: 'walk', loop: true }];\n * let sprite = new Sprite(10, 10, 20, 20, image, animation);\n *\n * sprite.play('walk');\n * sprite.render();\n ",
       "start": 34,
       "end": 369,
       "loc": {
