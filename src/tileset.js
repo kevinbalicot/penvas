@@ -27,7 +27,12 @@ export class Tileset extends Model {
         this.tileHeight = tileHeight;
         /** @type {Image} */
         this.image = image;
-        this.tiles = 0;
+        /** @type {number} */
+        this.columns = this.image.width / this.tileWidth;
+        /** @type {number} */
+        this.rows = this.image.height / this.tileHeight;
+        /** @type {number} */
+        this.tiles = this.columns * this.rows;
     }
 
     /**
@@ -39,21 +44,23 @@ export class Tileset extends Model {
      * @property {number} y
      */
     getTilePosition (id) {
-        const columns = this.image.width / this.tileWidth;
-        const rows = this.image.height / this.tileHeight;
-        const tiles = columns * rows;
-        this.tiles = tiles;
-
-        id = id > tiles ? tiles : id;
+        id = id > this.tiles ? this.tiles : id;
 
         const percent = (id * this.tileWidth) / this.image.width;
-        const unit = Math.trunc(percent);
-        const decimal = percent - unit;
+        let x = 0;
+        let y = 0;
 
-        const x = (decimal * columns) - 1;
-        const y = Math.trunc((id * this.tileWidth) / this.image.width);
+        if (Number.isInteger(percent)) {
+            x = this.columns -1;
+            y = percent - 1;
+        } else {
+            const unit = Math.trunc(percent);
+            const decimal = percent - unit;
+            x = (decimal * this.columns) - 1;
+            y = Math.trunc((id * this.tileWidth) / this.image.width);
+        }
 
-        return { x: x < 0 ? columns : x, y};
+        return { x: x < 0 ? this.columns : x, y};
     }
 
     /**
