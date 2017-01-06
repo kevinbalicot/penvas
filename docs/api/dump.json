@@ -3,7 +3,7 @@
     "__docId__": 0,
     "kind": "file",
     "name": "src/application.js",
-    "content": "import { Ticker } from './ticker';\nimport { Model } from './model';\nimport keyboard from './keyboard';\nimport loader from './loader';\n\n/**\n * Create a new application\n * @example\n * let app = new Application({ container: document.getElementById('my-canvas'), width: 500, height: 300 });\n */\nexport class Application {\n\n    /**\n     * @param {Object} [options]\n     * @param {HTMLElement} [options.container] - HTML container (default: body element)\n     * @param {number} [options.width] - canvas width (default: window width)\n     * @param {number} [options.height] - canvas height (default: window height)\n     * @param {hex} [options.background=0xffffff] - canvas background (default: 0xffffff)\n     * @param {function} [options.create] - called to load assets\n     * @param {function} [options.render] - called at every frame\n     * @param {function} [options.ready] - called when application is ready (need to use loader)\n     */\n    constructor (options = {}) {\n\n        /**\n         * Object of options\n         * @type {Object}\n         */\n        this.options = options;\n\n        /**\n         * List of layers\n         * @type {Array<Object>}\n         */\n        this.layers = [];\n\n        /**\n         * Current layer rendered\n         * @type {Object}\n         */\n        this.currentLayer = null;\n\n        /** @type {keyboard} */\n        this.keyboard = keyboard;\n\n        /** @type {loader} */\n        this.loader = loader;\n\n        if (typeof options.container != 'object') {\n            options.container = document.querySelector('body');\n        }\n\n        /**\n         * Canvas width (default window width)\n         * @type {number}\n         */\n        this.width = options.width || window.innerWidth;\n\n        /**\n         * Canvas height (default window height)\n         * @type {number}\n         */\n        this.height = options.height || window.innerHeight;\n\n        /**\n         * Canvas background color\n         * @type {hex}\n         */\n        this.background = options.background || 0xffffff;\n\n        /** @type {HTMLCanvasElement} */\n        this.canvas = document.createElement('canvas');\n        this.canvas.width = this.width;\n        this.canvas.height = this.height;\n        this.canvas.style.backgroundColor = this.background;\n\n        /** @type {CanvasRenderingContext2D} */\n        this.context = this.canvas.getContext('2d');\n        /** @type {CanvasRenderingContext2D} */\n        this.ctx = this.context;\n\n        options.container.appendChild(this.canvas);\n\n        if (!!options.create) {\n            options.create.call(this);\n            this.loader.on('ready', () => this.ready());\n        }\n\n        /** @type {Ticker} */\n        this.ticker = new Ticker();\n\n        this.ticker.on('step', this.step, this);\n        this.ticker.on('render', this.render, this);\n\n        if (this.loader.ready) {\n            this.ticker.start();\n        }\n    }\n\n    /**\n     * Callback called at every frame to calculate models x,y positions\n     * @protected\n     * @param {number} dt - Delta between two frames\n     */\n    step (dt) {\n        try {\n            if (!!this.options.step) {\n                this.options.step.call(this, dt);\n            }\n\n            if (!!this.currentLayer && !!this.currentLayer.step) {\n                this.currentLayer.step.call(this, dt);\n            }\n        } catch(e) {\n            this.handleError(e);\n        }\n    }\n\n    /**\n     * Callback called at every frame to render models\n     * @protected\n     * @param {number} dt - Delta between two frames\n     */\n    render (dt) {\n        try {\n            if (!!this.options.render) {\n                this.options.render.call(this, dt);\n            }\n\n            if (!!this.currentLayer && !!this.currentLayer.render) {\n                this.currentLayer.render.call(this, dt);\n            }\n        } catch(e) {\n            this.handleError(e);\n        }\n    }\n\n    /**\n     * Add layer to application\n     * @param {Object} layer\n     * @param {function} layer.create - called to create models\n     * @param {function} layer.step - called at every frame\n     * @param {function} layer.render - called at every frame\n     * @param {String} name\n     */\n    addLayer (layer, name) {\n        this.layers.push({ layer, name });\n\n        if (this.layers.length === 1) {\n            this.changeLayer(name);\n        }\n\n        layer.create.call(this);\n\n        //maybe it's too hight concept for ligth canvas lib\n        for (let prop in this) {\n            if (this[prop] instanceof Model) {\n                this[prop].parent = this;\n            }\n        }\n    }\n\n    /**\n     * Switch the current layer\n     * @param {String} name\n     */\n    changeLayer (name) {\n        let layer = this.layers.find(layer => layer.name === name);\n\n        if (!!layer) {\n            this.currentLayer = layer.layer;\n        }\n    }\n\n    /**\n     * Reset canvas zone\n     */\n    clearLayer () {\n        this.ctx.save();\n        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);\n        this.ctx.restore();\n    }\n\n    /**\n     * Start timer and called application ready function\n     * @protected\n     */\n    ready () {\n        this.ticker.start();\n\n        if (!!this.options.ready) {\n            this.options.ready.call(this);\n        }\n    }\n\n    /**\n     * Display model's x,y positions information\n     * @private\n     * @param {Model} model\n     */\n    renderDebug (model) {\n        this.ctx.save();\n        this.ctx.font = '12px sans-serif';\n        this.ctx.beginPath();\n        this.ctx.strokeStyle = 'red';\n        this.ctx.rect(model.x, model.y, model.width, model.height);\n        this.ctx.stroke();\n        this.ctx.fillText(`[${Math.round(model.x)}, ${Math.round(model.y)}]`, model.x, model.y - 10);\n        this.ctx.beginPath();\n        this.ctx.strokeStyle = 'blue';\n        this.ctx.rect(model.hitbox.x, model.hitbox.y, model.hitbox.width, model.hitbox.height);\n        this.ctx.stroke();\n        this.ctx.fillText(`[${Math.round(model.hitbox.x)}, ${Math.round(model.hitbox.y)}]`, model.hitbox.x, model.hitbox.y - 10);\n        this.ctx.restore();\n    }\n\n    /**\n     * Add models to debug\n     * @param {Array<Model>|Model} models\n     */\n    debug (models = []) {\n        [].concat(models).forEach(model => {\n            if (model instanceof Model) {\n                this.renderDebug(model);\n            }\n        });\n    }\n\n    /**\n     * @private\n     * @param {Error} err\n     */\n    handleError (err) {\n        this.ticker.stop();\n        console.log(err);\n\n        if (this.debug) {\n            this.ctx.save();\n            this.ctx.font = '12px sans-serif';\n            this.ctx.fillStyle = 'red';\n            this.ctx.fillText(err, 50, 50);\n            this.ctx.restore();\n        }\n    }\n}\n",
+    "content": "import { Ticker } from './ticker';\nimport { Model } from './model';\nimport io from './io';\nimport loader from './loader';\nimport mouse from './mouse';\n\n/**\n * Create a new application\n * @example\n * let app = new Application({ container: document.getElementById('my-canvas'), width: 500, height: 300 });\n */\nexport class Application {\n\n    /**\n     * @param {Object} [options]\n     * @param {HTMLElement} [options.container] - HTML container (default: body element)\n     * @param {number} [options.width] - canvas width (default: window width)\n     * @param {number} [options.height] - canvas height (default: window height)\n     * @param {hex} [options.background=0xffffff] - canvas background (default: 0xffffff)\n     * @param {function} [options.create] - called to load assets\n     * @param {function} [options.render] - called at every frame\n     * @param {function} [options.ready] - called when application is ready (need to use loader)\n     */\n    constructor (options = {}) {\n\n        /**\n         * Object of options\n         * @type {Object}\n         */\n        this.options = options;\n\n        /**\n         * List of layers\n         * @type {Array<Object>}\n         */\n        this.layers = [];\n\n        /**\n         * Current layer rendered\n         * @type {Object}\n         */\n        this.currentLayer = null;\n\n        /** @type {io} */\n        this.io = io;\n\n        /** @type {loader} */\n        this.loader = loader;\n\n        /** @type {mouse} */\n        this.mouse = mouse;\n\n        /**\n         * Canvas width (default window width)\n         * @type {number}\n         */\n        this.width = options.width || window.innerWidth;\n\n        /**\n         * Canvas height (default window height)\n         * @type {number}\n         */\n        this.height = options.height || window.innerHeight;\n\n        /**\n         * Canvas background color\n         * @type {hex}\n         */\n        this.background = options.background || 0xffffff;\n\n        if (typeof options.container != 'object') {\n            options.container = document.querySelector('body');\n        }\n\n        /** @type {HTMLCanvasElement} */\n        this.canvas = document.createElement('canvas');\n        this.canvas.width = this.width;\n        this.canvas.height = this.height;\n        this.canvas.style.backgroundColor = this.background;\n\n        /** @type {CanvasRenderingContext2D} */\n        this.context = this.canvas.getContext('2d');\n        /** @type {CanvasRenderingContext2D} */\n        this.ctx = this.context;\n\n        // Update mouse coordinates\n        this.canvas.addEventListener('mousemove', event => {\n            const rect = this.canvas.getBoundingClientRect();\n            this.mouse.x = event.clientX - rect.left;\n            this.mouse.y = event.clientY - rect.top;\n        });\n\n        options.container.appendChild(this.canvas);\n\n        if (!!options.create) {\n            options.create.call(this);\n            this.loader.on('ready', () => this.ready());\n        }\n\n        /** @type {Ticker} */\n        this.ticker = new Ticker();\n\n        this.ticker.on('step', this.step, this);\n        this.ticker.on('render', this.render, this);\n\n        if (this.loader.ready) {\n            this.ticker.start();\n        }\n    }\n\n    /**\n     * Callback called at every frame to calculate models x,y positions\n     * @protected\n     * @param {number} dt - Delta between two frames\n     */\n    step (dt) {\n        try {\n            if (!!this.options.step) {\n                this.options.step.call(this, dt);\n            }\n\n            if (!!this.currentLayer && !!this.currentLayer.step) {\n                this.currentLayer.step.call(this, dt);\n            }\n        } catch(e) {\n            this.handleError(e);\n        }\n    }\n\n    /**\n     * Callback called at every frame to render models\n     * @protected\n     * @param {number} dt - Delta between two frames\n     */\n    render (dt) {\n        try {\n            if (!!this.options.render) {\n                this.options.render.call(this, dt);\n            }\n\n            if (!!this.currentLayer && !!this.currentLayer.render) {\n                this.currentLayer.render.call(this, dt);\n            }\n        } catch(e) {\n            this.handleError(e);\n        }\n    }\n\n    /**\n     * Add layer to application\n     * @param {Object} layer\n     * @param {function} layer.create - called to create models\n     * @param {function} layer.step - called at every frame\n     * @param {function} layer.render - called at every frame\n     * @param {String} name\n     */\n    addLayer (layer, name) {\n        this.layers.push({ layer, name });\n\n        if (this.layers.length === 1) {\n            this.changeLayer(name);\n        }\n\n        layer.create.call(this);\n\n        //maybe it's too hight concept for ligth canvas lib\n        for (let prop in this) {\n            if (this[prop] instanceof Model) {\n                this[prop].parent = this;\n            }\n        }\n    }\n\n    /**\n     * Switch the current layer\n     * @param {String} name\n     */\n    changeLayer (name) {\n        let layer = this.layers.find(layer => layer.name === name);\n\n        if (!!layer) {\n            this.currentLayer = layer.layer;\n        }\n    }\n\n    /**\n     * Reset canvas zone\n     */\n    clearLayer () {\n        this.ctx.save();\n        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);\n        this.ctx.restore();\n    }\n\n    /**\n     * Start timer and called application ready function\n     * @protected\n     */\n    ready () {\n        this.ticker.start();\n\n        if (!!this.options.ready) {\n            this.options.ready.call(this);\n        }\n    }\n\n    /**\n     * Display model's x,y positions information\n     * @private\n     * @param {Model} model\n     */\n    renderDebug (model) {\n        this.ctx.save();\n        this.ctx.font = '12px sans-serif';\n        this.ctx.beginPath();\n        this.ctx.strokeStyle = 'red';\n        this.ctx.rect(model.x, model.y, model.width, model.height);\n        this.ctx.stroke();\n        this.ctx.fillText(`[${Math.round(model.x)}, ${Math.round(model.y)}]`, model.x, model.y - 10);\n        this.ctx.beginPath();\n        this.ctx.strokeStyle = 'blue';\n        this.ctx.rect(model.hitbox.x, model.hitbox.y, model.hitbox.width, model.hitbox.height);\n        this.ctx.stroke();\n        this.ctx.fillText(`[${Math.round(model.hitbox.x)}, ${Math.round(model.hitbox.y)}]`, model.hitbox.x, model.hitbox.y - 10);\n        this.ctx.restore();\n    }\n\n    /**\n     * Add models to debug\n     * @param {Array<Model>|Model} models\n     */\n    debug (models = []) {\n        [].concat(models).forEach(model => {\n            if (model instanceof Model) {\n                this.renderDebug(model);\n            }\n        });\n    }\n\n    /**\n     * @private\n     * @param {Error} err\n     */\n    handleError (err) {\n        this.ticker.stop();\n        console.log(err);\n\n        if (this.debug) {\n            this.ctx.save();\n            this.ctx.font = '12px sans-serif';\n            this.ctx.fillStyle = 'red';\n            this.ctx.fillText(err, 50, 50);\n            this.ctx.restore();\n        }\n    }\n}\n",
     "static": true,
     "longname": "src/application.js",
     "access": null,
@@ -25,7 +25,7 @@
     "examples": [
       "let app = new Application({ container: document.getElementById('my-canvas'), width: 500, height: 300 });"
     ],
-    "lineNumber": 11,
+    "lineNumber": 12,
     "interface": false
   },
   {
@@ -39,7 +39,7 @@
     "longname": "src/application.js~Application#constructor",
     "access": null,
     "description": "",
-    "lineNumber": 23,
+    "lineNumber": 24,
     "params": [
       {
         "nullable": null,
@@ -134,7 +134,7 @@
     "longname": "src/application.js~Application#options",
     "access": null,
     "description": "Object of options",
-    "lineNumber": 29,
+    "lineNumber": 30,
     "type": {
       "nullable": null,
       "types": [
@@ -153,7 +153,7 @@
     "longname": "src/application.js~Application#layers",
     "access": null,
     "description": "List of layers",
-    "lineNumber": 35,
+    "lineNumber": 36,
     "type": {
       "nullable": null,
       "types": [
@@ -172,7 +172,7 @@
     "longname": "src/application.js~Application#currentLayer",
     "access": null,
     "description": "Current layer rendered",
-    "lineNumber": 41,
+    "lineNumber": 42,
     "type": {
       "nullable": null,
       "types": [
@@ -185,17 +185,17 @@
   {
     "__docId__": 6,
     "kind": "member",
-    "name": "keyboard",
+    "name": "io",
     "memberof": "src/application.js~Application",
     "static": false,
-    "longname": "src/application.js~Application#keyboard",
+    "longname": "src/application.js~Application#io",
     "access": null,
     "description": null,
-    "lineNumber": 44,
+    "lineNumber": 45,
     "type": {
       "nullable": null,
       "types": [
-        "keyboard"
+        "io"
       ],
       "spread": false,
       "description": null
@@ -210,7 +210,7 @@
     "longname": "src/application.js~Application#loader",
     "access": null,
     "description": null,
-    "lineNumber": 47,
+    "lineNumber": 48,
     "type": {
       "nullable": null,
       "types": [
@@ -222,6 +222,25 @@
   },
   {
     "__docId__": 8,
+    "kind": "member",
+    "name": "mouse",
+    "memberof": "src/application.js~Application",
+    "static": false,
+    "longname": "src/application.js~Application#mouse",
+    "access": null,
+    "description": null,
+    "lineNumber": 51,
+    "type": {
+      "nullable": null,
+      "types": [
+        "mouse"
+      ],
+      "spread": false,
+      "description": null
+    }
+  },
+  {
+    "__docId__": 9,
     "kind": "member",
     "name": "width",
     "memberof": "src/application.js~Application",
@@ -240,7 +259,7 @@
     }
   },
   {
-    "__docId__": 9,
+    "__docId__": 10,
     "kind": "member",
     "name": "height",
     "memberof": "src/application.js~Application",
@@ -259,7 +278,7 @@
     }
   },
   {
-    "__docId__": 10,
+    "__docId__": 11,
     "kind": "member",
     "name": "background",
     "memberof": "src/application.js~Application",
@@ -278,7 +297,7 @@
     }
   },
   {
-    "__docId__": 11,
+    "__docId__": 12,
     "kind": "member",
     "name": "canvas",
     "memberof": "src/application.js~Application",
@@ -286,7 +305,7 @@
     "longname": "src/application.js~Application#canvas",
     "access": null,
     "description": null,
-    "lineNumber": 72,
+    "lineNumber": 76,
     "type": {
       "nullable": null,
       "types": [
@@ -297,7 +316,7 @@
     }
   },
   {
-    "__docId__": 12,
+    "__docId__": 13,
     "kind": "member",
     "name": "context",
     "memberof": "src/application.js~Application",
@@ -305,26 +324,7 @@
     "longname": "src/application.js~Application#context",
     "access": null,
     "description": null,
-    "lineNumber": 78,
-    "type": {
-      "nullable": null,
-      "types": [
-        "CanvasRenderingContext2D"
-      ],
-      "spread": false,
-      "description": null
-    }
-  },
-  {
-    "__docId__": 13,
-    "kind": "member",
-    "name": "ctx",
-    "memberof": "src/application.js~Application",
-    "static": false,
-    "longname": "src/application.js~Application#ctx",
-    "access": null,
-    "description": null,
-    "lineNumber": 80,
+    "lineNumber": 82,
     "type": {
       "nullable": null,
       "types": [
@@ -337,13 +337,32 @@
   {
     "__docId__": 14,
     "kind": "member",
+    "name": "ctx",
+    "memberof": "src/application.js~Application",
+    "static": false,
+    "longname": "src/application.js~Application#ctx",
+    "access": null,
+    "description": null,
+    "lineNumber": 84,
+    "type": {
+      "nullable": null,
+      "types": [
+        "CanvasRenderingContext2D"
+      ],
+      "spread": false,
+      "description": null
+    }
+  },
+  {
+    "__docId__": 15,
+    "kind": "member",
     "name": "ticker",
     "memberof": "src/application.js~Application",
     "static": false,
     "longname": "src/application.js~Application#ticker",
     "access": null,
     "description": null,
-    "lineNumber": 90,
+    "lineNumber": 101,
     "type": {
       "nullable": null,
       "types": [
@@ -354,7 +373,7 @@
     }
   },
   {
-    "__docId__": 15,
+    "__docId__": 16,
     "kind": "method",
     "name": "step",
     "memberof": "src/application.js~Application",
@@ -364,32 +383,7 @@
     "longname": "src/application.js~Application#step",
     "access": "protected",
     "description": "Callback called at every frame to calculate models x,y positions",
-    "lineNumber": 105,
-    "params": [
-      {
-        "nullable": null,
-        "types": [
-          "number"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "dt",
-        "description": "Delta between two frames"
-      }
-    ]
-  },
-  {
-    "__docId__": 16,
-    "kind": "method",
-    "name": "render",
-    "memberof": "src/application.js~Application",
-    "generator": false,
-    "async": false,
-    "static": false,
-    "longname": "src/application.js~Application#render",
-    "access": "protected",
-    "description": "Callback called at every frame to render models",
-    "lineNumber": 124,
+    "lineNumber": 116,
     "params": [
       {
         "nullable": null,
@@ -406,6 +400,31 @@
   {
     "__docId__": 17,
     "kind": "method",
+    "name": "render",
+    "memberof": "src/application.js~Application",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/application.js~Application#render",
+    "access": "protected",
+    "description": "Callback called at every frame to render models",
+    "lineNumber": 135,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "dt",
+        "description": "Delta between two frames"
+      }
+    ]
+  },
+  {
+    "__docId__": 18,
+    "kind": "method",
     "name": "addLayer",
     "memberof": "src/application.js~Application",
     "generator": false,
@@ -414,7 +433,7 @@
     "longname": "src/application.js~Application#addLayer",
     "access": null,
     "description": "Add layer to application",
-    "lineNumber": 146,
+    "lineNumber": 157,
     "params": [
       {
         "nullable": null,
@@ -469,7 +488,7 @@
     ]
   },
   {
-    "__docId__": 18,
+    "__docId__": 19,
     "kind": "method",
     "name": "changeLayer",
     "memberof": "src/application.js~Application",
@@ -479,7 +498,7 @@
     "longname": "src/application.js~Application#changeLayer",
     "access": null,
     "description": "Switch the current layer",
-    "lineNumber": 167,
+    "lineNumber": 178,
     "params": [
       {
         "nullable": null,
@@ -494,7 +513,7 @@
     ]
   },
   {
-    "__docId__": 19,
+    "__docId__": 20,
     "kind": "member",
     "name": "currentLayer",
     "memberof": "src/application.js~Application",
@@ -502,7 +521,7 @@
     "longname": "src/application.js~Application#currentLayer",
     "access": null,
     "description": null,
-    "lineNumber": 171,
+    "lineNumber": 182,
     "undocument": true,
     "unknown": [
       {
@@ -517,7 +536,7 @@
     }
   },
   {
-    "__docId__": 20,
+    "__docId__": 21,
     "kind": "method",
     "name": "clearLayer",
     "memberof": "src/application.js~Application",
@@ -527,11 +546,11 @@
     "longname": "src/application.js~Application#clearLayer",
     "access": null,
     "description": "Reset canvas zone",
-    "lineNumber": 178,
+    "lineNumber": 189,
     "params": []
   },
   {
-    "__docId__": 21,
+    "__docId__": 22,
     "kind": "method",
     "name": "ready",
     "memberof": "src/application.js~Application",
@@ -541,11 +560,11 @@
     "longname": "src/application.js~Application#ready",
     "access": "protected",
     "description": "Start timer and called application ready function",
-    "lineNumber": 188,
+    "lineNumber": 199,
     "params": []
   },
   {
-    "__docId__": 22,
+    "__docId__": 23,
     "kind": "method",
     "name": "renderDebug",
     "memberof": "src/application.js~Application",
@@ -555,7 +574,7 @@
     "longname": "src/application.js~Application#renderDebug",
     "access": "private",
     "description": "Display model's x,y positions information",
-    "lineNumber": 201,
+    "lineNumber": 212,
     "params": [
       {
         "nullable": null,
@@ -570,7 +589,7 @@
     ]
   },
   {
-    "__docId__": 23,
+    "__docId__": 24,
     "kind": "method",
     "name": "debug",
     "memberof": "src/application.js~Application",
@@ -580,7 +599,7 @@
     "longname": "src/application.js~Application#debug",
     "access": null,
     "description": "Add models to debug",
-    "lineNumber": 221,
+    "lineNumber": 232,
     "params": [
       {
         "nullable": null,
@@ -596,7 +615,7 @@
     ]
   },
   {
-    "__docId__": 24,
+    "__docId__": 25,
     "kind": "method",
     "name": "handleError",
     "memberof": "src/application.js~Application",
@@ -606,7 +625,7 @@
     "longname": "src/application.js~Application#handleError",
     "access": "private",
     "description": "",
-    "lineNumber": 233,
+    "lineNumber": 244,
     "params": [
       {
         "nullable": null,
@@ -621,7 +640,7 @@
     ]
   },
   {
-    "__docId__": 25,
+    "__docId__": 26,
     "kind": "file",
     "name": "src/container.js",
     "content": "/**\n * Create a new container with a canvas element\n * @example\n * let container = new Container({ width: 200, height: 200, background: 0xeee })\n */\nexport class Container {\n\n    /**\n     * Create a new canvas\n     * @param {Object} [options]\n     * @param {number} [options.x=0]\n     * @param {number} [options.y=0]\n     * @param {number} [options.width] - default window width\n     * @param {number} [options.height] - default window height\n     * @param {hex} [options.background=0xffffff]\n     */\n    constructor (options = {}) {\n        /** @type {number} */\n        this.x = options.x || 0;\n        /** @type {number} */\n        this.y = options.y || 0;\n        /** @type {number} */\n        this.width = options.width || window.innerWidth;\n        /** @type {number} */\n        this.height = options.height || window.innerHeight;\n        /** @type {hex} */\n        this.background = options.background || 0xffffff;\n\n        /** @type {HTMLCanvasElement} */\n        this.canvas = document.createElement('canvas');\n        this.canvas.width = this.width;\n        this.canvas.height = this.height;\n        this.canvas.style.backgroundColor = this.background;\n\n        /** @type {CanvasRenderingContext2D} */\n        this.context = this.canvas.getContext('2d');\n        /** @type {CanvasRenderingContext2D} */\n        this.ctx = this.context;\n    }\n\n    /**\n     * Render this canvas into another canvas\n     * @param {RenderingContext} ctx - Another canvas\n     * @param {number} x\n     * @param {number} y\n     */\n    render (ctx, x = 0, y = 0) {\n        ctx.save();\n        ctx.drawImage(this.canvas, x, y);\n        ctx.restore();\n    }\n}\n",
@@ -632,7 +651,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 26,
+    "__docId__": 27,
     "kind": "class",
     "name": "Container",
     "memberof": "src/container.js",
@@ -650,7 +669,7 @@
     "interface": false
   },
   {
-    "__docId__": 27,
+    "__docId__": 28,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/container.js~Container",
@@ -731,7 +750,7 @@
     ]
   },
   {
-    "__docId__": 28,
+    "__docId__": 29,
     "kind": "member",
     "name": "x",
     "memberof": "src/container.js~Container",
@@ -750,7 +769,7 @@
     }
   },
   {
-    "__docId__": 29,
+    "__docId__": 30,
     "kind": "member",
     "name": "y",
     "memberof": "src/container.js~Container",
@@ -769,7 +788,7 @@
     }
   },
   {
-    "__docId__": 30,
+    "__docId__": 31,
     "kind": "member",
     "name": "width",
     "memberof": "src/container.js~Container",
@@ -788,7 +807,7 @@
     }
   },
   {
-    "__docId__": 31,
+    "__docId__": 32,
     "kind": "member",
     "name": "height",
     "memberof": "src/container.js~Container",
@@ -807,7 +826,7 @@
     }
   },
   {
-    "__docId__": 32,
+    "__docId__": 33,
     "kind": "member",
     "name": "background",
     "memberof": "src/container.js~Container",
@@ -826,7 +845,7 @@
     }
   },
   {
-    "__docId__": 33,
+    "__docId__": 34,
     "kind": "member",
     "name": "canvas",
     "memberof": "src/container.js~Container",
@@ -845,7 +864,7 @@
     }
   },
   {
-    "__docId__": 34,
+    "__docId__": 35,
     "kind": "member",
     "name": "context",
     "memberof": "src/container.js~Container",
@@ -864,7 +883,7 @@
     }
   },
   {
-    "__docId__": 35,
+    "__docId__": 36,
     "kind": "member",
     "name": "ctx",
     "memberof": "src/container.js~Container",
@@ -883,7 +902,7 @@
     }
   },
   {
-    "__docId__": 36,
+    "__docId__": 37,
     "kind": "method",
     "name": "render",
     "memberof": "src/container.js~Container",
@@ -928,7 +947,7 @@
     ]
   },
   {
-    "__docId__": 37,
+    "__docId__": 38,
     "kind": "file",
     "name": "src/event-emitter.js",
     "content": "/**\n * Use to emit events\n * @example\n * class MyClass extends EventEmitter {\n *     doSomething() {\n *        this.dispatch('my-event', { message: 'event' });\n *     }\n * }\n */\nexport class EventEmitter {\n\n    constructor () {\n        /**\n         * List of registers\n         * @protected\n         * @type {Array}\n         */\n        this.registered = [];\n    }\n\n    /**\n     * Listen event\n     * @param {String} event\n     * @param {function} callback\n     * @param {mixed} context\n     */\n    on (event, callback, context) {\n        this.registered.push({ event, callback, context });\n    }\n\n    /**\n     * Dispatch event\n     * @param {String} event\n     * @param {mixed} args\n     */\n    dispatch (event, args) {\n        this.registered.forEach(register => {\n            if (register.event === event) {\n                register.callback.call(register.context || this, args);\n            }\n        });\n    }\n}\n",
@@ -939,7 +958,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 38,
+    "__docId__": 39,
     "kind": "class",
     "name": "EventEmitter",
     "memberof": "src/event-emitter.js",
@@ -957,7 +976,7 @@
     "interface": false
   },
   {
-    "__docId__": 39,
+    "__docId__": 40,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/event-emitter.js~EventEmitter",
@@ -978,7 +997,7 @@
     "params": []
   },
   {
-    "__docId__": 40,
+    "__docId__": 41,
     "kind": "member",
     "name": "registered",
     "memberof": "src/event-emitter.js~EventEmitter",
@@ -997,7 +1016,7 @@
     }
   },
   {
-    "__docId__": 41,
+    "__docId__": 42,
     "kind": "method",
     "name": "on",
     "memberof": "src/event-emitter.js~EventEmitter",
@@ -1042,7 +1061,7 @@
     ]
   },
   {
-    "__docId__": 42,
+    "__docId__": 43,
     "kind": "method",
     "name": "dispatch",
     "memberof": "src/event-emitter.js~EventEmitter",
@@ -1077,7 +1096,7 @@
     ]
   },
   {
-    "__docId__": 43,
+    "__docId__": 44,
     "kind": "file",
     "name": "src/helper/collision-checker.js",
     "content": "/**\n * @ignore\n */\nexport class CollisionChecker {\n\n    constructor () {\n        this.pair = [];\n    }\n\n    add (model, platforms, event) {\n\n        if (!Array.isArray(platforms)) {\n            platforms = [platforms];\n        }\n\n        this.pair.push({ model, platforms, event });\n    }\n\n    check (td) {\n        let model, platform;\n        this.pair.forEach(pair => {\n            model = Object.create(pair.model);\n            model.step(td);\n            platform = model.hasCollisions(pair.platforms);\n\n            if (!!platform) {\n                pair.event(pair.model, platform);\n            }\n        });\n    }\n\n    clear () {\n        this.pair = [];\n    }\n}\n",
@@ -1088,7 +1107,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 44,
+    "__docId__": 45,
     "kind": "class",
     "name": "CollisionChecker",
     "memberof": "src/helper/collision-checker.js",
@@ -1104,7 +1123,7 @@
     "interface": false
   },
   {
-    "__docId__": 45,
+    "__docId__": 46,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/helper/collision-checker.js~CollisionChecker",
@@ -1125,7 +1144,7 @@
     "params": []
   },
   {
-    "__docId__": 46,
+    "__docId__": 47,
     "kind": "member",
     "name": "pair",
     "memberof": "src/helper/collision-checker.js~CollisionChecker",
@@ -1148,7 +1167,7 @@
     }
   },
   {
-    "__docId__": 47,
+    "__docId__": 48,
     "kind": "method",
     "name": "add",
     "memberof": "src/helper/collision-checker.js~CollisionChecker",
@@ -1188,7 +1207,7 @@
     ]
   },
   {
-    "__docId__": 48,
+    "__docId__": 49,
     "kind": "method",
     "name": "check",
     "memberof": "src/helper/collision-checker.js~CollisionChecker",
@@ -1216,7 +1235,7 @@
     ]
   },
   {
-    "__docId__": 49,
+    "__docId__": 50,
     "kind": "method",
     "name": "clear",
     "memberof": "src/helper/collision-checker.js~CollisionChecker",
@@ -1237,7 +1256,7 @@
     "params": []
   },
   {
-    "__docId__": 50,
+    "__docId__": 51,
     "kind": "member",
     "name": "pair",
     "memberof": "src/helper/collision-checker.js~CollisionChecker",
@@ -1260,7 +1279,7 @@
     }
   },
   {
-    "__docId__": 51,
+    "__docId__": 52,
     "kind": "file",
     "name": "src/helper/renderer.js",
     "content": "/**\n * @ignore\n */\nexport class Renderer {\n\n    constructor (ctx) {\n        this.models = [];\n        this.ctx = ctx;\n    }\n\n    add (models, order = 0) {\n\n        if (!Array.isArray(models)) {\n            models = [models];\n        }\n\n        models.forEach(model => {\n            this.models.push({ model, order });\n        });\n    }\n\n    sort () {\n        return this.models.sort((a, b) => {\n            if (a.order < b.order) {\n                return -1;\n            } else if (a.order > b.order) {\n                return 1;\n            }\n\n            return 0;\n        });\n    }\n\n    render () {\n        this.sort();\n        this.models.forEach(el => {\n            if (!!el.model.render) {\n                el.model.render(this.ctx);\n            }\n        });\n    }\n}\n",
@@ -1271,7 +1290,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 52,
+    "__docId__": 53,
     "kind": "class",
     "name": "Renderer",
     "memberof": "src/helper/renderer.js",
@@ -1287,7 +1306,7 @@
     "interface": false
   },
   {
-    "__docId__": 53,
+    "__docId__": 54,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/helper/renderer.js~Renderer",
@@ -1315,7 +1334,7 @@
     ]
   },
   {
-    "__docId__": 54,
+    "__docId__": 55,
     "kind": "member",
     "name": "models",
     "memberof": "src/helper/renderer.js~Renderer",
@@ -1338,7 +1357,7 @@
     }
   },
   {
-    "__docId__": 55,
+    "__docId__": 56,
     "kind": "member",
     "name": "ctx",
     "memberof": "src/helper/renderer.js~Renderer",
@@ -1361,7 +1380,7 @@
     }
   },
   {
-    "__docId__": 56,
+    "__docId__": 57,
     "kind": "method",
     "name": "add",
     "memberof": "src/helper/renderer.js~Renderer",
@@ -1398,7 +1417,7 @@
     ]
   },
   {
-    "__docId__": 57,
+    "__docId__": 58,
     "kind": "method",
     "name": "sort",
     "memberof": "src/helper/renderer.js~Renderer",
@@ -1424,7 +1443,7 @@
     }
   },
   {
-    "__docId__": 58,
+    "__docId__": 59,
     "kind": "method",
     "name": "render",
     "memberof": "src/helper/renderer.js~Renderer",
@@ -1445,10 +1464,10 @@
     "params": []
   },
   {
-    "__docId__": 59,
+    "__docId__": 60,
     "kind": "file",
     "name": "src/index.js",
-    "content": "import { Application } from  './application';\nimport { Container } from  './container';\nimport { EventEmitter } from  './event-emitter';\nimport { Model } from  './model';\nimport { Sprite } from  './sprite';\nimport { Ticker } from  './ticker';\nimport { Tileset } from  './tileset';\n\nimport Keyboard from  './keyboard';\nimport Loader from './loader';\n\nwindow.Application = Application;\nwindow.Container = Container;\nwindow.EventEmitter = EventEmitter;\nwindow.Model = Model;\nwindow.Sprite = Sprite;\nwindow.Ticker = Ticker;\nwindow.Tileset = Tileset;\nwindow.Keyboard = Keyboard;\nwindow.Loader = Loader;\n",
+    "content": "import { Application } from  './application';\nimport { Container } from  './container';\nimport { EventEmitter } from  './event-emitter';\nimport { Model } from  './model';\nimport { Sprite } from  './sprite';\nimport { Ticker } from  './ticker';\nimport { Tileset } from  './tileset';\n\nimport io from  './io';\nimport loader from './loader';\nimport mouse from './mouse';\n\nwindow.Application = Application;\nwindow.Container = Container;\nwindow.EventEmitter = EventEmitter;\nwindow.Model = Model;\nwindow.Sprite = Sprite;\nwindow.Ticker = Ticker;\nwindow.Tileset = Tileset;\n\nwindow.io = io;\nwindow.loader = loader;\nwindow.mouse = mouse;\n",
     "static": true,
     "longname": "src/index.js",
     "access": null,
@@ -1456,26 +1475,26 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 60,
+    "__docId__": 61,
     "kind": "file",
-    "name": "src/keyboard.js",
-    "content": "/** @type {Object} */\nexport const KEYS = {\n    SPACE: 32,\n    LEFT: 37,\n    UP: 38,\n    RIGHT: 39,\n    DOWN: 40\n}\n\n/** @type {Object} */\nexport const CLICK = {\n    LEFT: 'left_click',\n    RIGHT: 'right_click',\n    MIDDLE: 'middle_click'\n}\n\n/** @type {Array<number>} */\nexport const keyboard = [];\n\ndocument.addEventListener('keydown', (e) => {\n    keyboard[e.keyCode] = true;\n});\n\ndocument.addEventListener('keyup', (e) => {\n    keyboard[e.keyCode] = false;\n});\n\ndocument.addEventListener('mousedown', () => {\n    keyboard[CLICK.LEFT] = true;\n});\n\ndocument.addEventListener('mouseup', () => {\n    keyboard[CLICK.LEFT] = false;\n});\n\nexport default keyboard;\n",
+    "name": "src/io.js",
+    "content": "/** @type {Object} */\nexport const KEYS = {\n    SPACE: 32,\n    LEFT: 37,\n    UP: 38,\n    RIGHT: 39,\n    DOWN: 40\n}\n\n/** @type {Object} */\nexport const MOUSE = {\n    LEFT_CLICK: 'left_click',\n    RIGHT_CLICK: 'right_click',\n    MIDDLE_CLICK: 'middle_click'\n}\n\n/** @type {Array<number>} */\nexport const io = [];\n\ndocument.addEventListener('keydown', (e) => {\n    io[e.keyCode] = true;\n});\n\ndocument.addEventListener('keyup', (e) => {\n    io[e.keyCode] = false;\n});\n\ndocument.addEventListener('mousedown', () => {\n    io[MOUSE.LEFT_CLICK] = true;\n});\n\ndocument.addEventListener('mouseup', () => {\n    io[MOUSE.LEFT_CLICK] = false;\n});\n\nexport default io;\n",
     "static": true,
-    "longname": "src/keyboard.js",
+    "longname": "src/io.js",
     "access": null,
     "description": null,
     "lineNumber": 1
   },
   {
-    "__docId__": 61,
+    "__docId__": 62,
     "kind": "variable",
     "name": "KEYS",
-    "memberof": "src/keyboard.js",
+    "memberof": "src/io.js",
     "static": true,
-    "longname": "src/keyboard.js~KEYS",
+    "longname": "src/io.js~KEYS",
     "access": null,
     "export": true,
-    "importPath": "penvas/src/keyboard.js",
+    "importPath": "penvas/src/io.js",
     "importStyle": "{KEYS}",
     "description": null,
     "lineNumber": 2,
@@ -1489,16 +1508,16 @@
     }
   },
   {
-    "__docId__": 62,
+    "__docId__": 63,
     "kind": "variable",
-    "name": "CLICK",
-    "memberof": "src/keyboard.js",
+    "name": "MOUSE",
+    "memberof": "src/io.js",
     "static": true,
-    "longname": "src/keyboard.js~CLICK",
+    "longname": "src/io.js~MOUSE",
     "access": null,
     "export": true,
-    "importPath": "penvas/src/keyboard.js",
-    "importStyle": "{CLICK}",
+    "importPath": "penvas/src/io.js",
+    "importStyle": "{MOUSE}",
     "description": null,
     "lineNumber": 11,
     "type": {
@@ -1511,16 +1530,16 @@
     }
   },
   {
-    "__docId__": 63,
+    "__docId__": 64,
     "kind": "variable",
-    "name": "keyboard",
-    "memberof": "src/keyboard.js",
+    "name": "io",
+    "memberof": "src/io.js",
     "static": true,
-    "longname": "src/keyboard.js~keyboard",
+    "longname": "src/io.js~io",
     "access": null,
     "export": true,
-    "importPath": "penvas/src/keyboard.js",
-    "importStyle": "{keyboard}",
+    "importPath": "penvas/src/io.js",
+    "importStyle": "{io}",
     "description": null,
     "lineNumber": 18,
     "type": {
@@ -1533,7 +1552,7 @@
     }
   },
   {
-    "__docId__": 64,
+    "__docId__": 65,
     "kind": "file",
     "name": "src/loader.js",
     "content": "import { EventEmitter } from './event-emitter';\n\n/**\n * Service to load asset\n * @example\n * let layer = {\n *     create: function() {\n *         Loader.add('img/my-image.png', 'player-image');\n *         Loader.add('config/my-config.json', 'player-config', 'json');\n *     },\n *     render: function() {\n *          const image = Loader.get('player-image');\n *          const config = Loader.get('player-config');\n *          this.ctx.drawImage(image, config.x, config.y);\n *     }\n * }\n */\nexport class Loader extends EventEmitter {\n\n    constructor () {\n        super();\n\n        this.count = 0;\n        this.queue = 0;\n        this.progress = 0;\n        this.ready = true;\n        this.collection = [];\n    }\n\n    /**\n     * Add asset to load\n     * @param {String} src\n     * @param {String} id\n     * @param {String} type - (image or json)\n     */\n    add (src, id, type = 'image') {\n        this.count++;\n        this.queue++;\n        this.ready = false;\n\n        switch (type) {\n            case 'image':\n                this.loadImage(src, id);\n                break;\n            case 'json':\n                this.loadJson(src, id);\n                break\n        }\n    }\n\n    /**\n     * Add asset into the collection and dispatch event\n     * @param {mixed} el\n     * @param {String} id\n     * @emits {load} emit when asset is loaded\n     * @emits {ready} emit when all assets are loaded\n     */\n    load (el, id) {\n        this.queue--;\n        this.progress = 1 - this.queue / this.count;\n\n        this.collection.push({ id: id, item: el });\n        this.dispatch('load', this.progress);\n\n        if (this.queue == 0) {\n            this.count = 0;\n            this.progress = 0;\n            this.ready = true;\n            this.dispatch('ready');\n        }\n    }\n\n    /**\n     * Load image\n     * @private\n     * @param {String} src\n     * @param {String} id\n     */\n    loadImage (src, id) {\n        let img = new Image();\n        img.src = src;\n        img.onload = () => this.load(img, id);\n    }\n\n    /**\n     * Load json file\n     * @private\n     * @param {String} src\n     * @param {String} id\n     */\n    loadJson (src, id) {\n        var request = new XMLHttpRequest();\n\n        request.open(\"GET\", src, true);\n        request.onload = e => {\n            let data = JSON.parse(e.target.response);\n            this.load(data, id);\n        }\n\n        request.send();\n    }\n\n    /**\n     * Get asset by id\n     * @param {String} id\n     * @return {mixed}\n     */\n    get (id) {\n        let items = this.collection.filter(el => el.id === id);\n\n        if (items.length == 0) {\n            return null;\n        }\n\n        return items.length > 1 ? items.map(el => el.item) : items[0].item;\n    }\n}\n\nexport const loader = new Loader();\nexport default loader;\n",
@@ -1544,7 +1563,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 65,
+    "__docId__": 66,
     "kind": "class",
     "name": "Loader",
     "memberof": "src/loader.js",
@@ -1565,7 +1584,7 @@
     ]
   },
   {
-    "__docId__": 66,
+    "__docId__": 67,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/loader.js~Loader",
@@ -1586,7 +1605,7 @@
     "params": []
   },
   {
-    "__docId__": 67,
+    "__docId__": 68,
     "kind": "member",
     "name": "count",
     "memberof": "src/loader.js~Loader",
@@ -1609,7 +1628,7 @@
     }
   },
   {
-    "__docId__": 68,
+    "__docId__": 69,
     "kind": "member",
     "name": "queue",
     "memberof": "src/loader.js~Loader",
@@ -1632,7 +1651,7 @@
     }
   },
   {
-    "__docId__": 69,
+    "__docId__": 70,
     "kind": "member",
     "name": "progress",
     "memberof": "src/loader.js~Loader",
@@ -1655,7 +1674,7 @@
     }
   },
   {
-    "__docId__": 70,
+    "__docId__": 71,
     "kind": "member",
     "name": "ready",
     "memberof": "src/loader.js~Loader",
@@ -1678,7 +1697,7 @@
     }
   },
   {
-    "__docId__": 71,
+    "__docId__": 72,
     "kind": "member",
     "name": "collection",
     "memberof": "src/loader.js~Loader",
@@ -1701,7 +1720,7 @@
     }
   },
   {
-    "__docId__": 72,
+    "__docId__": 73,
     "kind": "method",
     "name": "add",
     "memberof": "src/loader.js~Loader",
@@ -1746,7 +1765,7 @@
     ]
   },
   {
-    "__docId__": 73,
+    "__docId__": 74,
     "kind": "member",
     "name": "ready",
     "memberof": "src/loader.js~Loader",
@@ -1769,7 +1788,7 @@
     }
   },
   {
-    "__docId__": 74,
+    "__docId__": 75,
     "kind": "method",
     "name": "load",
     "memberof": "src/loader.js~Loader",
@@ -1818,7 +1837,7 @@
     ]
   },
   {
-    "__docId__": 75,
+    "__docId__": 76,
     "kind": "member",
     "name": "progress",
     "memberof": "src/loader.js~Loader",
@@ -1841,7 +1860,7 @@
     }
   },
   {
-    "__docId__": 76,
+    "__docId__": 77,
     "kind": "member",
     "name": "count",
     "memberof": "src/loader.js~Loader",
@@ -1864,7 +1883,7 @@
     }
   },
   {
-    "__docId__": 77,
+    "__docId__": 78,
     "kind": "member",
     "name": "progress",
     "memberof": "src/loader.js~Loader",
@@ -1887,7 +1906,7 @@
     }
   },
   {
-    "__docId__": 78,
+    "__docId__": 79,
     "kind": "member",
     "name": "ready",
     "memberof": "src/loader.js~Loader",
@@ -1910,7 +1929,7 @@
     }
   },
   {
-    "__docId__": 79,
+    "__docId__": 80,
     "kind": "method",
     "name": "loadImage",
     "memberof": "src/loader.js~Loader",
@@ -1945,7 +1964,7 @@
     ]
   },
   {
-    "__docId__": 80,
+    "__docId__": 81,
     "kind": "method",
     "name": "loadJson",
     "memberof": "src/loader.js~Loader",
@@ -1980,7 +1999,7 @@
     ]
   },
   {
-    "__docId__": 81,
+    "__docId__": 82,
     "kind": "method",
     "name": "get",
     "memberof": "src/loader.js~Loader",
@@ -2013,7 +2032,7 @@
     }
   },
   {
-    "__docId__": 82,
+    "__docId__": 83,
     "kind": "variable",
     "name": "loader",
     "memberof": "src/loader.js",
@@ -2039,7 +2058,7 @@
     }
   },
   {
-    "__docId__": 83,
+    "__docId__": 84,
     "kind": "file",
     "name": "src/model.js",
     "content": "/**\n * Base class for every model entity\n * @example\n * let model = new Model(10, 10, 100, 200);\n */\nexport class Model {\n\n    /**\n     * @param {number} x\n     * @param {number} y\n     * @param {number} width\n     * @param {number} height\n     * @param {Object} [hitbox]\n     * @param {Object} [hitbox.x]\n     * @param {Object} [hitbox.y]\n     * @param {Object} [hitbox.width]\n     * @param {Object} [hitbox.height]\n     */\n    constructor (x, y, width, height, hitbox = {}) {\n        /** @type {Number} */\n        this.x = x;\n        /** @type {Number} */\n        this.y = y;\n        /** @type {Number} */\n        this.width = width;\n        /** @type {Number} */\n        this.height = height;\n\n        this.hitbox = hitbox;\n        this.collision = false;\n        this.parent = {};\n    }\n\n    /**\n     * @return {Object}\n     * @property {number} x\n     * @property {number} y\n     * @property {number} width\n     * @property {number} height\n     */\n    get hitbox () {\n        return {\n            x: this.x + this._hitbox.x,\n            y: this.y + this._hitbox.y,\n            width: this._hitbox.width,\n            height: this._hitbox.height\n        }\n    }\n\n    /**\n     * @param {Object} [hitbox]\n     * @param {Object} [hitbox.x]\n     * @param {Object} [hitbox.y]\n     * @param {Object} [hitbox.width]\n     * @param {Object} [hitbox.height]\n     */\n    set hitbox (hitbox) {\n        this._hitbox = {\n            x: hitbox.x || 0,\n            y: hitbox.y || 0,\n            width: hitbox.width || this.width,\n            height: hitbox.height || this.height\n        }\n    }\n\n    /**\n     * Check if there are any collisions with models\n     * @param {Array<Model>|Models} models\n     */\n    hasCollisions (models) {\n\n        if (!Array.isArray(models)) {\n            models = [models];\n        }\n\n        let model;\n        for (let i = 0; i < models.length; i++) {\n            model = models[i];\n\n            if (this.hitbox.x < model.hitbox.x + model.hitbox.width &&\n                this.hitbox.x + model.hitbox.width > model.hitbox.x &&\n                this.hitbox.y < model.hitbox.y + model.hitbox.height &&\n                this.hitbox.height + this.hitbox.y > model.hitbox.y\n            ) {\n                return model;\n            }\n        }\n\n        return false;\n    }\n}\n",
@@ -2050,7 +2069,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 84,
+    "__docId__": 85,
     "kind": "class",
     "name": "Model",
     "memberof": "src/model.js",
@@ -2068,7 +2087,7 @@
     "interface": false
   },
   {
-    "__docId__": 85,
+    "__docId__": 86,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/model.js~Model",
@@ -2173,7 +2192,7 @@
     ]
   },
   {
-    "__docId__": 86,
+    "__docId__": 87,
     "kind": "member",
     "name": "x",
     "memberof": "src/model.js~Model",
@@ -2192,7 +2211,7 @@
     }
   },
   {
-    "__docId__": 87,
+    "__docId__": 88,
     "kind": "member",
     "name": "y",
     "memberof": "src/model.js~Model",
@@ -2211,7 +2230,7 @@
     }
   },
   {
-    "__docId__": 88,
+    "__docId__": 89,
     "kind": "member",
     "name": "width",
     "memberof": "src/model.js~Model",
@@ -2230,7 +2249,7 @@
     }
   },
   {
-    "__docId__": 89,
+    "__docId__": 90,
     "kind": "member",
     "name": "height",
     "memberof": "src/model.js~Model",
@@ -2249,7 +2268,7 @@
     }
   },
   {
-    "__docId__": 90,
+    "__docId__": 91,
     "kind": "member",
     "name": "hitbox",
     "memberof": "src/model.js~Model",
@@ -2272,7 +2291,7 @@
     }
   },
   {
-    "__docId__": 91,
+    "__docId__": 92,
     "kind": "member",
     "name": "collision",
     "memberof": "src/model.js~Model",
@@ -2295,7 +2314,7 @@
     }
   },
   {
-    "__docId__": 92,
+    "__docId__": 93,
     "kind": "member",
     "name": "parent",
     "memberof": "src/model.js~Model",
@@ -2318,7 +2337,7 @@
     }
   },
   {
-    "__docId__": 93,
+    "__docId__": 94,
     "kind": "get",
     "name": "hitbox",
     "memberof": "src/model.js~Model",
@@ -2386,7 +2405,7 @@
     }
   },
   {
-    "__docId__": 94,
+    "__docId__": 95,
     "kind": "set",
     "name": "hitbox",
     "memberof": "src/model.js~Model",
@@ -2456,7 +2475,7 @@
     }
   },
   {
-    "__docId__": 95,
+    "__docId__": 96,
     "kind": "member",
     "name": "_hitbox",
     "memberof": "src/model.js~Model",
@@ -2479,7 +2498,7 @@
     }
   },
   {
-    "__docId__": 96,
+    "__docId__": 97,
     "kind": "method",
     "name": "hasCollisions",
     "memberof": "src/model.js~Model",
@@ -2510,7 +2529,492 @@
     }
   },
   {
-    "__docId__": 97,
+    "__docId__": 98,
+    "kind": "file",
+    "name": "src/mouse.js",
+    "content": "import { Model } from './model';\nimport { Container } from './container';\nimport { MOUSE, io } from './io';\n\n/**\n * Mouse service\n * @example\n * let tile = { x: 10, y: 10, width: 32, height: 32 };\n * if (mouse.isOver(tile)) {\n *     tile.backgroundColor = 'red';\n * }\n */\nclass Mouse {\n\n    constructor() {\n        this.x = 0;\n        this.y = 0;\n    }\n\n    /**\n     * Check if mouse coordinates has collisions with object\n     * @protected\n     * @param {Object} object\n     * @param {number} object.x\n     * @param {number} object.y\n     * @param {number} object.width\n     * @param {number} object.height\n     */\n    hasCollision(object) {\n\n        if (object.x === undefined || object.y === undefined || object.width === undefined || object.height === undefined) {\n            throw new Error(`Object ${object} is not valid, needs x, y, width and height parameters.`);\n        }\n\n        if (this.x <= object.x + object.width &&\n        object.x <= this.x &&\n        this.y <= object.y + object.height &&\n        object.y <= this.y) {\n            return true;\n        }\n\n        return false;\n    }\n\n    /**\n     * Check if mouse is over object\n     * @param {Object} object\n     * @param {number} object.x\n     * @param {number} object.y\n     * @param {number} object.width\n     * @param {number} object.height\n     * @return {boolean}\n     */\n    isOver(object) {\n        return this.hasCollision(object);\n    }\n\n    /**\n     * Check if mouse is out of object\n     * @param {Object} object\n     * @param {number} object.x\n     * @param {number} object.y\n     * @param {number} object.width\n     * @param {number} object.height\n     * @return {boolean}\n     */\n    isOut(object) {\n        return !this.hasCollision(object);\n    }\n\n    /**\n     * Check if mouse click and over object\n     * @param {Object} object\n     * @param {number} object.x\n     * @param {number} object.y\n     * @param {number} object.width\n     * @param {number} object.height\n     * @return {boolean}\n     */\n    isClickOn(object) {\n        return io[MOUSE.LEFT_CLICK] && this.isOver(object);\n    }\n\n    /**\n     * Check if mouse click and out of object\n     * @param {Object} object\n     * @param {number} object.x\n     * @param {number} object.y\n     * @param {number} object.width\n     * @param {number} object.height\n     * @return {boolean}\n     */\n    isClickOut(object) {\n        return io[MOUSE.LEFT_CLICK] && this.isOut(object);\n    }\n}\n\nexport const mouse = new Mouse();\nexport default mouse;\n",
+    "static": true,
+    "longname": "src/mouse.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 99,
+    "kind": "variable",
+    "name": "mouse",
+    "memberof": "src/mouse.js",
+    "static": true,
+    "longname": "src/mouse.js~mouse",
+    "access": null,
+    "export": true,
+    "importPath": "penvas/src/mouse.js",
+    "importStyle": "{mouse}",
+    "description": null,
+    "lineNumber": 98,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "src/mouse.js~Mouse"
+      ]
+    }
+  },
+  {
+    "__docId__": 100,
+    "kind": "class",
+    "name": "Mouse",
+    "memberof": "src/mouse.js",
+    "static": true,
+    "longname": "src/mouse.js~Mouse",
+    "access": null,
+    "export": true,
+    "importPath": "penvas/src/mouse.js",
+    "importStyle": null,
+    "description": "Mouse service",
+    "examples": [
+      "let tile = { x: 10, y: 10, width: 32, height: 32 };\nif (mouse.isOver(tile)) {\n    tile.backgroundColor = 'red';\n}"
+    ],
+    "lineNumber": 13,
+    "pseudoExport": true,
+    "interface": false
+  },
+  {
+    "__docId__": 101,
+    "kind": "constructor",
+    "name": "constructor",
+    "memberof": "src/mouse.js~Mouse",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/mouse.js~Mouse#constructor",
+    "access": null,
+    "description": null,
+    "lineNumber": 15,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "params": []
+  },
+  {
+    "__docId__": 102,
+    "kind": "member",
+    "name": "x",
+    "memberof": "src/mouse.js~Mouse",
+    "static": false,
+    "longname": "src/mouse.js~Mouse#x",
+    "access": null,
+    "description": null,
+    "lineNumber": 16,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "number"
+      ]
+    }
+  },
+  {
+    "__docId__": 103,
+    "kind": "member",
+    "name": "y",
+    "memberof": "src/mouse.js~Mouse",
+    "static": false,
+    "longname": "src/mouse.js~Mouse#y",
+    "access": null,
+    "description": null,
+    "lineNumber": 17,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "number"
+      ]
+    }
+  },
+  {
+    "__docId__": 104,
+    "kind": "method",
+    "name": "hasCollision",
+    "memberof": "src/mouse.js~Mouse",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/mouse.js~Mouse#hasCollision",
+    "access": "protected",
+    "description": "Check if mouse coordinates has collisions with object",
+    "lineNumber": 29,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "object",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "object.x",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "object.y",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "object.width",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "object.height",
+        "description": ""
+      }
+    ],
+    "return": {
+      "types": [
+        "boolean"
+      ]
+    }
+  },
+  {
+    "__docId__": 105,
+    "kind": "method",
+    "name": "isOver",
+    "memberof": "src/mouse.js~Mouse",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/mouse.js~Mouse#isOver",
+    "access": null,
+    "description": "Check if mouse is over object",
+    "lineNumber": 54,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "object",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "object.x",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "object.y",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "object.width",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "object.height",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "boolean"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "__docId__": 106,
+    "kind": "method",
+    "name": "isOut",
+    "memberof": "src/mouse.js~Mouse",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/mouse.js~Mouse#isOut",
+    "access": null,
+    "description": "Check if mouse is out of object",
+    "lineNumber": 67,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "object",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "object.x",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "object.y",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "object.width",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "object.height",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "boolean"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "__docId__": 107,
+    "kind": "method",
+    "name": "isClickOn",
+    "memberof": "src/mouse.js~Mouse",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/mouse.js~Mouse#isClickOn",
+    "access": null,
+    "description": "Check if mouse click and over object",
+    "lineNumber": 80,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "object",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "object.x",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "object.y",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "object.width",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "object.height",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "boolean"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "__docId__": 108,
+    "kind": "method",
+    "name": "isClickOut",
+    "memberof": "src/mouse.js~Mouse",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/mouse.js~Mouse#isClickOut",
+    "access": null,
+    "description": "Check if mouse click and out of object",
+    "lineNumber": 93,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "object",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "object.x",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "object.y",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "object.width",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "object.height",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "boolean"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "__docId__": 109,
     "kind": "file",
     "name": "src/server/collision-checker.js",
     "content": "'use strict';\n\nclass CollisionChecker {\n\n    constructor () {\n        this.pair = [];\n    }\n\n    add (model, platforms, event) {\n\n        if (!Array.isArray(platforms)) {\n            platforms = [platforms];\n        }\n\n        this.pair.push({ model, platforms, event });\n    }\n\n    check (td) {\n        let model, hasCollision;\n        this.pair.forEach(pair => {\n            model = Object.create(pair.model);\n            model.step(td);\n            hasCollision = this.hasCollisions(this.getHitbox(model), pair.platforms.map(el => this.getHitbox(el)));\n\n            if (!!hasCollision) {\n                pair.event(pair.model);\n            }\n        });\n    }\n\n    hasCollision (hitbox, hitboxes) {\n\n        if (!Array.isArray(hitboxes)) {\n            hitboxes = [hitboxes];\n        }\n\n        let rect;\n        for (let i = 0; i < hitboxes.length; i++) {\n            rect = hitboxes[i];\n\n            if (hitbox.x < rect.x + rect.width &&\n                hitbox.x + rect.width > rect.x &&\n                hitbox.y < rect.y + rect.height &&\n                hitbox.height + hitbox.y > rect.y\n            ) {\n                return true;\n            }\n        }\n\n        return false;\n    }\n\n    getHitbox (model) {\n        if (!!model.hitbox) {\n            return {\n                x: model.x + model.hitbox.x,\n                y: model.y + model.hitbox.y,\n                width: model.hitbox.width,\n                height: model.hitbox.height\n            }\n        }\n\n        return {\n            x: model.x,\n            y: model.y,\n            width: model.width,\n            height: model.height\n        }\n    }\n\n    clear () {\n        this.pair = [];\n    }\n}\n\nmodule.exports = CollisionChecker;\n",
@@ -2521,7 +3025,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 98,
+    "__docId__": 110,
     "kind": "class",
     "name": "CollisionChecker",
     "memberof": "src/server/collision-checker.js",
@@ -2543,7 +3047,7 @@
     "interface": false
   },
   {
-    "__docId__": 99,
+    "__docId__": 111,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/server/collision-checker.js~CollisionChecker",
@@ -2564,7 +3068,7 @@
     "params": []
   },
   {
-    "__docId__": 100,
+    "__docId__": 112,
     "kind": "member",
     "name": "pair",
     "memberof": "src/server/collision-checker.js~CollisionChecker",
@@ -2587,7 +3091,7 @@
     }
   },
   {
-    "__docId__": 101,
+    "__docId__": 113,
     "kind": "method",
     "name": "add",
     "memberof": "src/server/collision-checker.js~CollisionChecker",
@@ -2627,7 +3131,7 @@
     ]
   },
   {
-    "__docId__": 102,
+    "__docId__": 114,
     "kind": "method",
     "name": "check",
     "memberof": "src/server/collision-checker.js~CollisionChecker",
@@ -2655,7 +3159,7 @@
     ]
   },
   {
-    "__docId__": 103,
+    "__docId__": 115,
     "kind": "method",
     "name": "hasCollision",
     "memberof": "src/server/collision-checker.js~CollisionChecker",
@@ -2694,7 +3198,7 @@
     }
   },
   {
-    "__docId__": 104,
+    "__docId__": 116,
     "kind": "method",
     "name": "getHitbox",
     "memberof": "src/server/collision-checker.js~CollisionChecker",
@@ -2727,7 +3231,7 @@
     }
   },
   {
-    "__docId__": 105,
+    "__docId__": 117,
     "kind": "method",
     "name": "clear",
     "memberof": "src/server/collision-checker.js~CollisionChecker",
@@ -2748,7 +3252,7 @@
     "params": []
   },
   {
-    "__docId__": 106,
+    "__docId__": 118,
     "kind": "member",
     "name": "pair",
     "memberof": "src/server/collision-checker.js~CollisionChecker",
@@ -2771,7 +3275,7 @@
     }
   },
   {
-    "__docId__": 107,
+    "__docId__": 119,
     "kind": "file",
     "name": "src/server/event-emitter.js",
     "content": "'use strict';\n\nclass EventEmitter {\n\n    constructor () {\n        this.registered = [];\n    }\n\n    on (event, callback, context) {\n        this.registered.push({ event, callback, context });\n    }\n\n    dispatch (event, args) {\n        this.registered.forEach(register => {\n            if (register.event === event) {\n                register.callback.call(register.context || this, args);\n            }\n        });\n    }\n}\n\nmodule.exports = EventEmitter;\n",
@@ -2782,7 +3286,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 108,
+    "__docId__": 120,
     "kind": "class",
     "name": "EventEmitter",
     "memberof": "src/server/event-emitter.js",
@@ -2804,7 +3308,7 @@
     "interface": false
   },
   {
-    "__docId__": 109,
+    "__docId__": 121,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/server/event-emitter.js~EventEmitter",
@@ -2825,7 +3329,7 @@
     "params": []
   },
   {
-    "__docId__": 110,
+    "__docId__": 122,
     "kind": "member",
     "name": "registered",
     "memberof": "src/server/event-emitter.js~EventEmitter",
@@ -2848,7 +3352,7 @@
     }
   },
   {
-    "__docId__": 111,
+    "__docId__": 123,
     "kind": "method",
     "name": "on",
     "memberof": "src/server/event-emitter.js~EventEmitter",
@@ -2888,7 +3392,7 @@
     ]
   },
   {
-    "__docId__": 112,
+    "__docId__": 124,
     "kind": "method",
     "name": "dispatch",
     "memberof": "src/server/event-emitter.js~EventEmitter",
@@ -2922,7 +3426,7 @@
     ]
   },
   {
-    "__docId__": 113,
+    "__docId__": 125,
     "kind": "file",
     "name": "src/server/server-application.js",
     "content": "'use strict';\n\nconst Ticker = require('./ticker');\n\nclass ServerApplication {\n\n    constructor (options = {}) {\n\n        this.options = options;\n\n        this.ticker = new Ticker();\n        this.ticker.on('step', this.step, this);\n\n        if (!!this.options.create) {\n            this.options.create.call(this);\n        }\n\n        this.ready();\n    }\n\n    step (dt) {\n        if (!!this.options.step) {\n            this.options.step.call(this, dt);\n        }\n    }\n\n    ready () {\n        this.ticker.start();\n    }\n\n    debug (models = []) {\n        [].concat(models).forEach(model => {\n            if (model instanceof Model) {\n\n            }\n        });\n    }\n}\n\nmodule.exports = ServerApplication;\n",
@@ -2933,7 +3437,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 114,
+    "__docId__": 126,
     "kind": "variable",
     "name": "Ticker",
     "memberof": "src/server/server-application.js",
@@ -2959,7 +3463,7 @@
     }
   },
   {
-    "__docId__": 115,
+    "__docId__": 127,
     "kind": "class",
     "name": "ServerApplication",
     "memberof": "src/server/server-application.js",
@@ -2981,7 +3485,7 @@
     "interface": false
   },
   {
-    "__docId__": 116,
+    "__docId__": 128,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/server/server-application.js~ServerApplication",
@@ -3012,7 +3516,7 @@
     ]
   },
   {
-    "__docId__": 117,
+    "__docId__": 129,
     "kind": "member",
     "name": "options",
     "memberof": "src/server/server-application.js~ServerApplication",
@@ -3035,7 +3539,7 @@
     }
   },
   {
-    "__docId__": 118,
+    "__docId__": 130,
     "kind": "member",
     "name": "ticker",
     "memberof": "src/server/server-application.js~ServerApplication",
@@ -3058,7 +3562,7 @@
     }
   },
   {
-    "__docId__": 119,
+    "__docId__": 131,
     "kind": "method",
     "name": "step",
     "memberof": "src/server/server-application.js~ServerApplication",
@@ -3086,7 +3590,7 @@
     ]
   },
   {
-    "__docId__": 120,
+    "__docId__": 132,
     "kind": "method",
     "name": "ready",
     "memberof": "src/server/server-application.js~ServerApplication",
@@ -3107,7 +3611,7 @@
     "params": []
   },
   {
-    "__docId__": 121,
+    "__docId__": 133,
     "kind": "method",
     "name": "debug",
     "memberof": "src/server/server-application.js~ServerApplication",
@@ -3138,7 +3642,7 @@
     ]
   },
   {
-    "__docId__": 122,
+    "__docId__": 134,
     "kind": "file",
     "name": "src/server/ticker.js",
     "content": "'use strict';\n\nconst EventEmitter = require('./event-emitter');\n\nclass Ticker extends EventEmitter {\n\n    constructor () {\n        super();\n\n        this.lastTick = Date.now();\n        this.stopped = true;\n        this.timer = null;\n    }\n\n    loop () {\n\n        if (this.stopped) {\n            return;\n        }\n\n        let delta = Date.now() - this.lastTick;\n        this.lastTick = Date.now();\n\n        if (delta > 1000)  {\n            return;\n        }\n\n        let dt = delta / 1000;\n\n        this.step(dt);\n    }\n\n    start () {\n        if (this.stopped) {\n            this.stopped = false;\n            this.time = setInterval(() => this.loop(), 10);\n        }\n    }\n\n    stop () {\n        this.stopped = true;\n        clearInterval(this.timer);\n    }\n\n    step (dt) {\n        this.dispatch('step', dt);\n    }\n}\n\nmodule.exports = Ticker;\n",
@@ -3149,7 +3653,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 123,
+    "__docId__": 135,
     "kind": "variable",
     "name": "EventEmitter",
     "memberof": "src/server/ticker.js",
@@ -3175,7 +3679,7 @@
     }
   },
   {
-    "__docId__": 124,
+    "__docId__": 136,
     "kind": "class",
     "name": "Ticker",
     "memberof": "src/server/ticker.js",
@@ -3200,7 +3704,7 @@
     ]
   },
   {
-    "__docId__": 125,
+    "__docId__": 137,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/server/ticker.js~Ticker",
@@ -3221,7 +3725,7 @@
     "params": []
   },
   {
-    "__docId__": 126,
+    "__docId__": 138,
     "kind": "member",
     "name": "lastTick",
     "memberof": "src/server/ticker.js~Ticker",
@@ -3244,7 +3748,7 @@
     }
   },
   {
-    "__docId__": 127,
+    "__docId__": 139,
     "kind": "member",
     "name": "stopped",
     "memberof": "src/server/ticker.js~Ticker",
@@ -3267,7 +3771,7 @@
     }
   },
   {
-    "__docId__": 128,
+    "__docId__": 140,
     "kind": "member",
     "name": "timer",
     "memberof": "src/server/ticker.js~Ticker",
@@ -3290,7 +3794,7 @@
     }
   },
   {
-    "__docId__": 129,
+    "__docId__": 141,
     "kind": "method",
     "name": "loop",
     "memberof": "src/server/ticker.js~Ticker",
@@ -3311,7 +3815,7 @@
     "params": []
   },
   {
-    "__docId__": 130,
+    "__docId__": 142,
     "kind": "member",
     "name": "lastTick",
     "memberof": "src/server/ticker.js~Ticker",
@@ -3334,7 +3838,7 @@
     }
   },
   {
-    "__docId__": 131,
+    "__docId__": 143,
     "kind": "method",
     "name": "start",
     "memberof": "src/server/ticker.js~Ticker",
@@ -3355,7 +3859,7 @@
     "params": []
   },
   {
-    "__docId__": 132,
+    "__docId__": 144,
     "kind": "member",
     "name": "stopped",
     "memberof": "src/server/ticker.js~Ticker",
@@ -3378,7 +3882,7 @@
     }
   },
   {
-    "__docId__": 133,
+    "__docId__": 145,
     "kind": "member",
     "name": "time",
     "memberof": "src/server/ticker.js~Ticker",
@@ -3401,7 +3905,7 @@
     }
   },
   {
-    "__docId__": 134,
+    "__docId__": 146,
     "kind": "method",
     "name": "stop",
     "memberof": "src/server/ticker.js~Ticker",
@@ -3422,7 +3926,7 @@
     "params": []
   },
   {
-    "__docId__": 135,
+    "__docId__": 147,
     "kind": "member",
     "name": "stopped",
     "memberof": "src/server/ticker.js~Ticker",
@@ -3445,7 +3949,7 @@
     }
   },
   {
-    "__docId__": 136,
+    "__docId__": 148,
     "kind": "method",
     "name": "step",
     "memberof": "src/server/ticker.js~Ticker",
@@ -3473,7 +3977,7 @@
     ]
   },
   {
-    "__docId__": 137,
+    "__docId__": 149,
     "kind": "file",
     "name": "src/sprite.js",
     "content": "import { Model } from './model';\n\n/**\n * The class to use sprite image\n * You can add animations\n * @example\n * const image = Loader.get('my-sprite'); // see Loader documentation\n * const animation = [{ frames: [9, 10, 11, 12], name: 'walk', loop: true }];\n * let sprite = new Sprite(10, 10, 20, 20, image, animation);\n *\n * sprite.play('walk');\n * sprite.render();\n */\nexport class Sprite extends Model {\n\n    /**\n     * @param {number} x\n     * @param {number} y\n     * @param {number} tileWidth - width tile\n     * @param {number} tileHeight - height tile\n     * @param {Image} image\n     * @param {Array<Object>} animations - list of animations\n     * @example\n     * new Sprite(0, 0, 20, 20, image, [{ frames: [9, 10, 11, 12], name: 'walk', loop: true, flip: false }]);\n     * @param {Object} [hitbox]\n     * @param {Object} [hitbox.x]\n     * @param {Object} [hitbox.y]\n     * @param {Object} [hitbox.width]\n     * @param {Object} [hitbox.height]\n     */\n    constructor (x, y, tileWidth, tileHeight, image, animations, hitbox) {\n        super(x, y, tileWidth, tileHeight, hitbox);\n\n        /** @type {Image} */\n        this.image = image;\n        /** @type {Array<Object>} */\n        this.animations = animations;\n\n        this.time = 1;\n        this.stopped = true;\n        this.frame = { x: 0, y: 0 };\n        this.frames = {\n            width: image.width / tileWidth,\n            height: image.height / tileHeight,\n            total: (image.width / tileWidth) * (image.height / tileHeight)\n        };\n\n        this.currentAnimation = 0;\n        this.currentFrame = 0;\n    }\n\n    /**\n     * @private\n     */\n    getNextFrame () {\n        let currentAnimation = this.animations[this.currentAnimation];\n        let currentFrame = currentAnimation.frames[this.currentFrame];\n\n        if (this.frames.width - currentFrame >= 0) {\n            this.frame.x = currentFrame - 1;\n            this.frame.y = 0;\n        } else {\n\n            let delta = currentFrame - this.frames.width;\n            this.frame.y = 1;\n\n            while (delta > this.frames.width) {\n                delta = delta - this.frames.width;\n                this.frame.y++;\n            }\n\n            this.frame.x = delta - 1;\n        }\n\n        this.currentFrame++;\n\n        if (this.currentFrame >= currentAnimation.frames.length) {\n            this.currentFrame = 0;\n\n            if (!currentAnimation.loop) {\n                this.stopped = true;\n            }\n        }\n    }\n\n    /**\n     * @param {number} dt - Delta between two frames\n     */\n    step (dt) {\n        this.time += dt;\n\n        if (this.time >= 0.25 && !this.stopped) {\n            this.getNextFrame();\n            this.time = 0;\n        }\n    }\n\n    /**\n     * Play animation\n     * @param {String} animation\n     */\n    play (animation) {\n        let currentAnimation = this.animations.filter(anim => anim.name === animation);\n\n        if (!!currentAnimation) {\n            let index = this.animations.indexOf(currentAnimation[0]);\n\n            if (this.currentAnimation != index) {\n                this.time = 1;\n                this.currentFrame = 0;\n            }\n\n            this.currentAnimation = index;\n            this.stopped = false;\n        }\n    }\n\n    /**\n     * Stop animation\n     */\n    stop () {\n        this.stopped = true;\n    }\n\n    /**\n     * Reset animation\n     */\n    reset () {\n        this.frame = { x: 0, y: 0 };\n    }\n\n    /**\n     * Render the sprite\n     * @param {RenderingContext} context\n     */\n    render (context = null) {\n        let ctx = context || this.parent.ctx;\n        let currentAnimation = this.animations[this.currentAnimation];\n        ctx.save();\n\n        if (!!currentAnimation && !!currentAnimation.flip) {\n            ctx.translate((this.x * 2) + this.width, 1);\n            ctx.scale(-1, 1);\n        }\n\n        ctx.drawImage(\n            this.image,     // image\n            this.frame.x * this.width,  // pos x\n            this.frame.y * this.height, // pos y\n            this.width,     // frame width\n            this.height,    // frame height\n            this.x,         // destination x\n            this.y,         // destination y\n            this.width,     // destination frame width\n            this.height     // destination frame height\n        );\n        ctx.restore();\n    }\n}\n",
@@ -3484,7 +3988,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 138,
+    "__docId__": 150,
     "kind": "class",
     "name": "Sprite",
     "memberof": "src/sprite.js",
@@ -3505,7 +4009,7 @@
     ]
   },
   {
-    "__docId__": 139,
+    "__docId__": 151,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/sprite.js~Sprite",
@@ -3633,7 +4137,7 @@
     ]
   },
   {
-    "__docId__": 140,
+    "__docId__": 152,
     "kind": "member",
     "name": "image",
     "memberof": "src/sprite.js~Sprite",
@@ -3652,7 +4156,7 @@
     }
   },
   {
-    "__docId__": 141,
+    "__docId__": 153,
     "kind": "member",
     "name": "animations",
     "memberof": "src/sprite.js~Sprite",
@@ -3671,7 +4175,7 @@
     }
   },
   {
-    "__docId__": 142,
+    "__docId__": 154,
     "kind": "member",
     "name": "time",
     "memberof": "src/sprite.js~Sprite",
@@ -3694,7 +4198,7 @@
     }
   },
   {
-    "__docId__": 143,
+    "__docId__": 155,
     "kind": "member",
     "name": "stopped",
     "memberof": "src/sprite.js~Sprite",
@@ -3717,7 +4221,7 @@
     }
   },
   {
-    "__docId__": 144,
+    "__docId__": 156,
     "kind": "member",
     "name": "frame",
     "memberof": "src/sprite.js~Sprite",
@@ -3740,7 +4244,7 @@
     }
   },
   {
-    "__docId__": 145,
+    "__docId__": 157,
     "kind": "member",
     "name": "frames",
     "memberof": "src/sprite.js~Sprite",
@@ -3763,7 +4267,7 @@
     }
   },
   {
-    "__docId__": 146,
+    "__docId__": 158,
     "kind": "member",
     "name": "currentAnimation",
     "memberof": "src/sprite.js~Sprite",
@@ -3786,7 +4290,7 @@
     }
   },
   {
-    "__docId__": 147,
+    "__docId__": 159,
     "kind": "member",
     "name": "currentFrame",
     "memberof": "src/sprite.js~Sprite",
@@ -3809,7 +4313,7 @@
     }
   },
   {
-    "__docId__": 148,
+    "__docId__": 160,
     "kind": "method",
     "name": "getNextFrame",
     "memberof": "src/sprite.js~Sprite",
@@ -3823,7 +4327,7 @@
     "params": []
   },
   {
-    "__docId__": 149,
+    "__docId__": 161,
     "kind": "member",
     "name": "currentFrame",
     "memberof": "src/sprite.js~Sprite",
@@ -3846,7 +4350,7 @@
     }
   },
   {
-    "__docId__": 150,
+    "__docId__": 162,
     "kind": "member",
     "name": "stopped",
     "memberof": "src/sprite.js~Sprite",
@@ -3869,7 +4373,7 @@
     }
   },
   {
-    "__docId__": 151,
+    "__docId__": 163,
     "kind": "method",
     "name": "step",
     "memberof": "src/sprite.js~Sprite",
@@ -3894,7 +4398,7 @@
     ]
   },
   {
-    "__docId__": 152,
+    "__docId__": 164,
     "kind": "member",
     "name": "time",
     "memberof": "src/sprite.js~Sprite",
@@ -3917,7 +4421,7 @@
     }
   },
   {
-    "__docId__": 153,
+    "__docId__": 165,
     "kind": "member",
     "name": "time",
     "memberof": "src/sprite.js~Sprite",
@@ -3940,7 +4444,7 @@
     }
   },
   {
-    "__docId__": 154,
+    "__docId__": 166,
     "kind": "method",
     "name": "play",
     "memberof": "src/sprite.js~Sprite",
@@ -3965,7 +4469,7 @@
     ]
   },
   {
-    "__docId__": 155,
+    "__docId__": 167,
     "kind": "member",
     "name": "time",
     "memberof": "src/sprite.js~Sprite",
@@ -3988,7 +4492,7 @@
     }
   },
   {
-    "__docId__": 156,
+    "__docId__": 168,
     "kind": "member",
     "name": "currentFrame",
     "memberof": "src/sprite.js~Sprite",
@@ -4011,7 +4515,7 @@
     }
   },
   {
-    "__docId__": 157,
+    "__docId__": 169,
     "kind": "member",
     "name": "currentAnimation",
     "memberof": "src/sprite.js~Sprite",
@@ -4034,7 +4538,7 @@
     }
   },
   {
-    "__docId__": 158,
+    "__docId__": 170,
     "kind": "member",
     "name": "stopped",
     "memberof": "src/sprite.js~Sprite",
@@ -4057,7 +4561,7 @@
     }
   },
   {
-    "__docId__": 159,
+    "__docId__": 171,
     "kind": "method",
     "name": "stop",
     "memberof": "src/sprite.js~Sprite",
@@ -4071,7 +4575,7 @@
     "params": []
   },
   {
-    "__docId__": 160,
+    "__docId__": 172,
     "kind": "member",
     "name": "stopped",
     "memberof": "src/sprite.js~Sprite",
@@ -4094,7 +4598,7 @@
     }
   },
   {
-    "__docId__": 161,
+    "__docId__": 173,
     "kind": "method",
     "name": "reset",
     "memberof": "src/sprite.js~Sprite",
@@ -4108,7 +4612,7 @@
     "params": []
   },
   {
-    "__docId__": 162,
+    "__docId__": 174,
     "kind": "member",
     "name": "frame",
     "memberof": "src/sprite.js~Sprite",
@@ -4131,7 +4635,7 @@
     }
   },
   {
-    "__docId__": 163,
+    "__docId__": 175,
     "kind": "method",
     "name": "render",
     "memberof": "src/sprite.js~Sprite",
@@ -4156,7 +4660,7 @@
     ]
   },
   {
-    "__docId__": 164,
+    "__docId__": 176,
     "kind": "file",
     "name": "src/ticker.js",
     "content": "import { EventEmitter } from './event-emitter';\n\n/**\n * Timer class\n * You can stop and start the game\n */\nexport class Ticker extends EventEmitter {\n\n    constructor () {\n        super();\n\n        this.lastTick = Date.now();\n        this.stopped = true;\n        this.frame = 0;\n        this.frameskip = 1;\n    }\n\n    /**\n     * @private\n     */\n    loop () {\n        if (this.stopped) {\n            return;\n        }\n\n        requestAnimationFrame(this.loop.bind(this));\n\n        let delta = Date.now() - this.lastTick;\n        this.lastTick = Date.now();\n\n        if (delta > 1000)  {\n            return;\n        }\n\n        let dt = delta / 1000;\n\n        this.step(dt);\n        this.render(dt);\n    }\n\n    /**\n     * Start timer\n     */\n    start () {\n        if (this.stopped) {\n            this.stopped = false;\n            requestAnimationFrame(this.loop.bind(this));\n        }\n    }\n\n    /**\n     * Stop timer\n     */\n    stop () {\n        this.stopped = true;\n    }\n\n    /**\n     * Called at every frame\n     * @private\n     * @param {number} dt\n     * @emits {step}\n     */\n    step (dt) {\n        this.dispatch('step', dt);\n    }\n\n    /**\n     * Called at every frame\n     * @private\n     * @param {number} dt\n     * @emits {render}\n     */\n    render (dt) {\n        this.dispatch('render', dt);\n    }\n}\n",
@@ -4167,7 +4671,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 165,
+    "__docId__": 177,
     "kind": "class",
     "name": "Ticker",
     "memberof": "src/ticker.js",
@@ -4185,7 +4689,7 @@
     ]
   },
   {
-    "__docId__": 166,
+    "__docId__": 178,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/ticker.js~Ticker",
@@ -4206,7 +4710,7 @@
     "params": []
   },
   {
-    "__docId__": 167,
+    "__docId__": 179,
     "kind": "member",
     "name": "lastTick",
     "memberof": "src/ticker.js~Ticker",
@@ -4229,7 +4733,7 @@
     }
   },
   {
-    "__docId__": 168,
+    "__docId__": 180,
     "kind": "member",
     "name": "stopped",
     "memberof": "src/ticker.js~Ticker",
@@ -4252,7 +4756,7 @@
     }
   },
   {
-    "__docId__": 169,
+    "__docId__": 181,
     "kind": "member",
     "name": "frame",
     "memberof": "src/ticker.js~Ticker",
@@ -4275,7 +4779,7 @@
     }
   },
   {
-    "__docId__": 170,
+    "__docId__": 182,
     "kind": "member",
     "name": "frameskip",
     "memberof": "src/ticker.js~Ticker",
@@ -4298,7 +4802,7 @@
     }
   },
   {
-    "__docId__": 171,
+    "__docId__": 183,
     "kind": "method",
     "name": "loop",
     "memberof": "src/ticker.js~Ticker",
@@ -4312,7 +4816,7 @@
     "params": []
   },
   {
-    "__docId__": 172,
+    "__docId__": 184,
     "kind": "member",
     "name": "lastTick",
     "memberof": "src/ticker.js~Ticker",
@@ -4335,7 +4839,7 @@
     }
   },
   {
-    "__docId__": 173,
+    "__docId__": 185,
     "kind": "method",
     "name": "start",
     "memberof": "src/ticker.js~Ticker",
@@ -4349,7 +4853,7 @@
     "params": []
   },
   {
-    "__docId__": 174,
+    "__docId__": 186,
     "kind": "member",
     "name": "stopped",
     "memberof": "src/ticker.js~Ticker",
@@ -4372,7 +4876,7 @@
     }
   },
   {
-    "__docId__": 175,
+    "__docId__": 187,
     "kind": "method",
     "name": "stop",
     "memberof": "src/ticker.js~Ticker",
@@ -4386,7 +4890,7 @@
     "params": []
   },
   {
-    "__docId__": 176,
+    "__docId__": 188,
     "kind": "member",
     "name": "stopped",
     "memberof": "src/ticker.js~Ticker",
@@ -4409,7 +4913,7 @@
     }
   },
   {
-    "__docId__": 177,
+    "__docId__": 189,
     "kind": "method",
     "name": "step",
     "memberof": "src/ticker.js~Ticker",
@@ -4442,7 +4946,7 @@
     ]
   },
   {
-    "__docId__": 178,
+    "__docId__": 190,
     "kind": "method",
     "name": "render",
     "memberof": "src/ticker.js~Ticker",
@@ -4475,10 +4979,10 @@
     ]
   },
   {
-    "__docId__": 179,
+    "__docId__": 191,
     "kind": "file",
     "name": "src/tileset.js",
-    "content": "import { Model } from './model';\n\n/**\n * The class to use tileset image\n * @example\n * const image = Loader.get('my-tileset'); // see Loader documentation\n * let tileset = new Tileset(0, 0, 32, 32, image);\n *\n * // render the first tile of tileset\n * tileset.render(1);\n */\nexport class Tileset extends Model {\n\n    /**\n     * @param {number} x\n     * @param {number} y\n     * @param {number} tileWidth\n     * @param {number} tileHeight\n     * @param {Image} image\n     */\n    constructor (x, y, tileWidth, tileHeight, image) {\n        super(x, y, tileWidth, tileHeight);\n\n        /** @type {number} */\n        this.tileWidth = tileWidth;\n        /** @type {number} */\n        this.tileHeight = tileHeight;\n        /** @type {Image} */\n        this.image = image;\n        this.tiles = 0;\n    }\n\n    /**\n     * Get tile x,y positions by id (exemple tile number 23)\n     * @private\n     * @param {number} id\n     * @return {Object}\n     * @property {number} x\n     * @property {number} y\n     */\n    getTilePosition (id) {\n        const columns = this.image.width / this.tileWidth;\n        const rows = this.image.height / this.tileHeight;\n        const tiles = columns * rows;\n        this.tiles = tiles;\n\n        id = id > tiles ? tiles : id;\n\n        const percent = (id * this.tileWidth) / this.image.width;\n        const unit = Math.trunc(percent);\n        const decimal = percent - unit;\n\n        const x = (decimal * columns) - 1;\n        const y = Math.trunc((id * this.tileWidth) / this.image.width);\n\n        return { x: x < 0 ? columns : x, y};\n    }\n\n    /**\n     * Render a tile\n     * @param {number} id\n     * @param {RenderingContext} context\n     */\n    render (id, context = null) {\n        if (id > 0) {\n            let ctx = context || this.parent.ctx;\n            let tile = this.getTilePosition(id);\n\n            ctx.save();\n            ctx.drawImage(\n                this.image,     // image\n                tile.x * this.tileWidth,    // pos x\n                tile.y * this.tileHeight,   // pos y\n                this.tileWidth,     // frame width\n                this.tileHeight,    // frame height\n                this.x,         // destination x\n                this.y,         // destination y\n                this.width,     // destination frame width\n                this.height     // destination frame height\n            );\n            ctx.restore();\n        }\n    }\n}\n",
+    "content": "import { Model } from './model';\n\n/**\n * The class to use tileset image\n * @example\n * const image = Loader.get('my-tileset'); // see Loader documentation\n * let tileset = new Tileset(0, 0, 32, 32, image);\n *\n * // render the first tile of tileset\n * tileset.render(1);\n */\nexport class Tileset extends Model {\n\n    /**\n     * @param {number} x\n     * @param {number} y\n     * @param {number} tileWidth\n     * @param {number} tileHeight\n     * @param {Image} image\n     */\n    constructor (x, y, tileWidth, tileHeight, image) {\n        super(x, y, tileWidth, tileHeight);\n\n        /** @type {number} */\n        this.tileWidth = tileWidth;\n        /** @type {number} */\n        this.tileHeight = tileHeight;\n        /** @type {Image} */\n        this.image = image;\n        /** @type {number} */\n        this.columns = this.image.width / this.tileWidth;\n        /** @type {number} */\n        this.rows = this.image.height / this.tileHeight;\n        /** @type {number} */\n        this.tiles = this.columns * this.rows;\n    }\n\n    /**\n     * Get tile x,y positions by id (exemple tile number 23)\n     * @private\n     * @param {number} id\n     * @return {Object}\n     * @property {number} x\n     * @property {number} y\n     */\n    getTilePosition (id) {\n        id = id > this.tiles ? this.tiles : id;\n\n        const percent = (id * this.tileWidth) / this.image.width;\n        let x = 0;\n        let y = 0;\n\n        if (Number.isInteger(percent)) {\n            x = this.columns -1;\n            y = percent - 1;\n        } else {\n            const unit = Math.trunc(percent);\n            const decimal = percent - unit;\n            x = (decimal * this.columns) - 1;\n            y = Math.trunc((id * this.tileWidth) / this.image.width);\n        }\n\n        return { x: x < 0 ? this.columns : x, y};\n    }\n\n    /**\n     * Render a tile\n     * @param {number} id\n     * @param {RenderingContext} context\n     */\n    render (id, context = null) {\n        if (id > 0) {\n            let ctx = context || this.parent.ctx;\n            let tile = this.getTilePosition(id);\n\n            ctx.save();\n            ctx.drawImage(\n                this.image,     // image\n                tile.x * this.tileWidth,    // pos x\n                tile.y * this.tileHeight,   // pos y\n                this.tileWidth,     // frame width\n                this.tileHeight,    // frame height\n                this.x,         // destination x\n                this.y,         // destination y\n                this.width,     // destination frame width\n                this.height     // destination frame height\n            );\n            ctx.restore();\n        }\n    }\n}\n",
     "static": true,
     "longname": "src/tileset.js",
     "access": null,
@@ -4486,7 +4990,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 180,
+    "__docId__": 192,
     "kind": "class",
     "name": "Tileset",
     "memberof": "src/tileset.js",
@@ -4507,7 +5011,7 @@
     ]
   },
   {
-    "__docId__": 181,
+    "__docId__": 193,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/tileset.js~Tileset",
@@ -4572,7 +5076,7 @@
     ]
   },
   {
-    "__docId__": 182,
+    "__docId__": 194,
     "kind": "member",
     "name": "tileWidth",
     "memberof": "src/tileset.js~Tileset",
@@ -4591,7 +5095,7 @@
     }
   },
   {
-    "__docId__": 183,
+    "__docId__": 195,
     "kind": "member",
     "name": "tileHeight",
     "memberof": "src/tileset.js~Tileset",
@@ -4610,7 +5114,7 @@
     }
   },
   {
-    "__docId__": 184,
+    "__docId__": 196,
     "kind": "member",
     "name": "image",
     "memberof": "src/tileset.js~Tileset",
@@ -4629,7 +5133,45 @@
     }
   },
   {
-    "__docId__": 185,
+    "__docId__": 197,
+    "kind": "member",
+    "name": "columns",
+    "memberof": "src/tileset.js~Tileset",
+    "static": false,
+    "longname": "src/tileset.js~Tileset#columns",
+    "access": null,
+    "description": null,
+    "lineNumber": 31,
+    "type": {
+      "nullable": null,
+      "types": [
+        "number"
+      ],
+      "spread": false,
+      "description": null
+    }
+  },
+  {
+    "__docId__": 198,
+    "kind": "member",
+    "name": "rows",
+    "memberof": "src/tileset.js~Tileset",
+    "static": false,
+    "longname": "src/tileset.js~Tileset#rows",
+    "access": null,
+    "description": null,
+    "lineNumber": 33,
+    "type": {
+      "nullable": null,
+      "types": [
+        "number"
+      ],
+      "spread": false,
+      "description": null
+    }
+  },
+  {
+    "__docId__": 199,
     "kind": "member",
     "name": "tiles",
     "memberof": "src/tileset.js~Tileset",
@@ -4637,22 +5179,18 @@
     "longname": "src/tileset.js~Tileset#tiles",
     "access": null,
     "description": null,
-    "lineNumber": 30,
-    "undocument": true,
-    "unknown": [
-      {
-        "tagName": "@_undocument",
-        "tagValue": ""
-      }
-    ],
+    "lineNumber": 35,
     "type": {
+      "nullable": null,
       "types": [
         "number"
-      ]
+      ],
+      "spread": false,
+      "description": null
     }
   },
   {
-    "__docId__": 186,
+    "__docId__": 200,
     "kind": "method",
     "name": "getTilePosition",
     "memberof": "src/tileset.js~Tileset",
@@ -4662,7 +5200,7 @@
     "longname": "src/tileset.js~Tileset#getTilePosition",
     "access": "private",
     "description": "Get tile x,y positions by id (exemple tile number 23)",
-    "lineNumber": 41,
+    "lineNumber": 46,
     "params": [
       {
         "nullable": null,
@@ -4707,30 +5245,7 @@
     }
   },
   {
-    "__docId__": 187,
-    "kind": "member",
-    "name": "tiles",
-    "memberof": "src/tileset.js~Tileset",
-    "static": false,
-    "longname": "src/tileset.js~Tileset#tiles",
-    "access": null,
-    "description": null,
-    "lineNumber": 45,
-    "undocument": true,
-    "unknown": [
-      {
-        "tagName": "@_undocument",
-        "tagValue": ""
-      }
-    ],
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 188,
+    "__docId__": 201,
     "kind": "method",
     "name": "render",
     "memberof": "src/tileset.js~Tileset",
@@ -4740,7 +5255,7 @@
     "longname": "src/tileset.js~Tileset#render",
     "access": null,
     "description": "Render a tile",
-    "lineNumber": 64,
+    "lineNumber": 71,
     "params": [
       {
         "nullable": null,
@@ -4765,7 +5280,7 @@
     ]
   },
   {
-    "__docId__": 190,
+    "__docId__": 203,
     "kind": "external",
     "name": "Infinity",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Infinity",
@@ -4777,7 +5292,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 191,
+    "__docId__": 204,
     "kind": "external",
     "name": "NaN",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NaN",
@@ -4789,7 +5304,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 192,
+    "__docId__": 205,
     "kind": "external",
     "name": "undefined",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined",
@@ -4801,7 +5316,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 193,
+    "__docId__": 206,
     "kind": "external",
     "name": "null",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null",
@@ -4813,7 +5328,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 194,
+    "__docId__": 207,
     "kind": "external",
     "name": "Object",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
@@ -4825,7 +5340,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 195,
+    "__docId__": 208,
     "kind": "external",
     "name": "object",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
@@ -4837,7 +5352,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 196,
+    "__docId__": 209,
     "kind": "external",
     "name": "Function",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
@@ -4849,7 +5364,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 197,
+    "__docId__": 210,
     "kind": "external",
     "name": "function",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
@@ -4861,7 +5376,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 198,
+    "__docId__": 211,
     "kind": "external",
     "name": "Boolean",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
@@ -4873,7 +5388,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 199,
+    "__docId__": 212,
     "kind": "external",
     "name": "boolean",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
@@ -4885,7 +5400,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 200,
+    "__docId__": 213,
     "kind": "external",
     "name": "Symbol",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol",
@@ -4897,7 +5412,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 201,
+    "__docId__": 214,
     "kind": "external",
     "name": "Error",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error",
@@ -4909,7 +5424,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 202,
+    "__docId__": 215,
     "kind": "external",
     "name": "EvalError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/EvalError",
@@ -4921,7 +5436,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 203,
+    "__docId__": 216,
     "kind": "external",
     "name": "InternalError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/InternalError",
@@ -4933,7 +5448,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 204,
+    "__docId__": 217,
     "kind": "external",
     "name": "RangeError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RangeError",
@@ -4945,7 +5460,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 205,
+    "__docId__": 218,
     "kind": "external",
     "name": "ReferenceError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ReferenceError",
@@ -4957,7 +5472,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 206,
+    "__docId__": 219,
     "kind": "external",
     "name": "SyntaxError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SyntaxError",
@@ -4969,7 +5484,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 207,
+    "__docId__": 220,
     "kind": "external",
     "name": "TypeError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError",
@@ -4981,7 +5496,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 208,
+    "__docId__": 221,
     "kind": "external",
     "name": "URIError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/URIError",
@@ -4993,7 +5508,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 209,
+    "__docId__": 222,
     "kind": "external",
     "name": "Number",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
@@ -5005,7 +5520,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 210,
+    "__docId__": 223,
     "kind": "external",
     "name": "number",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
@@ -5017,7 +5532,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 211,
+    "__docId__": 224,
     "kind": "external",
     "name": "Date",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date",
@@ -5029,7 +5544,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 212,
+    "__docId__": 225,
     "kind": "external",
     "name": "String",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
@@ -5041,7 +5556,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 213,
+    "__docId__": 226,
     "kind": "external",
     "name": "string",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
@@ -5053,7 +5568,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 214,
+    "__docId__": 227,
     "kind": "external",
     "name": "RegExp",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp",
@@ -5065,7 +5580,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 215,
+    "__docId__": 228,
     "kind": "external",
     "name": "Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
@@ -5077,7 +5592,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 216,
+    "__docId__": 229,
     "kind": "external",
     "name": "Int8Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int8Array",
@@ -5089,7 +5604,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 217,
+    "__docId__": 230,
     "kind": "external",
     "name": "Uint8Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array",
@@ -5101,7 +5616,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 218,
+    "__docId__": 231,
     "kind": "external",
     "name": "Uint8ClampedArray",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray",
@@ -5113,7 +5628,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 219,
+    "__docId__": 232,
     "kind": "external",
     "name": "Int16Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int16Array",
@@ -5125,7 +5640,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 220,
+    "__docId__": 233,
     "kind": "external",
     "name": "Uint16Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint16Array",
@@ -5137,7 +5652,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 221,
+    "__docId__": 234,
     "kind": "external",
     "name": "Int32Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array",
@@ -5149,7 +5664,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 222,
+    "__docId__": 235,
     "kind": "external",
     "name": "Uint32Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array",
@@ -5161,7 +5676,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 223,
+    "__docId__": 236,
     "kind": "external",
     "name": "Float32Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array",
@@ -5173,7 +5688,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 224,
+    "__docId__": 237,
     "kind": "external",
     "name": "Float64Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array",
@@ -5185,7 +5700,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 225,
+    "__docId__": 238,
     "kind": "external",
     "name": "Map",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map",
@@ -5197,7 +5712,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 226,
+    "__docId__": 239,
     "kind": "external",
     "name": "Set",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set",
@@ -5209,7 +5724,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 227,
+    "__docId__": 240,
     "kind": "external",
     "name": "WeakMap",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap",
@@ -5221,7 +5736,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 228,
+    "__docId__": 241,
     "kind": "external",
     "name": "WeakSet",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet",
@@ -5233,7 +5748,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 229,
+    "__docId__": 242,
     "kind": "external",
     "name": "ArrayBuffer",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer",
@@ -5245,7 +5760,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 230,
+    "__docId__": 243,
     "kind": "external",
     "name": "DataView",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView",
@@ -5257,7 +5772,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 231,
+    "__docId__": 244,
     "kind": "external",
     "name": "JSON",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON",
@@ -5269,7 +5784,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 232,
+    "__docId__": 245,
     "kind": "external",
     "name": "Promise",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
@@ -5281,7 +5796,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 233,
+    "__docId__": 246,
     "kind": "external",
     "name": "Generator",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator",
@@ -5293,7 +5808,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 234,
+    "__docId__": 247,
     "kind": "external",
     "name": "GeneratorFunction",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/GeneratorFunction",
@@ -5305,7 +5820,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 235,
+    "__docId__": 248,
     "kind": "external",
     "name": "Reflect",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect",
@@ -5317,7 +5832,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 236,
+    "__docId__": 249,
     "kind": "external",
     "name": "Proxy",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy",
@@ -5330,7 +5845,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 238,
+    "__docId__": 251,
     "kind": "external",
     "name": "CanvasRenderingContext2D",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D",
@@ -5342,7 +5857,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 239,
+    "__docId__": 252,
     "kind": "external",
     "name": "DocumentFragment",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment",
@@ -5354,7 +5869,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 240,
+    "__docId__": 253,
     "kind": "external",
     "name": "Element",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Element",
@@ -5366,7 +5881,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 241,
+    "__docId__": 254,
     "kind": "external",
     "name": "Event",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Event",
@@ -5378,7 +5893,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 242,
+    "__docId__": 255,
     "kind": "external",
     "name": "Node",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Node",
@@ -5390,7 +5905,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 243,
+    "__docId__": 256,
     "kind": "external",
     "name": "NodeList",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/NodeList",
@@ -5402,7 +5917,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 244,
+    "__docId__": 257,
     "kind": "external",
     "name": "XMLHttpRequest",
     "externalLink": "https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest",
@@ -5414,7 +5929,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 245,
+    "__docId__": 258,
     "kind": "external",
     "name": "AudioContext",
     "externalLink": "https://developer.mozilla.org/en/docs/Web/API/AudioContext",

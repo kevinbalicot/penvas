@@ -1,39 +1,71 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
+var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.Application = undefined;
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && _typeof2(Symbol.iterator) === "symbol" ? function (obj) {
+    return typeof obj === "undefined" ? "undefined" : _typeof2(obj);
+} : function (obj) {
+    return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj === "undefined" ? "undefined" : _typeof2(obj);
+};
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _createClass = function () {
+    function defineProperties(target, props) {
+        for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+        }
+    }return function (Constructor, protoProps, staticProps) {
+        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+    };
+}();
 
 var _ticker = require('./ticker');
 
 var _model = require('./model');
 
-var _keyboard = require('./keyboard');
+var _io = require('./io');
+
+var _io2 = _interopRequireDefault(_io);
 
 var _loader = require('./loader');
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var _loader2 = _interopRequireDefault(_loader);
 
+var _mouse = require('./mouse');
+
+var _mouse2 = _interopRequireDefault(_mouse);
+
+function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { default: obj };
+}
+
+function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+        throw new TypeError("Cannot call a class as a function");
+    }
+}
+
+/**
+ * Create a new application
+ * @example
+ * let app = new Application({ container: document.getElementById('my-canvas'), width: 500, height: 300 });
+ */
 var Application = exports.Application = function () {
 
     /**
-     * @param {} options
-     *      {
-     *          HTMLElement container: HTML container (default: body element)
-     *          int width: canvas width (default: window width)
-     *          int height: canvas height (default: window height)
-     *          hex background: canvas background (default: 0xffffff)
-     *
-     *          function create: called to load assets
-     *          function render: called at every frame
-     *          function ready: called when application is ready (need to use loader)
-     *      }
+     * @param {Object} [options]
+     * @param {HTMLElement} [options.container] - HTML container (default: body element)
+     * @param {number} [options.width] - canvas width (default: window width)
+     * @param {number} [options.height] - canvas height (default: window height)
+     * @param {hex} [options.background=0xffffff] - canvas background (default: 0xffffff)
+     * @param {function} [options.create] - called to load assets
+     * @param {function} [options.render] - called at every frame
+     * @param {function} [options.ready] - called when application is ready (need to use loader)
      */
     function Application() {
         var _this = this;
@@ -42,27 +74,72 @@ var Application = exports.Application = function () {
 
         _classCallCheck(this, Application);
 
+        /**
+         * Object of options
+         * @type {Object}
+         */
         this.options = options;
+
+        /**
+         * List of layers
+         * @type {Array<Object>}
+         */
         this.layers = [];
+
+        /**
+         * Current layer rendered
+         * @type {Object}
+         */
         this.currentLayer = null;
-        this.keyboard = _keyboard.keyboard;
-        this.loader = _loader.loader;
+
+        /** @type {io} */
+        this.io = _io2.default;
+
+        /** @type {loader} */
+        this.loader = _loader2.default;
+
+        /** @type {mouse} */
+        this.mouse = _mouse2.default;
+
+        /**
+         * Canvas width (default window width)
+         * @type {number}
+         */
+        this.width = options.width || window.innerWidth;
+
+        /**
+         * Canvas height (default window height)
+         * @type {number}
+         */
+        this.height = options.height || window.innerHeight;
+
+        /**
+         * Canvas background color
+         * @type {hex}
+         */
+        this.background = options.background || 0xffffff;
 
         if (_typeof(options.container) != 'object') {
             options.container = document.querySelector('body');
         }
 
-        this.width = options.width || window.innerWidth;
-        this.height = options.height || window.innerHeight;
-        this.background = options.background || 0xffffff;
-
+        /** @type {HTMLCanvasElement} */
         this.canvas = document.createElement('canvas');
         this.canvas.width = this.width;
         this.canvas.height = this.height;
         this.canvas.style.backgroundColor = this.background;
 
+        /** @type {CanvasRenderingContext2D} */
         this.context = this.canvas.getContext('2d');
+        /** @type {CanvasRenderingContext2D} */
         this.ctx = this.context;
+
+        // Update mouse coordinates
+        this.canvas.addEventListener('mousemove', function (event) {
+            var rect = _this.canvas.getBoundingClientRect();
+            _this.mouse.x = event.clientX - rect.left;
+            _this.mouse.y = event.clientY - rect.top;
+        });
 
         options.container.appendChild(this.canvas);
 
@@ -73,6 +150,7 @@ var Application = exports.Application = function () {
             });
         }
 
+        /** @type {Ticker} */
         this.ticker = new _ticker.Ticker();
 
         this.ticker.on('step', this.step, this);
@@ -85,10 +163,9 @@ var Application = exports.Application = function () {
 
     /**
      * Callback called at every frame to calculate models x,y positions
-     * @param float dt
-     * @return void
+     * @protected
+     * @param {number} dt - Delta between two frames
      */
-
 
     _createClass(Application, [{
         key: 'step',
@@ -108,8 +185,8 @@ var Application = exports.Application = function () {
 
         /**
          * Callback called at every frame to render models
-         * @param float dt
-         * @return void
+         * @protected
+         * @param {number} dt - Delta between two frames
          */
 
     }, {
@@ -130,14 +207,11 @@ var Application = exports.Application = function () {
 
         /**
          * Add layer to application
-         * @param {} layer
-         *      {
-         *          function create: called to create models
-         *          function step: called at every frame
-         *          function render: called at every frame
-         *      }
-         * @param string name
-         * @return void
+         * @param {Object} layer
+         * @param {function} layer.create - called to create models
+         * @param {function} layer.step - called at every frame
+         * @param {function} layer.render - called at every frame
+         * @param {String} name
          */
 
     }, {
@@ -161,8 +235,7 @@ var Application = exports.Application = function () {
 
         /**
          * Switch the current layer
-         * @param string name
-         * @return void
+         * @param {String} name
          */
 
     }, {
@@ -179,7 +252,6 @@ var Application = exports.Application = function () {
 
         /**
          * Reset canvas zone
-         * @return void
          */
 
     }, {
@@ -192,7 +264,7 @@ var Application = exports.Application = function () {
 
         /**
          * Start timer and called application ready function
-         * @return void
+         * @protected
          */
 
     }, {
@@ -207,8 +279,8 @@ var Application = exports.Application = function () {
 
         /**
          * Display model's x,y positions information
-         * @param Model model
-         * @return void
+         * @private
+         * @param {Model} model
          */
 
     }, {
@@ -231,8 +303,7 @@ var Application = exports.Application = function () {
 
         /**
          * Add models to debug
-         * @param Model[] models
-         * @return void
+         * @param {Array<Model>|Model} models
          */
 
     }, {
@@ -250,8 +321,8 @@ var Application = exports.Application = function () {
         }
 
         /**
-         * @param Error err
-         * @return void
+         * @private
+         * @param {Error} err
          */
 
     }, {
@@ -273,58 +344,79 @@ var Application = exports.Application = function () {
     return Application;
 }();
 
-},{"./keyboard":5,"./loader":6,"./model":7,"./ticker":9}],2:[function(require,module,exports){
+},{"./io":5,"./loader":6,"./model":7,"./mouse":8,"./ticker":10}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _createClass = function () {
+    function defineProperties(target, props) {
+        for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+        }
+    }return function (Constructor, protoProps, staticProps) {
+        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+    };
+}();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+        throw new TypeError("Cannot call a class as a function");
+    }
+}
 
+/**
+ * Create a new container with a canvas element
+ * @example
+ * let container = new Container({ width: 200, height: 200, background: 0xeee })
+ */
 var Container = exports.Container = function () {
 
     /**
      * Create a new canvas
-     * @param {} options
-     *      {
-     *          int x: default 0
-     *          int y: default 0
-     *          int width: default window width
-     *          int height: default window height
-     *          hex background: default 0xffffff
-     *      }
+     * @param {Object} [options]
+     * @param {number} [options.x=0]
+     * @param {number} [options.y=0]
+     * @param {number} [options.width] - default window width
+     * @param {number} [options.height] - default window height
+     * @param {hex} [options.background=0xffffff]
      */
     function Container() {
         var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
         _classCallCheck(this, Container);
 
+        /** @type {number} */
         this.x = options.x || 0;
+        /** @type {number} */
         this.y = options.y || 0;
+        /** @type {number} */
         this.width = options.width || window.innerWidth;
+        /** @type {number} */
         this.height = options.height || window.innerHeight;
+        /** @type {hex} */
         this.background = options.background || 0xffffff;
 
+        /** @type {HTMLCanvasElement} */
         this.canvas = document.createElement('canvas');
         this.canvas.width = this.width;
         this.canvas.height = this.height;
         this.canvas.style.backgroundColor = this.background;
 
+        /** @type {CanvasRenderingContext2D} */
         this.context = this.canvas.getContext('2d');
+        /** @type {CanvasRenderingContext2D} */
         this.ctx = this.context;
     }
 
     /**
      * Render this canvas into another canvas
-     * @param 2DContext ctx
-     * @param int x
-     * @param int y
-     * @return void
+     * @param {RenderingContext} ctx - Another canvas
+     * @param {number} x
+     * @param {number} y
      */
-
 
     _createClass(Container, [{
         key: 'render',
@@ -348,24 +440,49 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _createClass = function () {
+    function defineProperties(target, props) {
+        for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+        }
+    }return function (Constructor, protoProps, staticProps) {
+        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+    };
+}();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+        throw new TypeError("Cannot call a class as a function");
+    }
+}
 
+/**
+ * Use to emit events
+ * @example
+ * class MyClass extends EventEmitter {
+ *     doSomething() {
+ *        this.dispatch('my-event', { message: 'event' });
+ *     }
+ * }
+ */
 var EventEmitter = exports.EventEmitter = function () {
     function EventEmitter() {
         _classCallCheck(this, EventEmitter);
 
+        /**
+         * List of registers
+         * @protected
+         * @type {Array}
+         */
         this.registered = [];
     }
 
     /**
-     * @param string event
-     * @param function callback
-     * @param mixed context
-     * @return void
+     * Listen event
+     * @param {String} event
+     * @param {function} callback
+     * @param {mixed} context
      */
-
 
     _createClass(EventEmitter, [{
         key: "on",
@@ -374,9 +491,9 @@ var EventEmitter = exports.EventEmitter = function () {
         }
 
         /**
-         * @param string event
-         * @param mixed args
-         * @return void
+         * Dispatch event
+         * @param {String} event
+         * @param {mixed} args
          */
 
     }, {
@@ -412,15 +529,21 @@ var _ticker = require('./ticker');
 
 var _tileset = require('./tileset');
 
-var _keyboard = require('./keyboard');
+var _io = require('./io');
 
-var _keyboard2 = _interopRequireDefault(_keyboard);
+var _io2 = _interopRequireDefault(_io);
 
 var _loader = require('./loader');
 
 var _loader2 = _interopRequireDefault(_loader);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _mouse = require('./mouse');
+
+var _mouse2 = _interopRequireDefault(_mouse);
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { default: obj };
+}
 
 window.Application = _application.Application;
 window.Container = _container.Container;
@@ -429,72 +552,109 @@ window.Model = _model.Model;
 window.Sprite = _sprite.Sprite;
 window.Ticker = _ticker.Ticker;
 window.Tileset = _tileset.Tileset;
-window.Keyboard = _keyboard2.default;
-window.Loader = _loader2.default;
 
-},{"./application":1,"./container":2,"./event-emitter":3,"./keyboard":5,"./loader":6,"./model":7,"./sprite":8,"./ticker":9,"./tileset":10}],5:[function(require,module,exports){
+window.io = _io2.default;
+window.loader = _loader2.default;
+window.mouse = _mouse2.default;
+
+},{"./application":1,"./container":2,"./event-emitter":3,"./io":5,"./loader":6,"./model":7,"./mouse":8,"./sprite":9,"./ticker":10,"./tileset":11}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-var KEY_UP = exports.KEY_UP = 38;
-var KEY_DOWN = exports.KEY_DOWN = 40;
-var KEY_LEFT = exports.KEY_LEFT = 37;
-var KEY_RIGHT = exports.KEY_RIGHT = 39;
-var KEY_SPACE = exports.KEY_SPACE = 32;
-var KEY_B = exports.KEY_B = 66;
-var KEY_N = exports.KEY_N = 78;
-var LEFT_CLICK = exports.LEFT_CLICK = 'left_click';
+/** @type {Object} */
+var KEYS = exports.KEYS = {
+    SPACE: 32,
+    LEFT: 37,
+    UP: 38,
+    RIGHT: 39,
+    DOWN: 40
+};
 
-var keyboard = exports.keyboard = [];
-keyboard[KEY_UP] = false;
-keyboard[KEY_DOWN] = false;
-keyboard[KEY_LEFT] = false;
-keyboard[KEY_RIGHT] = false;
-keyboard[KEY_SPACE] = false;
-keyboard[KEY_B] = false;
-keyboard[KEY_N] = false;
-keyboard[LEFT_CLICK] = false;
+/** @type {Object} */
+var MOUSE = exports.MOUSE = {
+    LEFT_CLICK: 'left_click',
+    RIGHT_CLICK: 'right_click',
+    MIDDLE_CLICK: 'middle_click'
+};
+
+/** @type {Array<number>} */
+var io = exports.io = [];
 
 document.addEventListener('keydown', function (e) {
-    //e.preventDefault();
-    keyboard[e.keyCode] = true;
+    io[e.keyCode] = true;
 });
 
 document.addEventListener('keyup', function (e) {
-    //e.preventDefault();
-    keyboard[e.keyCode] = false;
+    io[e.keyCode] = false;
 });
 
 document.addEventListener('mousedown', function () {
-    keyboard[LEFT_CLICK] = true;
+    io[MOUSE.LEFT_CLICK] = true;
 });
 
 document.addEventListener('mouseup', function () {
-    keyboard[LEFT_CLICK] = false;
+    io[MOUSE.LEFT_CLICK] = false;
 });
 
-exports.default = keyboard;
+exports.default = io;
 
 },{}],6:[function(require,module,exports){
 'use strict';
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.loader = exports.Loader = undefined;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _createClass = function () {
+    function defineProperties(target, props) {
+        for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+        }
+    }return function (Constructor, protoProps, staticProps) {
+        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+    };
+}();
 
 var _eventEmitter = require('./event-emitter');
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+        throw new TypeError("Cannot call a class as a function");
+    }
+}
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+function _possibleConstructorReturn(self, call) {
+    if (!self) {
+        throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }return call && ((typeof call === "undefined" ? "undefined" : _typeof(call)) === "object" || typeof call === "function") ? call : self;
+}
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) {
+    if (typeof superClass !== "function" && superClass !== null) {
+        throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof(superClass)));
+    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
 
+/**
+ * Service to load asset
+ * @example
+ * let layer = {
+ *     create: function() {
+ *         Loader.add('img/my-image.png', 'player-image');
+ *         Loader.add('config/my-config.json', 'player-config', 'json');
+ *     },
+ *     render: function() {
+ *          const image = Loader.get('player-image');
+ *          const config = Loader.get('player-config');
+ *          this.ctx.drawImage(image, config.x, config.y);
+ *     }
+ * }
+ */
 var Loader = exports.Loader = function (_EventEmitter) {
     _inherits(Loader, _EventEmitter);
 
@@ -513,12 +673,10 @@ var Loader = exports.Loader = function (_EventEmitter) {
 
     /**
      * Add asset to load
-     * @param string src
-     * @param string id
-     * @param string type (image or json)
-     * @return void
+     * @param {String} src
+     * @param {String} id
+     * @param {String} type - (image or json)
      */
-
 
     _createClass(Loader, [{
         key: 'add',
@@ -540,10 +698,11 @@ var Loader = exports.Loader = function (_EventEmitter) {
         }
 
         /**
-         * Add assat into collection and dispatch event
-         * @param mixed el
-         * @param string id
-         * @return void
+         * Add asset into the collection and dispatch event
+         * @param {mixed} el
+         * @param {String} id
+         * @emits {load} emit when asset is loaded
+         * @emits {ready} emit when all assets are loaded
          */
 
     }, {
@@ -564,9 +723,10 @@ var Loader = exports.Loader = function (_EventEmitter) {
         }
 
         /**
-         * @param string src
-         * @param string id
-         * @return void
+         * Load image
+         * @private
+         * @param {String} src
+         * @param {String} id
          */
 
     }, {
@@ -582,9 +742,10 @@ var Loader = exports.Loader = function (_EventEmitter) {
         }
 
         /**
-         * @param string src
-         * @param string id
-         * @return void
+         * Load json file
+         * @private
+         * @param {String} src
+         * @param {String} id
          */
 
     }, {
@@ -605,8 +766,8 @@ var Loader = exports.Loader = function (_EventEmitter) {
 
         /**
          * Get asset by id
-         * @param string id
-         * @return mixed
+         * @param {String} id
+         * @return {mixed}
          */
 
     }, {
@@ -639,47 +800,73 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _createClass = function () {
+    function defineProperties(target, props) {
+        for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+        }
+    }return function (Constructor, protoProps, staticProps) {
+        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+    };
+}();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+        throw new TypeError("Cannot call a class as a function");
+    }
+}
 
 /**
  * Base class for every model entity
+ * @example
+ * let model = new Model(10, 10, 100, 200);
  */
 var Model = exports.Model = function () {
 
     /**
-     * @param int x
-     * @param int y
-     * @param int width
-     * @param int height
-     * @param {x, y, width, height} hitbox
+     * @param {number} x
+     * @param {number} y
+     * @param {number} width
+     * @param {number} height
+     * @param {Object} [hitbox]
+     * @param {Object} [hitbox.x]
+     * @param {Object} [hitbox.y]
+     * @param {Object} [hitbox.width]
+     * @param {Object} [hitbox.height]
      */
     function Model(x, y, width, height) {
         var hitbox = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
 
         _classCallCheck(this, Model);
 
+        /** @type {Number} */
         this.x = x;
+        /** @type {Number} */
         this.y = y;
+        /** @type {Number} */
         this.width = width;
+        /** @type {Number} */
         this.height = height;
+
         this.hitbox = hitbox;
         this.collision = false;
         this.parent = {};
     }
 
     /**
-     * @return {x, y, width, height}
+     * @return {Object}
+     * @property {number} x
+     * @property {number} y
+     * @property {number} width
+     * @property {number} height
      */
-
 
     _createClass(Model, [{
         key: "hasCollisions",
 
-
         /**
-         * @param Model[] models
+         * Check if there are any collisions with models
+         * @param {Array<Model>|Models} models
          */
         value: function hasCollisions(models) {
 
@@ -710,10 +897,14 @@ var Model = exports.Model = function () {
         }
 
         /**
-         * @param {x, y, width, height} hitbox
+         * @param {Object} [hitbox]
+         * @param {Object} [hitbox.x]
+         * @param {Object} [hitbox.y]
+         * @param {Object} [hitbox.width]
+         * @param {Object} [hitbox.height]
          */
-        ,
-        set: function set(hitbox) {
+
+        , set: function set(hitbox) {
             this._hitbox = {
                 x: hitbox.x || 0,
                 y: hitbox.y || 0,
@@ -732,41 +923,223 @@ var Model = exports.Model = function () {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.Sprite = undefined;
+exports.mouse = undefined;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _createClass = function () {
+    function defineProperties(target, props) {
+        for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+        }
+    }return function (Constructor, protoProps, staticProps) {
+        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+    };
+}();
 
 var _model = require('./model');
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var _container = require('./container');
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+var _io = require('./io');
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+        throw new TypeError("Cannot call a class as a function");
+    }
+}
 
+/**
+ * Mouse service
+ * @example
+ * let tile = { x: 10, y: 10, width: 32, height: 32 };
+ * if (mouse.isOver(tile)) {
+ *     tile.backgroundColor = 'red';
+ * }
+ */
+var Mouse = function () {
+    function Mouse() {
+        _classCallCheck(this, Mouse);
+
+        this.x = 0;
+        this.y = 0;
+    }
+
+    /**
+     * Check if mouse coordinates has collisions with object
+     * @protected
+     * @param {Object} object
+     * @param {number} object.x
+     * @param {number} object.y
+     * @param {number} object.width
+     * @param {number} object.height
+     */
+
+    _createClass(Mouse, [{
+        key: 'hasCollision',
+        value: function hasCollision(object) {
+
+            if (object.x === undefined || object.y === undefined || object.width === undefined || object.height === undefined) {
+                throw new Error('Object ' + object + ' is not valid, needs x, y, width and height parameters.');
+            }
+
+            if (this.x <= object.x + object.width && object.x <= this.x && this.y <= object.y + object.height && object.y <= this.y) {
+                return true;
+            }
+
+            return false;
+        }
+
+        /**
+         * Check if mouse is over object
+         * @param {Object} object
+         * @param {number} object.x
+         * @param {number} object.y
+         * @param {number} object.width
+         * @param {number} object.height
+         * @return {boolean}
+         */
+
+    }, {
+        key: 'isOver',
+        value: function isOver(object) {
+            return this.hasCollision(object);
+        }
+
+        /**
+         * Check if mouse is out of object
+         * @param {Object} object
+         * @param {number} object.x
+         * @param {number} object.y
+         * @param {number} object.width
+         * @param {number} object.height
+         * @return {boolean}
+         */
+
+    }, {
+        key: 'isOut',
+        value: function isOut(object) {
+            return !this.hasCollision(object);
+        }
+
+        /**
+         * Check if mouse click and over object
+         * @param {Object} object
+         * @param {number} object.x
+         * @param {number} object.y
+         * @param {number} object.width
+         * @param {number} object.height
+         * @return {boolean}
+         */
+
+    }, {
+        key: 'isClickOn',
+        value: function isClickOn(object) {
+            return _io.io[_io.MOUSE.LEFT_CLICK] && this.isOver(object);
+        }
+
+        /**
+         * Check if mouse click and out of object
+         * @param {Object} object
+         * @param {number} object.x
+         * @param {number} object.y
+         * @param {number} object.width
+         * @param {number} object.height
+         * @return {boolean}
+         */
+
+    }, {
+        key: 'isClickOut',
+        value: function isClickOut(object) {
+            return _io.io[_io.MOUSE.LEFT_CLICK] && this.isOut(object);
+        }
+    }]);
+
+    return Mouse;
+}();
+
+var mouse = exports.mouse = new Mouse();
+exports.default = mouse;
+
+},{"./container":2,"./io":5,"./model":7}],9:[function(require,module,exports){
+'use strict';
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.Sprite = undefined;
+
+var _createClass = function () {
+    function defineProperties(target, props) {
+        for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+        }
+    }return function (Constructor, protoProps, staticProps) {
+        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+    };
+}();
+
+var _model = require('./model');
+
+function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+        throw new TypeError("Cannot call a class as a function");
+    }
+}
+
+function _possibleConstructorReturn(self, call) {
+    if (!self) {
+        throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }return call && ((typeof call === "undefined" ? "undefined" : _typeof(call)) === "object" || typeof call === "function") ? call : self;
+}
+
+function _inherits(subClass, superClass) {
+    if (typeof superClass !== "function" && superClass !== null) {
+        throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof(superClass)));
+    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+/**
+ * The class to use sprite image
+ * You can add animations
+ * @example
+ * const image = Loader.get('my-sprite'); // see Loader documentation
+ * const animation = [{ frames: [9, 10, 11, 12], name: 'walk', loop: true }];
+ * let sprite = new Sprite(10, 10, 20, 20, image, animation);
+ *
+ * sprite.play('walk');
+ * sprite.render();
+ */
 var Sprite = exports.Sprite = function (_Model) {
     _inherits(Sprite, _Model);
 
     /**
-     * @param int x
-     * @param int y
-     * @param int tileWidth : width tile
-     * @param int tileHeight : height tile
-     * @param Image image
-     * @param {} animations : list of animations
-     *                      example : { frames: [9, 10, 11, 12], name: 'walk', loop: true, flip: false }
-     * @param {x, y, width, height} hitbox
+     * @param {number} x
+     * @param {number} y
+     * @param {number} tileWidth - width tile
+     * @param {number} tileHeight - height tile
+     * @param {Image} image
+     * @param {Array<Object>} animations - list of animations
+     * @example
+     * new Sprite(0, 0, 20, 20, image, [{ frames: [9, 10, 11, 12], name: 'walk', loop: true, flip: false }]);
+     * @param {Object} [hitbox]
+     * @param {Object} [hitbox.x]
+     * @param {Object} [hitbox.y]
+     * @param {Object} [hitbox.width]
+     * @param {Object} [hitbox.height]
      */
     function Sprite(x, y, tileWidth, tileHeight, image, animations, hitbox) {
         _classCallCheck(this, Sprite);
 
+        /** @type {Image} */
         var _this = _possibleConstructorReturn(this, (Sprite.__proto__ || Object.getPrototypeOf(Sprite)).call(this, x, y, tileWidth, tileHeight, hitbox));
 
         _this.image = image;
+        /** @type {Array<Object>} */
         _this.animations = animations;
+
         _this.time = 1;
         _this.stopped = true;
-
         _this.frame = { x: 0, y: 0 };
         _this.frames = {
             width: image.width / tileWidth,
@@ -780,9 +1153,8 @@ var Sprite = exports.Sprite = function (_Model) {
     }
 
     /**
-     * @return void
+     * @private
      */
-
 
     _createClass(Sprite, [{
         key: 'getNextFrame',
@@ -818,7 +1190,7 @@ var Sprite = exports.Sprite = function (_Model) {
         }
 
         /**
-         * @param float dt
+         * @param {number} dt - Delta between two frames
          */
 
     }, {
@@ -833,7 +1205,8 @@ var Sprite = exports.Sprite = function (_Model) {
         }
 
         /**
-         * @param string animation
+         * Play animation
+         * @param {String} animation
          */
 
     }, {
@@ -857,7 +1230,7 @@ var Sprite = exports.Sprite = function (_Model) {
         }
 
         /**
-         * @return void
+         * Stop animation
          */
 
     }, {
@@ -867,7 +1240,7 @@ var Sprite = exports.Sprite = function (_Model) {
         }
 
         /**
-         * @return void
+         * Reset animation
          */
 
     }, {
@@ -877,8 +1250,8 @@ var Sprite = exports.Sprite = function (_Model) {
         }
 
         /**
-         * @param 2DContext context
-         * @return void
+         * Render the sprite
+         * @param {RenderingContext} context
          */
 
     }, {
@@ -912,24 +1285,50 @@ var Sprite = exports.Sprite = function (_Model) {
     return Sprite;
 }(_model.Model);
 
-},{"./model":7}],9:[function(require,module,exports){
+},{"./model":7}],10:[function(require,module,exports){
 'use strict';
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.Ticker = undefined;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _createClass = function () {
+    function defineProperties(target, props) {
+        for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+        }
+    }return function (Constructor, protoProps, staticProps) {
+        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+    };
+}();
 
 var _eventEmitter = require('./event-emitter');
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+        throw new TypeError("Cannot call a class as a function");
+    }
+}
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+function _possibleConstructorReturn(self, call) {
+    if (!self) {
+        throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }return call && ((typeof call === "undefined" ? "undefined" : _typeof(call)) === "object" || typeof call === "function") ? call : self;
+}
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) {
+    if (typeof superClass !== "function" && superClass !== null) {
+        throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof(superClass)));
+    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
 
+/**
+ * Timer class
+ * You can stop and start the game
+ */
 var Ticker = exports.Ticker = function (_EventEmitter) {
     _inherits(Ticker, _EventEmitter);
 
@@ -946,9 +1345,8 @@ var Ticker = exports.Ticker = function (_EventEmitter) {
     }
 
     /**
-     * @return void
+     * @private
      */
-
 
     _createClass(Ticker, [{
         key: 'loop',
@@ -973,7 +1371,7 @@ var Ticker = exports.Ticker = function (_EventEmitter) {
         }
 
         /**
-         * @return void
+         * Start timer
          */
 
     }, {
@@ -986,7 +1384,7 @@ var Ticker = exports.Ticker = function (_EventEmitter) {
         }
 
         /**
-         * @return void
+         * Stop timer
          */
 
     }, {
@@ -996,8 +1394,10 @@ var Ticker = exports.Ticker = function (_EventEmitter) {
         }
 
         /**
-         * @param float dt
-         * @return void
+         * Called at every frame
+         * @private
+         * @param {number} dt
+         * @emits {step}
          */
 
     }, {
@@ -1007,8 +1407,10 @@ var Ticker = exports.Ticker = function (_EventEmitter) {
         }
 
         /**
-         * @param float dt
-         * @return void
+         * Called at every frame
+         * @private
+         * @param {number} dt
+         * @emits {render}
          */
 
     }, {
@@ -1021,75 +1423,120 @@ var Ticker = exports.Ticker = function (_EventEmitter) {
     return Ticker;
 }(_eventEmitter.EventEmitter);
 
-},{"./event-emitter":3}],10:[function(require,module,exports){
+},{"./event-emitter":3}],11:[function(require,module,exports){
 'use strict';
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.Tileset = undefined;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _createClass = function () {
+    function defineProperties(target, props) {
+        for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+        }
+    }return function (Constructor, protoProps, staticProps) {
+        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+    };
+}();
 
 var _model = require('./model');
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+        throw new TypeError("Cannot call a class as a function");
+    }
+}
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+function _possibleConstructorReturn(self, call) {
+    if (!self) {
+        throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }return call && ((typeof call === "undefined" ? "undefined" : _typeof(call)) === "object" || typeof call === "function") ? call : self;
+}
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) {
+    if (typeof superClass !== "function" && superClass !== null) {
+        throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof(superClass)));
+    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
 
+/**
+ * The class to use tileset image
+ * @example
+ * const image = Loader.get('my-tileset'); // see Loader documentation
+ * let tileset = new Tileset(0, 0, 32, 32, image);
+ *
+ * // render the first tile of tileset
+ * tileset.render(1);
+ */
 var Tileset = exports.Tileset = function (_Model) {
     _inherits(Tileset, _Model);
 
     /**
-     * @param int x
-     * @param int y
-     * @param int tileWidth
-     * @param int tileHeight
-     * @param Image image
+     * @param {number} x
+     * @param {number} y
+     * @param {number} tileWidth
+     * @param {number} tileHeight
+     * @param {Image} image
      */
     function Tileset(x, y, tileWidth, tileHeight, image) {
         _classCallCheck(this, Tileset);
 
+        /** @type {number} */
         var _this = _possibleConstructorReturn(this, (Tileset.__proto__ || Object.getPrototypeOf(Tileset)).call(this, x, y, tileWidth, tileHeight));
 
         _this.tileWidth = tileWidth;
+        /** @type {number} */
         _this.tileHeight = tileHeight;
+        /** @type {Image} */
         _this.image = image;
+        /** @type {number} */
+        _this.columns = _this.image.width / _this.tileWidth;
+        /** @type {number} */
+        _this.rows = _this.image.height / _this.tileHeight;
+        /** @type {number} */
+        _this.tiles = _this.columns * _this.rows;
         return _this;
     }
 
     /**
      * Get tile x,y positions by id (exemple tile number 23)
-     * @param int id
-     * @return {x, y}
+     * @private
+     * @param {number} id
+     * @return {Object}
+     * @property {number} x
+     * @property {number} y
      */
-
 
     _createClass(Tileset, [{
         key: 'getTilePosition',
         value: function getTilePosition(id) {
-            var columns = this.image.width / this.tileWidth;
-            var rows = this.image.height / this.tileHeight;
-            var tiles = columns * rows;
-
-            id = id > tiles ? tiles : id;
+            id = id > this.tiles ? this.tiles : id;
 
             var percent = id * this.tileWidth / this.image.width;
-            var unit = Math.trunc(percent);
-            var decimal = percent - unit;
+            var x = 0;
+            var y = 0;
 
-            var x = decimal * columns - 1;
-            var y = Math.trunc(id * this.tileWidth / this.image.width);
+            if (Number.isInteger(percent)) {
+                x = this.columns - 1;
+                y = percent - 1;
+            } else {
+                var unit = Math.trunc(percent);
+                var decimal = percent - unit;
+                x = decimal * this.columns - 1;
+                y = Math.trunc(id * this.tileWidth / this.image.width);
+            }
 
-            return { x: x < 0 ? columns : x, y: y };
+            return { x: x < 0 ? this.columns : x, y: y };
         }
 
         /**
          * Render a tile
-         * @param int id
-         * @param 2DContext context
+         * @param {number} id
+         * @param {RenderingContext} context
          */
 
     }, {

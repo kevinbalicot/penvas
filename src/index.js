@@ -6,8 +6,9 @@ import { Sprite } from  './sprite';
 import { Ticker } from  './ticker';
 import { Tileset } from  './tileset';
 
-import Keyboard from  './keyboard';
-import Loader from './loader';
+import io from  './io';
+import loader from './loader';
+import mouse from './mouse';
 
 window.Application = Application;
 window.Container = Container;
@@ -16,5 +17,7 @@ window.Model = Model;
 window.Sprite = Sprite;
 window.Ticker = Ticker;
 window.Tileset = Tileset;
-window.Keyboard = Keyboard;
-window.Loader = Loader;
+
+window.io = io;
+window.loader = loader;
+window.mouse = mouse;

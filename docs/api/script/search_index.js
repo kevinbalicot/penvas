@@ -6,12 +6,6 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
-    "penvas/src/keyboard.js~click",
-    "variable/index.html#static-variable-CLICK",
-    "<span>CLICK</span> <span class=\"search-result-import-path\">penvas/src/keyboard.js</span>",
-    "variable"
-  ],
-  [
     "penvas/src/container.js~container",
     "class/src/container.js~Container.html",
     "<span>Container</span> <span class=\"search-result-import-path\">penvas/src/container.js</span>",
@@ -24,9 +18,9 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
-    "penvas/src/keyboard.js~keys",
+    "penvas/src/io.js~keys",
     "variable/index.html#static-variable-KEYS",
-    "<span>KEYS</span> <span class=\"search-result-import-path\">penvas/src/keyboard.js</span>",
+    "<span>KEYS</span> <span class=\"search-result-import-path\">penvas/src/io.js</span>",
     "variable"
   ],
   [
@@ -36,9 +30,21 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
+    "penvas/src/io.js~mouse",
+    "variable/index.html#static-variable-MOUSE",
+    "<span>MOUSE</span> <span class=\"search-result-import-path\">penvas/src/io.js</span>",
+    "variable"
+  ],
+  [
     "penvas/src/model.js~model",
     "class/src/model.js~Model.html",
     "<span>Model</span> <span class=\"search-result-import-path\">penvas/src/model.js</span>",
+    "class"
+  ],
+  [
+    "penvas/src/mouse.js~mouse",
+    "class/src/mouse.js~Mouse.html",
+    "<span>Mouse</span> <span class=\"search-result-import-path\">penvas/src/mouse.js</span>",
     "class"
   ],
   [
@@ -60,15 +66,21 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
-    "penvas/src/keyboard.js~keyboard",
-    "variable/index.html#static-variable-keyboard",
-    "<span>keyboard</span> <span class=\"search-result-import-path\">penvas/src/keyboard.js</span>",
+    "penvas/src/io.js~io",
+    "variable/index.html#static-variable-io",
+    "<span>io</span> <span class=\"search-result-import-path\">penvas/src/io.js</span>",
     "variable"
   ],
   [
     "penvas/src/loader.js~loader",
     "variable/index.html#static-variable-loader",
     "<span>loader</span> <span class=\"search-result-import-path\">penvas/src/loader.js</span>",
+    "variable"
+  ],
+  [
+    "penvas/src/mouse.js~mouse",
+    "variable/index.html#static-variable-mouse",
+    "<span>mouse</span> <span class=\"search-result-import-path\">penvas/src/mouse.js</span>",
     "variable"
   ],
   [
@@ -474,9 +486,9 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
-    "src/application.js~application#keyboard",
-    "class/src/application.js~Application.html#instance-member-keyboard",
-    "src/application.js~Application#keyboard",
+    "src/application.js~application#io",
+    "class/src/application.js~Application.html#instance-member-io",
+    "src/application.js~Application#io",
     "member"
   ],
   [
@@ -489,6 +501,12 @@ window.esdocSearchIndex = [
     "src/application.js~application#loader",
     "class/src/application.js~Application.html#instance-member-loader",
     "src/application.js~Application#loader",
+    "member"
+  ],
+  [
+    "src/application.js~application#mouse",
+    "class/src/application.js~Application.html#instance-member-mouse",
+    "src/application.js~Application#mouse",
     "member"
   ],
   [
@@ -642,9 +660,9 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "src/keyboard.js",
-    "file/src/keyboard.js.html",
-    "src/keyboard.js",
+    "src/io.js",
+    "file/src/io.js.html",
+    "src/io.js",
     "file"
   ],
   [
@@ -771,6 +789,60 @@ window.esdocSearchIndex = [
     "src/model.js~model#y",
     "class/src/model.js~Model.html#instance-member-y",
     "src/model.js~Model#y",
+    "member"
+  ],
+  [
+    "src/mouse.js",
+    "file/src/mouse.js.html",
+    "src/mouse.js",
+    "file"
+  ],
+  [
+    "src/mouse.js~mouse#constructor",
+    "class/src/mouse.js~Mouse.html#instance-constructor-constructor",
+    "src/mouse.js~Mouse#constructor",
+    "method"
+  ],
+  [
+    "src/mouse.js~mouse#hascollision",
+    "class/src/mouse.js~Mouse.html#instance-method-hasCollision",
+    "src/mouse.js~Mouse#hasCollision",
+    "method"
+  ],
+  [
+    "src/mouse.js~mouse#isclickon",
+    "class/src/mouse.js~Mouse.html#instance-method-isClickOn",
+    "src/mouse.js~Mouse#isClickOn",
+    "method"
+  ],
+  [
+    "src/mouse.js~mouse#isclickout",
+    "class/src/mouse.js~Mouse.html#instance-method-isClickOut",
+    "src/mouse.js~Mouse#isClickOut",
+    "method"
+  ],
+  [
+    "src/mouse.js~mouse#isout",
+    "class/src/mouse.js~Mouse.html#instance-method-isOut",
+    "src/mouse.js~Mouse#isOut",
+    "method"
+  ],
+  [
+    "src/mouse.js~mouse#isover",
+    "class/src/mouse.js~Mouse.html#instance-method-isOver",
+    "src/mouse.js~Mouse#isOver",
+    "method"
+  ],
+  [
+    "src/mouse.js~mouse#x",
+    "class/src/mouse.js~Mouse.html#instance-member-x",
+    "src/mouse.js~Mouse#x",
+    "member"
+  ],
+  [
+    "src/mouse.js~mouse#y",
+    "class/src/mouse.js~Mouse.html#instance-member-y",
+    "src/mouse.js~Mouse#y",
     "member"
   ],
   [
@@ -942,6 +1014,12 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
+    "src/tileset.js~tileset#columns",
+    "class/src/tileset.js~Tileset.html#instance-member-columns",
+    "src/tileset.js~Tileset#columns",
+    "member"
+  ],
+  [
     "src/tileset.js~tileset#constructor",
     "class/src/tileset.js~Tileset.html#instance-constructor-constructor",
     "src/tileset.js~Tileset#constructor",
@@ -958,6 +1036,12 @@ window.esdocSearchIndex = [
     "class/src/tileset.js~Tileset.html#instance-method-render",
     "src/tileset.js~Tileset#render",
     "method"
+  ],
+  [
+    "src/tileset.js~tileset#rows",
+    "class/src/tileset.js~Tileset.html#instance-member-rows",
+    "src/tileset.js~Tileset#rows",
+    "member"
   ],
   [
     "src/tileset.js~tileset#tileheight",

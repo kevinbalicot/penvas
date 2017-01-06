@@ -1,7 +1,8 @@
 import { Ticker } from './ticker';
 import { Model } from './model';
-import keyboard from './keyboard';
+import io from './io';
 import loader from './loader';
+import mouse from './mouse';
 
 /**
  * Create a new application
@@ -40,15 +41,14 @@ export class Application {
          */
         this.currentLayer = null;
 
-        /** @type {keyboard} */
-        this.keyboard = keyboard;
+        /** @type {io} */
+        this.io = io;
 
         /** @type {loader} */
         this.loader = loader;
 
-        if (typeof options.container != 'object') {
-            options.container = document.querySelector('body');
-        }
+        /** @type {mouse} */
+        this.mouse = mouse;
 
         /**
          * Canvas width (default window width)
@@ -68,6 +68,10 @@ export class Application {
          */
         this.background = options.background || 0xffffff;
 
+        if (typeof options.container != 'object') {
+            options.container = document.querySelector('body');
+        }
+
         /** @type {HTMLCanvasElement} */
         this.canvas = document.createElement('canvas');
         this.canvas.width = this.width;
@@ -78,6 +82,13 @@ export class Application {
         this.context = this.canvas.getContext('2d');
         /** @type {CanvasRenderingContext2D} */
         this.ctx = this.context;
+
+        // Update mouse coordinates
+        this.canvas.addEventListener('mousemove', event => {
+            const rect = this.canvas.getBoundingClientRect();
+            this.mouse.x = event.clientX - rect.left;
+            this.mouse.y = event.clientY - rect.top;
+        });
 
         options.container.appendChild(this.canvas);
 

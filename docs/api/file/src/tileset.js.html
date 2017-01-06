@@ -37,13 +37,15 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/event-emitter.js~EventEmitter.html">EventEmitter</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/loader.js~Loader.html">Loader</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/model.js~Model.html">Model</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/mouse.js~Mouse.html">Mouse</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/sprite.js~Sprite.html">Sprite</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ticker.js~Ticker.html">Ticker</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html">Tileset</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-CLICK">CLICK</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEYS">KEYS</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-keyboard">keyboard</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-MOUSE">MOUSE</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-io">io</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-loader">loader</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-mouse">mouse</a></span></span></li>
 </ul>
 </div>
 </nav>
@@ -78,7 +80,12 @@ export class Tileset extends Model {
         this.tileHeight = tileHeight;
         /** @type {Image} */
         this.image = image;
-        this.tiles = 0;
+        /** @type {number} */
+        this.columns = this.image.width / this.tileWidth;
+        /** @type {number} */
+        this.rows = this.image.height / this.tileHeight;
+        /** @type {number} */
+        this.tiles = this.columns * this.rows;
     }
 
     /**
@@ -90,21 +97,23 @@ export class Tileset extends Model {
      * @property {number} y
      */
     getTilePosition (id) {
-        const columns = this.image.width / this.tileWidth;
-        const rows = this.image.height / this.tileHeight;
-        const tiles = columns * rows;
-        this.tiles = tiles;
-
-        id = id &gt; tiles ? tiles : id;
+        id = id &gt; this.tiles ? this.tiles : id;
 
         const percent = (id * this.tileWidth) / this.image.width;
-        const unit = Math.trunc(percent);
-        const decimal = percent - unit;
+        let x = 0;
+        let y = 0;
 
-        const x = (decimal * columns) - 1;
-        const y = Math.trunc((id * this.tileWidth) / this.image.width);
+        if (Number.isInteger(percent)) {
+            x = this.columns -1;
+            y = percent - 1;
+        } else {
+            const unit = Math.trunc(percent);
+            const decimal = percent - unit;
+            x = (decimal * this.columns) - 1;
+            y = Math.trunc((id * this.tileWidth) / this.image.width);
+        }
 
-        return { x: x &lt; 0 ? columns : x, y};
+        return { x: x &lt; 0 ? this.columns : x, y};
     }
 
     /**

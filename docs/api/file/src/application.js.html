@@ -37,13 +37,15 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/event-emitter.js~EventEmitter.html">EventEmitter</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/loader.js~Loader.html">Loader</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/model.js~Model.html">Model</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/mouse.js~Mouse.html">Mouse</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/sprite.js~Sprite.html">Sprite</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ticker.js~Ticker.html">Ticker</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html">Tileset</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-CLICK">CLICK</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEYS">KEYS</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-keyboard">keyboard</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-MOUSE">MOUSE</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-io">io</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-loader">loader</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-mouse">mouse</a></span></span></li>
 </ul>
 </div>
 </nav>
@@ -51,8 +53,9 @@
 <div class="content" data-ice="content"><h1 data-ice="title">src/application.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { Ticker } from &apos;./ticker&apos;;
 import { Model } from &apos;./model&apos;;
-import keyboard from &apos;./keyboard&apos;;
+import io from &apos;./io&apos;;
 import loader from &apos;./loader&apos;;
+import mouse from &apos;./mouse&apos;;
 
 /**
  * Create a new application
@@ -91,15 +94,14 @@ export class Application {
          */
         this.currentLayer = null;
 
-        /** @type {keyboard} */
-        this.keyboard = keyboard;
+        /** @type {io} */
+        this.io = io;
 
         /** @type {loader} */
         this.loader = loader;
 
-        if (typeof options.container != &apos;object&apos;) {
-            options.container = document.querySelector(&apos;body&apos;);
-        }
+        /** @type {mouse} */
+        this.mouse = mouse;
 
         /**
          * Canvas width (default window width)
@@ -119,6 +121,10 @@ export class Application {
          */
         this.background = options.background || 0xffffff;
 
+        if (typeof options.container != &apos;object&apos;) {
+            options.container = document.querySelector(&apos;body&apos;);
+        }
+
         /** @type {HTMLCanvasElement} */
         this.canvas = document.createElement(&apos;canvas&apos;);
         this.canvas.width = this.width;
@@ -129,6 +135,13 @@ export class Application {
         this.context = this.canvas.getContext(&apos;2d&apos;);
         /** @type {CanvasRenderingContext2D} */
         this.ctx = this.context;
+
+        // Update mouse coordinates
+        this.canvas.addEventListener(&apos;mousemove&apos;, event =&gt; {
+            const rect = this.canvas.getBoundingClientRect();
+            this.mouse.x = event.clientX - rect.left;
+            this.mouse.y = event.clientY - rect.top;
+        });
 
         options.container.appendChild(this.canvas);
 

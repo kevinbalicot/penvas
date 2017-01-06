@@ -1,16 +1,11 @@
 {
-  "coverage": "76.08%",
-  "expectCount": 92,
-  "actualCount": 70,
+  "coverage": "76.19%",
+  "expectCount": 105,
+  "actualCount": 80,
   "files": {
     "src/application.js": {
-      "expectCount": 21,
-      "actualCount": 21,
-      "undocumentLines": []
-    },
-    "src/keyboard.js": {
-      "expectCount": 3,
-      "actualCount": 3,
+      "expectCount": 22,
+      "actualCount": 22,
       "undocumentLines": []
     },
     "src/container.js": {
@@ -24,6 +19,11 @@
       "undocumentLines": [
         12
       ]
+    },
+    "src/io.js": {
+      "expectCount": 3,
+      "actualCount": 3,
+      "undocumentLines": []
     },
     "src/loader.js": {
       "expectCount": 11,
@@ -44,6 +44,16 @@
       "undocumentLines": [
         30,
         31
+      ]
+    },
+    "src/mouse.js": {
+      "expectCount": 10,
+      "actualCount": 6,
+      "undocumentLines": [
+        15,
+        98,
+        16,
+        17
       ]
     },
     "src/sprite.js": {
@@ -70,11 +80,9 @@
       ]
     },
     "src/tileset.js": {
-      "expectCount": 7,
-      "actualCount": 6,
-      "undocumentLines": [
-        30
-      ]
+      "expectCount": 9,
+      "actualCount": 9,
+      "undocumentLines": []
     }
   }
 }

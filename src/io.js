@@ -8,29 +8,29 @@ export const KEYS = {
 }
 
 /** @type {Object} */
-export const CLICK = {
-    LEFT: 'left_click',
-    RIGHT: 'right_click',
-    MIDDLE: 'middle_click'
+export const MOUSE = {
+    LEFT_CLICK: 'left_click',
+    RIGHT_CLICK: 'right_click',
+    MIDDLE_CLICK: 'middle_click'
 }
 
 /** @type {Array<number>} */
-export const keyboard = [];
+export const io = [];
 
 document.addEventListener('keydown', (e) => {
-    keyboard[e.keyCode] = true;
+    io[e.keyCode] = true;
 });
 
 document.addEventListener('keyup', (e) => {
-    keyboard[e.keyCode] = false;
+    io[e.keyCode] = false;
 });
 
 document.addEventListener('mousedown', () => {
-    keyboard[CLICK.LEFT] = true;
+    io[MOUSE.LEFT_CLICK] = true;
 });
 
 document.addEventListener('mouseup', () => {
-    keyboard[CLICK.LEFT] = false;
+    io[MOUSE.LEFT_CLICK] = false;
 });
 
-export default keyboard;
+export default io;
