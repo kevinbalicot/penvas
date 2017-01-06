@@ -2,10 +2,11 @@ DIST_DIR = ./dist
 BIN_DIR = ./node_modules/.bin
 BIN_FILE = $(DIST_DIR)/penvas.js
 
-build: $(BIN_FILE)
+build: $(DIST_DIR) node_modules
+	$(BIN_DIR)/browserify src/index.js -o $(BIN_FILE) -t [ babelify ]
 
 clean:
-	rm -rf ./node_modules $(DIST_DIR)
+	rm -rf ./node_modules
 
 doc: node_modules
 	${BIN_DIR}/esdoc
@@ -20,6 +21,3 @@ node_modules: package.json
 
 $(DIST_DIR):
 	mkdir -p $@
-
-$(BIN_FILE): $(DIST_DIR) node_modules
-	$(BIN_DIR)/browserify src/index.js -o $(BIN_FILE) -t [ babelify ]
