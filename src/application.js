@@ -1,5 +1,7 @@
 import { Ticker } from './ticker';
 import { Model } from './model';
+import { Drawer } from './drawer';
+
 import io from './io';
 import loader from './loader';
 import mouse from './mouse';
@@ -9,7 +11,7 @@ import mouse from './mouse';
  * @example
  * let app = new Application({ container: document.getElementById('my-canvas'), width: 500, height: 300 });
  */
-export class Application {
+export class Application extends Drawer {
 
     /**
      * @param {Object} [options]
@@ -22,6 +24,7 @@ export class Application {
      * @param {function} [options.ready] - called when application is ready (need to use loader)
      */
     constructor (options = {}) {
+        super();
 
         /**
          * Object of options
@@ -181,15 +184,6 @@ export class Application {
         if (!!layer) {
             this.currentLayer = layer.layer;
         }
-    }
-
-    /**
-     * Reset canvas zone
-     */
-    clearLayer () {
-        this.ctx.save();
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.restore();
     }
 
     /**

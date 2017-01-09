@@ -34,6 +34,7 @@
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/application.js~Application.html">Application</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/container.js~Container.html">Container</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/drawer.js~Drawer.html">Drawer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/event-emitter.js~EventEmitter.html">EventEmitter</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/loader.js~Loader.html">Loader</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/model.js~Model.html">Model</a></span></span></li>
@@ -53,6 +54,8 @@
 <div class="content" data-ice="content"><h1 data-ice="title">src/application.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { Ticker } from &apos;./ticker&apos;;
 import { Model } from &apos;./model&apos;;
+import { Drawer } from &apos;./drawer&apos;;
+
 import io from &apos;./io&apos;;
 import loader from &apos;./loader&apos;;
 import mouse from &apos;./mouse&apos;;
@@ -62,7 +65,7 @@ import mouse from &apos;./mouse&apos;;
  * @example
  * let app = new Application({ container: document.getElementById(&apos;my-canvas&apos;), width: 500, height: 300 });
  */
-export class Application {
+export class Application extends Drawer {
 
     /**
      * @param {Object} [options]
@@ -75,6 +78,7 @@ export class Application {
      * @param {function} [options.ready] - called when application is ready (need to use loader)
      */
     constructor (options = {}) {
+        super();
 
         /**
          * Object of options
@@ -234,15 +238,6 @@ export class Application {
         if (!!layer) {
             this.currentLayer = layer.layer;
         }
-    }
-
-    /**
-     * Reset canvas zone
-     */
-    clearLayer () {
-        this.ctx.save();
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.restore();
     }
 
     /**

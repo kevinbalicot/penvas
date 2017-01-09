@@ -34,6 +34,7 @@
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/application.js~Application.html">Application</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/container.js~Container.html">Container</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/drawer.js~Drawer.html">Drawer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/event-emitter.js~EventEmitter.html">EventEmitter</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/loader.js~Loader.html">Loader</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/model.js~Model.html">Model</a></span></span></li>
@@ -51,12 +52,14 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/container.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { Drawer } from &apos;./drawer&apos;;
+
+/**
  * Create a new container with a canvas element
  * @example
  * let container = new Container({ width: 200, height: 200, background: 0xeee })
  */
-export class Container {
+export class Container extends Drawer {
 
     /**
      * Create a new canvas
@@ -68,6 +71,8 @@ export class Container {
      * @param {hex} [options.background=0xffffff]
      */
     constructor (options = {}) {
+        super();
+
         /** @type {number} */
         this.x = options.x || 0;
         /** @type {number} */

@@ -1,9 +1,11 @@
+import { Drawer } from './drawer';
+
 /**
  * Create a new container with a canvas element
  * @example
- * let container = new Container({ width: 200, height: 200, background: 0xeee })
+ * let container = new Container({ width: 200, height: 200, background: 'gray' });
  */
-export class Container {
+export class Container extends Drawer {
 
     /**
      * Create a new canvas
@@ -15,6 +17,8 @@ export class Container {
      * @param {hex} [options.background=0xffffff]
      */
     constructor (options = {}) {
+        super();
+
         /** @type {number} */
         this.x = options.x || 0;
         /** @type {number} */

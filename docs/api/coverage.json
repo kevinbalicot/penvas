@@ -1,17 +1,25 @@
 {
-  "coverage": "76.19%",
-  "expectCount": 105,
-  "actualCount": 80,
+  "coverage": "76.31%",
+  "expectCount": 114,
+  "actualCount": 87,
   "files": {
     "src/application.js": {
-      "expectCount": 22,
-      "actualCount": 22,
+      "expectCount": 21,
+      "actualCount": 21,
       "undocumentLines": []
     },
     "src/container.js": {
       "expectCount": 11,
       "actualCount": 11,
       "undocumentLines": []
+    },
+    "src/drawer.js": {
+      "expectCount": 10,
+      "actualCount": 8,
+      "undocumentLines": [
+        10,
+        11
+      ]
     },
     "src/event-emitter.js": {
       "expectCount": 5,

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/drawer.js | Penvas API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/application.js~Application.html">Application</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/container.js~Container.html">Container</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/drawer.js~Drawer.html">Drawer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/event-emitter.js~EventEmitter.html">EventEmitter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/loader.js~Loader.html">Loader</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/model.js~Model.html">Model</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/mouse.js~Mouse.html">Mouse</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/sprite.js~Sprite.html">Sprite</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ticker.js~Ticker.html">Ticker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html">Tileset</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEYS">KEYS</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-MOUSE">MOUSE</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-io">io</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-loader">loader</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-mouse">mouse</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/drawer.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
+ * Draw class
+ * @example
+ * let drawer = new Drawer();
+ * drawer.drawRect(10, 10, 100, 100);
+ * let metrics = drawer.drawText(&apos;Hello world&apos;, 50, 50);
+ * metrics.width // text width
+ */
+class Drawer {
+    constructor() {
+        this.ctx = new CanvasRenderingContext2D();
+    }
+
+    /**
+     * Reset canvas zone
+     */
+    clearLayer () {
+        this.ctx.save();
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.restore();
+    }
+
+    /**
+     * Draw a line
+     * @param {number} x - x coordinate for first point of line
+     * @param {number} y - y coordinate for first point of line
+     * @param {number} destX - x coordinate for second point of line
+     * @param {number} destY - y coordinate for second point of line
+     * @param {number} [size=1] - line size
+     * @param {string} [color=black] - line color
+     */
+    drawLine(x, y, destX, destY, size = 1, color = &apos;black&apos;) {
+        this.ctx.save();
+        this.ctx.beginPath();
+        this.ctx.lineWidth = size;
+        this.ctx.strokeStyle = color;
+        this.ctx.moveTo(x, y);
+        this.ctx.lineTo(destX, destY);
+        this.ctx.stroke();
+        this.ctx.closePath();
+        this.ctx.restore();
+    }
+
+    /**
+     * Draw a rectangle
+     * @param {number} x - x coordinate for rectangle position
+     * @param {number} y - y coordinate for rectangle position
+     * @param {number} width - rectangle width
+     * @param {number} height - rectangle height
+     * @param {number} [size=1] - line size
+     * @param {string} [color=black] - line color
+     */
+    drawRect(x, y, width, height, size = 1, color = &apos;black&apos;) {
+        this.ctx.save();
+        this.ctx.beginPath();
+        this.ctx.lineWidth = size;
+        this.ctx.strokeStyle = color;
+        this.ctx.rect(x, y, width, height);
+        this.ctx.stroke();
+        this.ctx.closePath();
+        this.ctx.restore();
+    }
+
+    /**
+     * Draw a fill rectangle
+     * @param {number} x - x coordinate for rectangle position
+     * @param {number} y - y coordinate for rectangle position
+     * @param {number} width - rectangle width
+     * @param {number} height - rectangle height
+     * @param {string} [color=black] - rectangle background color
+     * @param {number} [lineSize=0] - line size
+     * @param {string} [lineColor=black] - line color
+     */
+    drawFillRect(x, y, width, height, color = &apos;black&apos;, lineSize = 0, lineColor = &apos;black&apos;) {
+        this.ctx.save();
+        this.ctx.beginPath();
+        if (lineSize &gt; 0) {
+            this.ctx.lineWidth = lineSize;
+            this.ctx.strokeStyle = lineColor;
+        }
+
+        this.ctx.fillStyle = color;
+        this.ctx.rect(x, y, width, height);
+        this.ctx.fill();
+        if (lineSize &gt; 0) {
+            this.stroke();
+        }
+        this.ctx.closePath();
+        this.ctx.restore();
+    }
+
+    /**
+     * Draw a circle
+     * @param {number} x - x coordinate for circle position
+     * @param {number} y - y coordinate for circle position
+     * @param {number} radius - circle radius
+     * @param {number} [size=1] - line size
+     * @param {string} [color=black] - line color
+     * @param {number} [start=0] - angle start
+     * @param {number} [end=360] - angle end
+     */
+    drawCircle(x, y, radius, size = 1, color = &apos;black&apos;, start = 0, end = (2 * Math.PI)) {
+        this.ctx.save();
+        this.ctx.beginPath();
+        this.ctx.lineWidth = size;
+        this.ctx.strokeStyle = color;
+        this.ctx.arc(x, y, radius, start, end);
+        this.ctx.stroke();
+        this.ctx.closePath();
+        this.ctx.restore();
+    }
+
+    /**
+     * Draw a fill circle
+     * @param {number} x - x coordinate for circle position
+     * @param {number} y - y coordinate for circle position
+     * @param {number} radius - circle radius
+     * @param {string} [color=black] - circle background color
+     * @param {number} [lineSize=0] - line size
+     * @param {string} [lineColor=black] - line color
+     * @param {number} [start=0] - angle start
+     * @param {number} [end=360] - angle end
+     */
+    drawFillCircle(x, y, radius, color = &apos;black&apos;, lineSize = 0, lineColor= &apos;black&apos;, start = 0, end = (2 * Math.PI)) {
+        this.ctx.save();
+        this.ctx.beginPath();
+        this.ctx.lineWidth = size;
+        this.ctx.strokeStyle = color;
+        this.ctx.arc(x, y, radius, start, end);
+        this.ctx.fill();
+        if (lineSize &gt; 0) {
+            this.ctx.lineWidth = lineSize;
+            this.ctx.strokeStyle = lineColor;
+            this.ctx.stroke();
+        }
+        this.ctx.closePath();
+        this.ctx.restore();
+    }
+
+    /**
+     * Draw a text
+     * @param {string} text - The text
+     * @param {number} x - x coordinate for text position
+     * @param {number} y - y coordinate for text position
+     * @param {string} [size=10pt] - text size (default: 10pt)
+     * @param {string} [font=Arial] - text font familly (default: Arial)
+     * @param {string} [color=black] - text color
+     * @param {string} [style] - text style, italic, blod etc ...
+     * @param {string} [align=left] - text align, left, right, center
+     * @return {Object}
+     */
+    drawText(text, x, y, size = &apos;10pt&apos;, font = &apos;Arial&apos;, color = &apos;black&apos;, style = &apos;&apos;, align = &apos;left&apos;) {
+        this.ctx.save();
+        this.ctx.beginPath();
+        this.ctx.font = `${style} ${size} ${font}`;
+        this.ctx.textAlign = align;
+        this.ctx.fillStyle = color;
+        this.ctx.fillText(text, x, y);
+        let metrics = this.ctx.measureText(text);
+        this.ctx.closePath();
+        this.ctx.restore();
+
+        return metrics;
+    }
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.5.2)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

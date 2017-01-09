@@ -12,6 +12,12 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
+    "penvas/src/drawer.js~drawer",
+    "class/src/drawer.js~Drawer.html",
+    "<span>Drawer</span> <span class=\"search-result-import-path\">penvas/src/drawer.js</span>",
+    "class"
+  ],
+  [
     "penvas/src/event-emitter.js~eventemitter",
     "class/src/event-emitter.js~EventEmitter.html",
     "<span>EventEmitter</span> <span class=\"search-result-import-path\">penvas/src/event-emitter.js</span>",
@@ -444,12 +450,6 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "src/application.js~application#clearlayer",
-    "class/src/application.js~Application.html#instance-method-clearLayer",
-    "src/application.js~Application#clearLayer",
-    "method"
-  ],
-  [
     "src/application.js~application#constructor",
     "class/src/application.js~Application.html#instance-constructor-constructor",
     "src/application.js~Application#constructor",
@@ -612,6 +612,66 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
+    "src/drawer.js",
+    "file/src/drawer.js.html",
+    "src/drawer.js",
+    "file"
+  ],
+  [
+    "src/drawer.js~drawer#clearlayer",
+    "class/src/drawer.js~Drawer.html#instance-method-clearLayer",
+    "src/drawer.js~Drawer#clearLayer",
+    "method"
+  ],
+  [
+    "src/drawer.js~drawer#constructor",
+    "class/src/drawer.js~Drawer.html#instance-constructor-constructor",
+    "src/drawer.js~Drawer#constructor",
+    "method"
+  ],
+  [
+    "src/drawer.js~drawer#ctx",
+    "class/src/drawer.js~Drawer.html#instance-member-ctx",
+    "src/drawer.js~Drawer#ctx",
+    "member"
+  ],
+  [
+    "src/drawer.js~drawer#drawcircle",
+    "class/src/drawer.js~Drawer.html#instance-method-drawCircle",
+    "src/drawer.js~Drawer#drawCircle",
+    "method"
+  ],
+  [
+    "src/drawer.js~drawer#drawfillcircle",
+    "class/src/drawer.js~Drawer.html#instance-method-drawFillCircle",
+    "src/drawer.js~Drawer#drawFillCircle",
+    "method"
+  ],
+  [
+    "src/drawer.js~drawer#drawfillrect",
+    "class/src/drawer.js~Drawer.html#instance-method-drawFillRect",
+    "src/drawer.js~Drawer#drawFillRect",
+    "method"
+  ],
+  [
+    "src/drawer.js~drawer#drawline",
+    "class/src/drawer.js~Drawer.html#instance-method-drawLine",
+    "src/drawer.js~Drawer#drawLine",
+    "method"
+  ],
+  [
+    "src/drawer.js~drawer#drawrect",
+    "class/src/drawer.js~Drawer.html#instance-method-drawRect",
+    "src/drawer.js~Drawer#drawRect",
+    "method"
+  ],
+  [
+    "src/drawer.js~drawer#drawtext",
+    "class/src/drawer.js~Drawer.html#instance-method-drawText",
+    "src/drawer.js~Drawer#drawText",
+    "method"
+  ],
+  [
     "src/event-emitter.js",
     "file/src/event-emitter.js.html",
     "src/event-emitter.js",
@@ -757,13 +817,13 @@ window.esdocSearchIndex = [
   ],
   [
     "src/model.js~model#hitbox",
-    "class/src/model.js~Model.html#instance-set-hitbox",
+    "class/src/model.js~Model.html#instance-get-hitbox",
     "src/model.js~Model#hitbox",
     "member"
   ],
   [
     "src/model.js~model#hitbox",
-    "class/src/model.js~Model.html#instance-get-hitbox",
+    "class/src/model.js~Model.html#instance-set-hitbox",
     "src/model.js~Model#hitbox",
     "member"
   ],
