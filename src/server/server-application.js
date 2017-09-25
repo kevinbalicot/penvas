@@ -1,7 +1,8 @@
-'use strict';
-
 const Ticker = require('./ticker');
 
+/**
+ * @ignore
+ */
 class ServerApplication {
 
     constructor (options = {}) {

@@ -1,23 +1,39 @@
-import { Application } from  './application';
-import { Container } from  './container';
-import { EventEmitter } from  './event-emitter';
-import { Model } from  './model';
-import { Sprite } from  './sprite';
-import { Ticker } from  './ticker';
-import { Tileset } from  './tileset';
+const lib = {
+    Application: require('./application'),
+    Container: require('./container'),
+    EventEmitter: require('./event-emitter'),
+    Model: require('./model'),
+    Sprite: require('./sprite'),
+    Ticker: require('./ticker'),
+    Tileset: require('./tileset'),
+    Drawer: require('./drawer'),
 
-import io from  './io';
-import loader from './loader';
-import mouse from './mouse';
+    io: require('./io'),
+    loader: require('./loader'),
+    mouse: require('./mouse'),
+    events: new (require('./event-emitter'))(),
 
-window.Application = Application;
-window.Container = Container;
-window.EventEmitter = EventEmitter;
-window.Model = Model;
-window.Sprite = Sprite;
-window.Ticker = Ticker;
-window.Tileset = Tileset;
+    Map: require('./helper/map'),
+    CollisionChecker: require('./helper/collision-checker'),
+    Renderer: require('./helper/renderer')
+};
 
-window.io = io;
-window.loader = loader;
-window.mouse = mouse;
+window.Application = lib.Application;
+window.Container = lib.Container;
+window.EventEmitter = lib.EventEmitter;
+window.Model = lib.Model;
+window.Sprite = lib.Sprite;
+window.Ticker = lib.Ticker;
+window.Tileset = lib.Tileset;
+window.Drawer = lib.Drawer;
+
+window.io = lib.io;
+window.loader = lib.loader;
+window.mouse = lib.mouse;
+window.events = lib.events;
+
+window.Map = lib.Map;
+window.CollisionChecker = lib.CollisionChecker;
+window.Renderer = lib.Renderer;
+
+module.exports = lib;

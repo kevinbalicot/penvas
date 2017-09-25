@@ -1,14 +1,15 @@
 /**
  * Draw class
+ * @param {CanvasRenderingContext2D} ctx
  * @example
  * let drawer = new Drawer();
  * drawer.drawRect(10, 10, 100, 100);
  * let metrics = drawer.drawText('Hello world', 50, 50);
  * metrics.width // text width
  */
-export class Drawer {
-    constructor() {
-        this.ctx = null;
+class Drawer {
+    constructor(ctx = null) {
+        this.ctx = ctx;
     }
 
     /**
@@ -160,3 +161,5 @@ export class Drawer {
         return metrics;
     }
 }
+
+module.exports = Drawer;

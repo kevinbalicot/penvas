@@ -1,95 +1,5 @@
 window.esdocSearchIndex = [
   [
-    "penvas/src/application.js~application",
-    "class/src/application.js~Application.html",
-    "<span>Application</span> <span class=\"search-result-import-path\">penvas/src/application.js</span>",
-    "class"
-  ],
-  [
-    "penvas/src/container.js~container",
-    "class/src/container.js~Container.html",
-    "<span>Container</span> <span class=\"search-result-import-path\">penvas/src/container.js</span>",
-    "class"
-  ],
-  [
-    "penvas/src/drawer.js~drawer",
-    "class/src/drawer.js~Drawer.html",
-    "<span>Drawer</span> <span class=\"search-result-import-path\">penvas/src/drawer.js</span>",
-    "class"
-  ],
-  [
-    "penvas/src/event-emitter.js~eventemitter",
-    "class/src/event-emitter.js~EventEmitter.html",
-    "<span>EventEmitter</span> <span class=\"search-result-import-path\">penvas/src/event-emitter.js</span>",
-    "class"
-  ],
-  [
-    "penvas/src/io.js~keys",
-    "variable/index.html#static-variable-KEYS",
-    "<span>KEYS</span> <span class=\"search-result-import-path\">penvas/src/io.js</span>",
-    "variable"
-  ],
-  [
-    "penvas/src/loader.js~loader",
-    "class/src/loader.js~Loader.html",
-    "<span>Loader</span> <span class=\"search-result-import-path\">penvas/src/loader.js</span>",
-    "class"
-  ],
-  [
-    "penvas/src/io.js~mouse",
-    "variable/index.html#static-variable-MOUSE",
-    "<span>MOUSE</span> <span class=\"search-result-import-path\">penvas/src/io.js</span>",
-    "variable"
-  ],
-  [
-    "penvas/src/model.js~model",
-    "class/src/model.js~Model.html",
-    "<span>Model</span> <span class=\"search-result-import-path\">penvas/src/model.js</span>",
-    "class"
-  ],
-  [
-    "penvas/src/mouse.js~mouse",
-    "class/src/mouse.js~Mouse.html",
-    "<span>Mouse</span> <span class=\"search-result-import-path\">penvas/src/mouse.js</span>",
-    "class"
-  ],
-  [
-    "penvas/src/sprite.js~sprite",
-    "class/src/sprite.js~Sprite.html",
-    "<span>Sprite</span> <span class=\"search-result-import-path\">penvas/src/sprite.js</span>",
-    "class"
-  ],
-  [
-    "penvas/src/ticker.js~ticker",
-    "class/src/ticker.js~Ticker.html",
-    "<span>Ticker</span> <span class=\"search-result-import-path\">penvas/src/ticker.js</span>",
-    "class"
-  ],
-  [
-    "penvas/src/tileset.js~tileset",
-    "class/src/tileset.js~Tileset.html",
-    "<span>Tileset</span> <span class=\"search-result-import-path\">penvas/src/tileset.js</span>",
-    "class"
-  ],
-  [
-    "penvas/src/io.js~io",
-    "variable/index.html#static-variable-io",
-    "<span>io</span> <span class=\"search-result-import-path\">penvas/src/io.js</span>",
-    "variable"
-  ],
-  [
-    "penvas/src/loader.js~loader",
-    "variable/index.html#static-variable-loader",
-    "<span>loader</span> <span class=\"search-result-import-path\">penvas/src/loader.js</span>",
-    "variable"
-  ],
-  [
-    "penvas/src/mouse.js~mouse",
-    "variable/index.html#static-variable-mouse",
-    "<span>mouse</span> <span class=\"search-result-import-path\">penvas/src/mouse.js</span>",
-    "variable"
-  ],
-  [
     "builtinexternal/ecmascriptexternal.js~array",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
     "BuiltinExternal/ECMAScriptExternal.js~Array",
@@ -426,190 +336,10 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "src/application.js~application#addlayer",
-    "class/src/application.js~Application.html#instance-method-addLayer",
-    "src/application.js~Application#addLayer",
-    "method"
-  ],
-  [
-    "src/application.js~application#background",
-    "class/src/application.js~Application.html#instance-member-background",
-    "src/application.js~Application#background",
-    "member"
-  ],
-  [
-    "src/application.js~application#canvas",
-    "class/src/application.js~Application.html#instance-member-canvas",
-    "src/application.js~Application#canvas",
-    "member"
-  ],
-  [
-    "src/application.js~application#changelayer",
-    "class/src/application.js~Application.html#instance-method-changeLayer",
-    "src/application.js~Application#changeLayer",
-    "method"
-  ],
-  [
-    "src/application.js~application#constructor",
-    "class/src/application.js~Application.html#instance-constructor-constructor",
-    "src/application.js~Application#constructor",
-    "method"
-  ],
-  [
-    "src/application.js~application#context",
-    "class/src/application.js~Application.html#instance-member-context",
-    "src/application.js~Application#context",
-    "member"
-  ],
-  [
-    "src/application.js~application#ctx",
-    "class/src/application.js~Application.html#instance-member-ctx",
-    "src/application.js~Application#ctx",
-    "member"
-  ],
-  [
-    "src/application.js~application#currentlayer",
-    "class/src/application.js~Application.html#instance-member-currentLayer",
-    "src/application.js~Application#currentLayer",
-    "member"
-  ],
-  [
-    "src/application.js~application#debug",
-    "class/src/application.js~Application.html#instance-method-debug",
-    "src/application.js~Application#debug",
-    "method"
-  ],
-  [
-    "src/application.js~application#height",
-    "class/src/application.js~Application.html#instance-member-height",
-    "src/application.js~Application#height",
-    "member"
-  ],
-  [
-    "src/application.js~application#io",
-    "class/src/application.js~Application.html#instance-member-io",
-    "src/application.js~Application#io",
-    "member"
-  ],
-  [
-    "src/application.js~application#layers",
-    "class/src/application.js~Application.html#instance-member-layers",
-    "src/application.js~Application#layers",
-    "member"
-  ],
-  [
-    "src/application.js~application#loader",
-    "class/src/application.js~Application.html#instance-member-loader",
-    "src/application.js~Application#loader",
-    "member"
-  ],
-  [
-    "src/application.js~application#mouse",
-    "class/src/application.js~Application.html#instance-member-mouse",
-    "src/application.js~Application#mouse",
-    "member"
-  ],
-  [
-    "src/application.js~application#options",
-    "class/src/application.js~Application.html#instance-member-options",
-    "src/application.js~Application#options",
-    "member"
-  ],
-  [
-    "src/application.js~application#ready",
-    "class/src/application.js~Application.html#instance-method-ready",
-    "src/application.js~Application#ready",
-    "method"
-  ],
-  [
-    "src/application.js~application#render",
-    "class/src/application.js~Application.html#instance-method-render",
-    "src/application.js~Application#render",
-    "method"
-  ],
-  [
-    "src/application.js~application#step",
-    "class/src/application.js~Application.html#instance-method-step",
-    "src/application.js~Application#step",
-    "method"
-  ],
-  [
-    "src/application.js~application#ticker",
-    "class/src/application.js~Application.html#instance-member-ticker",
-    "src/application.js~Application#ticker",
-    "member"
-  ],
-  [
-    "src/application.js~application#width",
-    "class/src/application.js~Application.html#instance-member-width",
-    "src/application.js~Application#width",
-    "member"
-  ],
-  [
     "src/container.js",
     "file/src/container.js.html",
     "src/container.js",
     "file"
-  ],
-  [
-    "src/container.js~container#background",
-    "class/src/container.js~Container.html#instance-member-background",
-    "src/container.js~Container#background",
-    "member"
-  ],
-  [
-    "src/container.js~container#canvas",
-    "class/src/container.js~Container.html#instance-member-canvas",
-    "src/container.js~Container#canvas",
-    "member"
-  ],
-  [
-    "src/container.js~container#constructor",
-    "class/src/container.js~Container.html#instance-constructor-constructor",
-    "src/container.js~Container#constructor",
-    "method"
-  ],
-  [
-    "src/container.js~container#context",
-    "class/src/container.js~Container.html#instance-member-context",
-    "src/container.js~Container#context",
-    "member"
-  ],
-  [
-    "src/container.js~container#ctx",
-    "class/src/container.js~Container.html#instance-member-ctx",
-    "src/container.js~Container#ctx",
-    "member"
-  ],
-  [
-    "src/container.js~container#height",
-    "class/src/container.js~Container.html#instance-member-height",
-    "src/container.js~Container#height",
-    "member"
-  ],
-  [
-    "src/container.js~container#render",
-    "class/src/container.js~Container.html#instance-method-render",
-    "src/container.js~Container#render",
-    "method"
-  ],
-  [
-    "src/container.js~container#width",
-    "class/src/container.js~Container.html#instance-member-width",
-    "src/container.js~Container#width",
-    "member"
-  ],
-  [
-    "src/container.js~container#x",
-    "class/src/container.js~Container.html#instance-member-x",
-    "src/container.js~Container#x",
-    "member"
-  ],
-  [
-    "src/container.js~container#y",
-    "class/src/container.js~Container.html#instance-member-y",
-    "src/container.js~Container#y",
-    "member"
   ],
   [
     "src/drawer.js",
@@ -618,93 +348,21 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "src/drawer.js~drawer#clearlayer",
-    "class/src/drawer.js~Drawer.html#instance-method-clearLayer",
-    "src/drawer.js~Drawer#clearLayer",
-    "method"
-  ],
-  [
-    "src/drawer.js~drawer#constructor",
-    "class/src/drawer.js~Drawer.html#instance-constructor-constructor",
-    "src/drawer.js~Drawer#constructor",
-    "method"
-  ],
-  [
-    "src/drawer.js~drawer#ctx",
-    "class/src/drawer.js~Drawer.html#instance-member-ctx",
-    "src/drawer.js~Drawer#ctx",
-    "member"
-  ],
-  [
-    "src/drawer.js~drawer#drawcircle",
-    "class/src/drawer.js~Drawer.html#instance-method-drawCircle",
-    "src/drawer.js~Drawer#drawCircle",
-    "method"
-  ],
-  [
-    "src/drawer.js~drawer#drawfillcircle",
-    "class/src/drawer.js~Drawer.html#instance-method-drawFillCircle",
-    "src/drawer.js~Drawer#drawFillCircle",
-    "method"
-  ],
-  [
-    "src/drawer.js~drawer#drawfillrect",
-    "class/src/drawer.js~Drawer.html#instance-method-drawFillRect",
-    "src/drawer.js~Drawer#drawFillRect",
-    "method"
-  ],
-  [
-    "src/drawer.js~drawer#drawline",
-    "class/src/drawer.js~Drawer.html#instance-method-drawLine",
-    "src/drawer.js~Drawer#drawLine",
-    "method"
-  ],
-  [
-    "src/drawer.js~drawer#drawrect",
-    "class/src/drawer.js~Drawer.html#instance-method-drawRect",
-    "src/drawer.js~Drawer#drawRect",
-    "method"
-  ],
-  [
-    "src/drawer.js~drawer#drawtext",
-    "class/src/drawer.js~Drawer.html#instance-method-drawText",
-    "src/drawer.js~Drawer#drawText",
-    "method"
-  ],
-  [
     "src/event-emitter.js",
     "file/src/event-emitter.js.html",
     "src/event-emitter.js",
     "file"
   ],
   [
-    "src/event-emitter.js~eventemitter#constructor",
-    "class/src/event-emitter.js~EventEmitter.html#instance-constructor-constructor",
-    "src/event-emitter.js~EventEmitter#constructor",
-    "method"
-  ],
-  [
-    "src/event-emitter.js~eventemitter#dispatch",
-    "class/src/event-emitter.js~EventEmitter.html#instance-method-dispatch",
-    "src/event-emitter.js~EventEmitter#dispatch",
-    "method"
-  ],
-  [
-    "src/event-emitter.js~eventemitter#on",
-    "class/src/event-emitter.js~EventEmitter.html#instance-method-on",
-    "src/event-emitter.js~EventEmitter#on",
-    "method"
-  ],
-  [
-    "src/event-emitter.js~eventemitter#registered",
-    "class/src/event-emitter.js~EventEmitter.html#instance-member-registered",
-    "src/event-emitter.js~EventEmitter#registered",
-    "member"
-  ],
-  [
     "src/helper/collision-checker.js",
     "file/src/helper/collision-checker.js.html",
     "src/helper/collision-checker.js",
+    "file"
+  ],
+  [
+    "src/helper/map.js",
+    "file/src/helper/map.js.html",
+    "src/helper/map.js",
     "file"
   ],
   [
@@ -726,64 +384,16 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
+    "src/keys.js",
+    "file/src/keys.js.html",
+    "src/keys.js",
+    "file"
+  ],
+  [
     "src/loader.js",
     "file/src/loader.js.html",
     "src/loader.js",
     "file"
-  ],
-  [
-    "src/loader.js~loader#add",
-    "class/src/loader.js~Loader.html#instance-method-add",
-    "src/loader.js~Loader#add",
-    "method"
-  ],
-  [
-    "src/loader.js~loader#collection",
-    "class/src/loader.js~Loader.html#instance-member-collection",
-    "src/loader.js~Loader#collection",
-    "member"
-  ],
-  [
-    "src/loader.js~loader#constructor",
-    "class/src/loader.js~Loader.html#instance-constructor-constructor",
-    "src/loader.js~Loader#constructor",
-    "method"
-  ],
-  [
-    "src/loader.js~loader#count",
-    "class/src/loader.js~Loader.html#instance-member-count",
-    "src/loader.js~Loader#count",
-    "member"
-  ],
-  [
-    "src/loader.js~loader#get",
-    "class/src/loader.js~Loader.html#instance-method-get",
-    "src/loader.js~Loader#get",
-    "method"
-  ],
-  [
-    "src/loader.js~loader#load",
-    "class/src/loader.js~Loader.html#instance-method-load",
-    "src/loader.js~Loader#load",
-    "method"
-  ],
-  [
-    "src/loader.js~loader#progress",
-    "class/src/loader.js~Loader.html#instance-member-progress",
-    "src/loader.js~Loader#progress",
-    "member"
-  ],
-  [
-    "src/loader.js~loader#queue",
-    "class/src/loader.js~Loader.html#instance-member-queue",
-    "src/loader.js~Loader#queue",
-    "member"
-  ],
-  [
-    "src/loader.js~loader#ready",
-    "class/src/loader.js~Loader.html#instance-member-ready",
-    "src/loader.js~Loader#ready",
-    "member"
   ],
   [
     "src/model.js",
@@ -792,129 +402,15 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "src/model.js~model#collision",
-    "class/src/model.js~Model.html#instance-member-collision",
-    "src/model.js~Model#collision",
-    "member"
-  ],
-  [
-    "src/model.js~model#constructor",
-    "class/src/model.js~Model.html#instance-constructor-constructor",
-    "src/model.js~Model#constructor",
-    "method"
-  ],
-  [
-    "src/model.js~model#hascollisions",
-    "class/src/model.js~Model.html#instance-method-hasCollisions",
-    "src/model.js~Model#hasCollisions",
-    "method"
-  ],
-  [
-    "src/model.js~model#height",
-    "class/src/model.js~Model.html#instance-member-height",
-    "src/model.js~Model#height",
-    "member"
-  ],
-  [
-    "src/model.js~model#hitbox",
-    "class/src/model.js~Model.html#instance-get-hitbox",
-    "src/model.js~Model#hitbox",
-    "member"
-  ],
-  [
-    "src/model.js~model#hitbox",
-    "class/src/model.js~Model.html#instance-set-hitbox",
-    "src/model.js~Model#hitbox",
-    "member"
-  ],
-  [
-    "src/model.js~model#parent",
-    "class/src/model.js~Model.html#instance-member-parent",
-    "src/model.js~Model#parent",
-    "member"
-  ],
-  [
-    "src/model.js~model#width",
-    "class/src/model.js~Model.html#instance-member-width",
-    "src/model.js~Model#width",
-    "member"
-  ],
-  [
-    "src/model.js~model#x",
-    "class/src/model.js~Model.html#instance-member-x",
-    "src/model.js~Model#x",
-    "member"
-  ],
-  [
-    "src/model.js~model#y",
-    "class/src/model.js~Model.html#instance-member-y",
-    "src/model.js~Model#y",
-    "member"
-  ],
-  [
     "src/mouse.js",
     "file/src/mouse.js.html",
     "src/mouse.js",
     "file"
   ],
   [
-    "src/mouse.js~mouse#constructor",
-    "class/src/mouse.js~Mouse.html#instance-constructor-constructor",
-    "src/mouse.js~Mouse#constructor",
-    "method"
-  ],
-  [
-    "src/mouse.js~mouse#hascollision",
-    "class/src/mouse.js~Mouse.html#instance-method-hasCollision",
-    "src/mouse.js~Mouse#hasCollision",
-    "method"
-  ],
-  [
-    "src/mouse.js~mouse#isclickon",
-    "class/src/mouse.js~Mouse.html#instance-method-isClickOn",
-    "src/mouse.js~Mouse#isClickOn",
-    "method"
-  ],
-  [
-    "src/mouse.js~mouse#isclickout",
-    "class/src/mouse.js~Mouse.html#instance-method-isClickOut",
-    "src/mouse.js~Mouse#isClickOut",
-    "method"
-  ],
-  [
-    "src/mouse.js~mouse#isout",
-    "class/src/mouse.js~Mouse.html#instance-method-isOut",
-    "src/mouse.js~Mouse#isOut",
-    "method"
-  ],
-  [
-    "src/mouse.js~mouse#isover",
-    "class/src/mouse.js~Mouse.html#instance-method-isOver",
-    "src/mouse.js~Mouse#isOver",
-    "method"
-  ],
-  [
-    "src/mouse.js~mouse#x",
-    "class/src/mouse.js~Mouse.html#instance-member-x",
-    "src/mouse.js~Mouse#x",
-    "member"
-  ],
-  [
-    "src/mouse.js~mouse#y",
-    "class/src/mouse.js~Mouse.html#instance-member-y",
-    "src/mouse.js~Mouse#y",
-    "member"
-  ],
-  [
     "src/server/collision-checker.js",
     "file/src/server/collision-checker.js.html",
     "src/server/collision-checker.js",
-    "file"
-  ],
-  [
-    "src/server/event-emitter.js",
-    "file/src/server/event-emitter.js.html",
-    "src/server/event-emitter.js",
     "file"
   ],
   [
@@ -936,189 +432,15 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "src/sprite.js~sprite#animations",
-    "class/src/sprite.js~Sprite.html#instance-member-animations",
-    "src/sprite.js~Sprite#animations",
-    "member"
-  ],
-  [
-    "src/sprite.js~sprite#constructor",
-    "class/src/sprite.js~Sprite.html#instance-constructor-constructor",
-    "src/sprite.js~Sprite#constructor",
-    "method"
-  ],
-  [
-    "src/sprite.js~sprite#currentanimation",
-    "class/src/sprite.js~Sprite.html#instance-member-currentAnimation",
-    "src/sprite.js~Sprite#currentAnimation",
-    "member"
-  ],
-  [
-    "src/sprite.js~sprite#currentframe",
-    "class/src/sprite.js~Sprite.html#instance-member-currentFrame",
-    "src/sprite.js~Sprite#currentFrame",
-    "member"
-  ],
-  [
-    "src/sprite.js~sprite#frame",
-    "class/src/sprite.js~Sprite.html#instance-member-frame",
-    "src/sprite.js~Sprite#frame",
-    "member"
-  ],
-  [
-    "src/sprite.js~sprite#frames",
-    "class/src/sprite.js~Sprite.html#instance-member-frames",
-    "src/sprite.js~Sprite#frames",
-    "member"
-  ],
-  [
-    "src/sprite.js~sprite#image",
-    "class/src/sprite.js~Sprite.html#instance-member-image",
-    "src/sprite.js~Sprite#image",
-    "member"
-  ],
-  [
-    "src/sprite.js~sprite#play",
-    "class/src/sprite.js~Sprite.html#instance-method-play",
-    "src/sprite.js~Sprite#play",
-    "method"
-  ],
-  [
-    "src/sprite.js~sprite#render",
-    "class/src/sprite.js~Sprite.html#instance-method-render",
-    "src/sprite.js~Sprite#render",
-    "method"
-  ],
-  [
-    "src/sprite.js~sprite#reset",
-    "class/src/sprite.js~Sprite.html#instance-method-reset",
-    "src/sprite.js~Sprite#reset",
-    "method"
-  ],
-  [
-    "src/sprite.js~sprite#step",
-    "class/src/sprite.js~Sprite.html#instance-method-step",
-    "src/sprite.js~Sprite#step",
-    "method"
-  ],
-  [
-    "src/sprite.js~sprite#stop",
-    "class/src/sprite.js~Sprite.html#instance-method-stop",
-    "src/sprite.js~Sprite#stop",
-    "method"
-  ],
-  [
-    "src/sprite.js~sprite#stopped",
-    "class/src/sprite.js~Sprite.html#instance-member-stopped",
-    "src/sprite.js~Sprite#stopped",
-    "member"
-  ],
-  [
-    "src/sprite.js~sprite#time",
-    "class/src/sprite.js~Sprite.html#instance-member-time",
-    "src/sprite.js~Sprite#time",
-    "member"
-  ],
-  [
     "src/ticker.js",
     "file/src/ticker.js.html",
     "src/ticker.js",
     "file"
   ],
   [
-    "src/ticker.js~ticker#constructor",
-    "class/src/ticker.js~Ticker.html#instance-constructor-constructor",
-    "src/ticker.js~Ticker#constructor",
-    "method"
-  ],
-  [
-    "src/ticker.js~ticker#frame",
-    "class/src/ticker.js~Ticker.html#instance-member-frame",
-    "src/ticker.js~Ticker#frame",
-    "member"
-  ],
-  [
-    "src/ticker.js~ticker#frameskip",
-    "class/src/ticker.js~Ticker.html#instance-member-frameskip",
-    "src/ticker.js~Ticker#frameskip",
-    "member"
-  ],
-  [
-    "src/ticker.js~ticker#lasttick",
-    "class/src/ticker.js~Ticker.html#instance-member-lastTick",
-    "src/ticker.js~Ticker#lastTick",
-    "member"
-  ],
-  [
-    "src/ticker.js~ticker#start",
-    "class/src/ticker.js~Ticker.html#instance-method-start",
-    "src/ticker.js~Ticker#start",
-    "method"
-  ],
-  [
-    "src/ticker.js~ticker#stop",
-    "class/src/ticker.js~Ticker.html#instance-method-stop",
-    "src/ticker.js~Ticker#stop",
-    "method"
-  ],
-  [
-    "src/ticker.js~ticker#stopped",
-    "class/src/ticker.js~Ticker.html#instance-member-stopped",
-    "src/ticker.js~Ticker#stopped",
-    "member"
-  ],
-  [
     "src/tileset.js",
     "file/src/tileset.js.html",
     "src/tileset.js",
     "file"
-  ],
-  [
-    "src/tileset.js~tileset#columns",
-    "class/src/tileset.js~Tileset.html#instance-member-columns",
-    "src/tileset.js~Tileset#columns",
-    "member"
-  ],
-  [
-    "src/tileset.js~tileset#constructor",
-    "class/src/tileset.js~Tileset.html#instance-constructor-constructor",
-    "src/tileset.js~Tileset#constructor",
-    "method"
-  ],
-  [
-    "src/tileset.js~tileset#image",
-    "class/src/tileset.js~Tileset.html#instance-member-image",
-    "src/tileset.js~Tileset#image",
-    "member"
-  ],
-  [
-    "src/tileset.js~tileset#render",
-    "class/src/tileset.js~Tileset.html#instance-method-render",
-    "src/tileset.js~Tileset#render",
-    "method"
-  ],
-  [
-    "src/tileset.js~tileset#rows",
-    "class/src/tileset.js~Tileset.html#instance-member-rows",
-    "src/tileset.js~Tileset#rows",
-    "member"
-  ],
-  [
-    "src/tileset.js~tileset#tileheight",
-    "class/src/tileset.js~Tileset.html#instance-member-tileHeight",
-    "src/tileset.js~Tileset#tileHeight",
-    "member"
-  ],
-  [
-    "src/tileset.js~tileset#tilewidth",
-    "class/src/tileset.js~Tileset.html#instance-member-tileWidth",
-    "src/tileset.js~Tileset#tileWidth",
-    "member"
-  ],
-  [
-    "src/tileset.js~tileset#tiles",
-    "class/src/tileset.js~Tileset.html#instance-member-tiles",
-    "src/tileset.js~Tileset#tiles",
-    "member"
   ]
 ]

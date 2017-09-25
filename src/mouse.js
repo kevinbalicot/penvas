@@ -1,6 +1,8 @@
-import { Model } from './model';
-import { Container } from './container';
-import { MOUSE, io } from './io';
+const Model = require('./model');
+const Container = require('./container');
+
+const io = require('./io');
+const keys = require('./keys');
 
 /**
  * Mouse service
@@ -78,7 +80,7 @@ class Mouse {
      * @return {boolean}
      */
     isClickOn(object) {
-        return io[MOUSE.LEFT_CLICK] && this.isOver(object);
+        return io[keys.LEFT_CLICK] && this.isOver(object);
     }
 
     /**
@@ -91,9 +93,8 @@ class Mouse {
      * @return {boolean}
      */
     isClickOut(object) {
-        return io[MOUSE.LEFT_CLICK] && this.isOut(object);
+        return io[keys.LEFT_CLICK] && this.isOut(object);
     }
 }
 
-export const mouse = new Mouse();
-export default mouse;
+module.exports = new Mouse();

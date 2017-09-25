@@ -2,10 +2,10 @@
   "name": "penvas",
   "version": "0.3.0",
   "description": "A light video game 2D framework",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "make build && make clean"
+    "prepublish": "make build"
   },
   "author": "Kevin Balicot <kevinbalicot@gmail.com>",
   "license": "MIT",

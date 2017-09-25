@@ -32,28 +32,14 @@
 <nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/application.js~Application.html">Application</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/container.js~Container.html">Container</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/drawer.js~Drawer.html">Drawer</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/event-emitter.js~EventEmitter.html">EventEmitter</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/loader.js~Loader.html">Loader</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/model.js~Model.html">Model</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/mouse.js~Mouse.html">Mouse</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/sprite.js~Sprite.html">Sprite</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ticker.js~Ticker.html">Ticker</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html">Tileset</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEYS">KEYS</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-MOUSE">MOUSE</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-io">io</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-loader">loader</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-mouse">mouse</a></span></span></li>
-</ul>
+  </ul>
 </div>
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/drawer.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
  * Draw class
+ * @param {CanvasRenderingContext2D} ctx
  * @example
  * let drawer = new Drawer();
  * drawer.drawRect(10, 10, 100, 100);
@@ -61,8 +47,8 @@
  * metrics.width // text width
  */
 class Drawer {
-    constructor() {
-        this.ctx = new CanvasRenderingContext2D();
+    constructor(ctx = null) {
+        this.ctx = ctx;
     }
 
     /**
@@ -70,6 +56,7 @@ class Drawer {
      */
     clearLayer () {
         this.ctx.save();
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.restore();
     }
@@ -128,16 +115,13 @@ class Drawer {
     drawFillRect(x, y, width, height, color = &apos;black&apos;, lineSize = 0, lineColor = &apos;black&apos;) {
         this.ctx.save();
         this.ctx.beginPath();
-        if (lineSize &gt; 0) {
-            this.ctx.lineWidth = lineSize;
-            this.ctx.strokeStyle = lineColor;
-        }
-
         this.ctx.fillStyle = color;
         this.ctx.rect(x, y, width, height);
         this.ctx.fill();
         if (lineSize &gt; 0) {
-            this.stroke();
+            this.ctx.lineWidth = lineSize;
+            this.ctx.strokeStyle = lineColor;
+            this.ctx.stroke();
         }
         this.ctx.closePath();
         this.ctx.restore();
@@ -178,9 +162,8 @@ class Drawer {
     drawFillCircle(x, y, radius, color = &apos;black&apos;, lineSize = 0, lineColor= &apos;black&apos;, start = 0, end = (2 * Math.PI)) {
         this.ctx.save();
         this.ctx.beginPath();
-        this.ctx.lineWidth = size;
-        this.ctx.strokeStyle = color;
         this.ctx.arc(x, y, radius, start, end);
+        this.ctx.fillStyle = color;
         this.ctx.fill();
         if (lineSize &gt; 0) {
             this.ctx.lineWidth = lineSize;
@@ -217,6 +200,8 @@ class Drawer {
         return metrics;
     }
 }
+
+module.exports = Drawer;
 </code></pre>
 
 </div>

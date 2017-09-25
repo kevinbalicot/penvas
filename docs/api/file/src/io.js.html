@@ -32,33 +32,16 @@
 <nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/application.js~Application.html">Application</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/container.js~Container.html">Container</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/drawer.js~Drawer.html">Drawer</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/event-emitter.js~EventEmitter.html">EventEmitter</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/loader.js~Loader.html">Loader</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/model.js~Model.html">Model</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/mouse.js~Mouse.html">Mouse</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/sprite.js~Sprite.html">Sprite</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ticker.js~Ticker.html">Ticker</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html">Tileset</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEYS">KEYS</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-MOUSE">MOUSE</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-io">io</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-loader">loader</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-mouse">mouse</a></span></span></li>
-</ul>
+  </ul>
 </div>
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/io.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
- * @type {Object}
- * @property {number} KEYS.SPACE
- * @property {number} KEYS.LEFT
- * @property {number} KEYS.UP
- * @property {number} KEYS.RIGHT
- * @property {number} KEYS.DOWN
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">const keys = require(&apos;./keys&apos;);
+
+/**
+ * Array of Input
+ * @type {Array&lt;number&gt;}
  * @example
  * if (true === io[KEYS.SPACE]) {
  *     this.player.jump();
@@ -67,36 +50,12 @@
  * if (!!io[39]) {
  *    this.player.walkRight();
  * }
- */
-export const KEYS = {
-    SPACE: 32,
-    LEFT: 37,
-    UP: 38,
-    RIGHT: 39,
-    DOWN: 40
-}
-
-/**
- * @type {Object}
- * @property {string} MOUSE.LEFT_CLICK
- * @property {string} MOUSE.RIGHT_CLICK
- * @property {string} MOUSE.MIDDLE_CLICK
- * @example
+ *
  * if (io[MOUSE.LEFT_CLICK]) {
  *     this.player.attack();
  * }
  */
-export const MOUSE = {
-    LEFT_CLICK: &apos;left_click&apos;,
-    RIGHT_CLICK: &apos;right_click&apos;,
-    MIDDLE_CLICK: &apos;middle_click&apos;
-}
-
-/**
- * Array of Input
- * @type {Array&lt;number&gt;}
- */
-export const io = [];
+const io = [];
 
 document.addEventListener(&apos;keydown&apos;, (e) =&gt; {
     io[e.keyCode] = true;
@@ -107,14 +66,14 @@ document.addEventListener(&apos;keyup&apos;, (e) =&gt; {
 });
 
 document.addEventListener(&apos;mousedown&apos;, () =&gt; {
-    io[MOUSE.LEFT_CLICK] = true;
+    io[keys.LEFT_CLICK] = true;
 });
 
 document.addEventListener(&apos;mouseup&apos;, () =&gt; {
-    io[MOUSE.LEFT_CLICK] = false;
+    io[keys.LEFT_CLICK] = false;
 });
 
-export default io;
+module.exports = io;
 </code></pre>
 
 </div>

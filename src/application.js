@@ -1,17 +1,17 @@
-import { Ticker } from './ticker';
-import { Model } from './model';
-import { Drawer } from './drawer';
+const Ticker = require('./ticker');
+const Model = require('./model');
+const Drawer = require('./drawer');
 
-import io from './io';
-import loader from './loader';
-import mouse from './mouse';
+const io = require('./io');
+const loader = require('./loader');
+const mouse = require('./mouse');
 
 /**
  * Create a new application
  * @example
  * let app = new Application({ container: document.getElementById('my-canvas'), width: 500, height: 300 });
  */
-export class Application extends Drawer {
+class Application extends Drawer {
 
     /**
      * @param {Object} [options]
@@ -248,3 +248,5 @@ export class Application extends Drawer {
         }
     }
 }
+
+module.exports = Application;

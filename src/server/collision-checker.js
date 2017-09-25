@@ -1,5 +1,6 @@
-'use strict';
-
+/**
+ * @ignore
+ */
 class CollisionChecker {
 
     constructor () {
@@ -39,9 +40,9 @@ class CollisionChecker {
             rect = hitboxes[i];
 
             if (hitbox.x < rect.x + rect.width &&
-                hitbox.x + rect.width > rect.x &&
+                hitbox.x + hitbox.width > rect.x &&
                 hitbox.y < rect.y + rect.height &&
-                hitbox.height + hitbox.y > rect.y
+                hitbox.y + hitbox.height > rect.y
             ) {
                 return true;
             }

@@ -1,4 +1,4 @@
-import { Model } from './model';
+const Model = require('./model');
 
 /**
  * The class to use tileset image
@@ -9,7 +9,7 @@ import { Model } from './model';
  * // render the first tile of tileset
  * tileset.render(1);
  */
-export class Tileset extends Model {
+class Tileset extends Model {
 
     /**
      * @param {number} x
@@ -56,7 +56,8 @@ export class Tileset extends Model {
         } else {
             const unit = Math.trunc(percent);
             const decimal = percent - unit;
-            x = (decimal * this.columns) - 1;
+
+            x = Math.round(decimal * this.columns) - 1;
             y = Math.trunc((id * this.tileWidth) / this.image.width);
         }
 
@@ -89,3 +90,5 @@ export class Tileset extends Model {
         }
     }
 }
+
+module.exports = Tileset;

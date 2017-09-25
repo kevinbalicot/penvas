@@ -1,7 +1,8 @@
-'use strict';
+const EventEmitter = require('./../event-emitter');
 
-const EventEmitter = require('./event-emitter');
-
+/**
+ * @ignore
+ */
 class Ticker extends EventEmitter {
 
     constructor () {

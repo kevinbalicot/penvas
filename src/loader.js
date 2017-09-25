@@ -1,4 +1,4 @@
-import { EventEmitter } from './event-emitter';
+const EventEmitter = require('./event-emitter');
 
 /**
  * Service to load asset
@@ -15,7 +15,7 @@ import { EventEmitter } from './event-emitter';
  *     }
  * }
  */
-export class Loader extends EventEmitter {
+class Loader extends EventEmitter {
 
     constructor () {
         super();
@@ -116,5 +116,4 @@ export class Loader extends EventEmitter {
     }
 }
 
-export const loader = new Loader();
-export default loader;
+module.exports = new Loader();

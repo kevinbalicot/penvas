@@ -1,4 +1,4 @@
-import { Model } from './model';
+const Model = require('./model');
 
 /**
  * The class to use sprite image
@@ -11,7 +11,7 @@ import { Model } from './model';
  * sprite.play('walk');
  * sprite.render();
  */
-export class Sprite extends Model {
+class Sprite extends Model {
 
     /**
      * @param {number} x
@@ -23,12 +23,12 @@ export class Sprite extends Model {
      * @example
      * new Sprite(0, 0, 20, 20, image, [{ frames: [9, 10, 11, 12], name: 'walk', loop: true, flip: false }]);
      * @param {Object} [hitbox]
-     * @param {Object} [hitbox.x]
-     * @param {Object} [hitbox.y]
-     * @param {Object} [hitbox.width]
-     * @param {Object} [hitbox.height]
+     * @param {number} [hitbox.x]
+     * @param {number} [hitbox.y]
+     * @param {number} [hitbox.width]
+     * @param {number} [hitbox.height]
      */
-    constructor (x, y, tileWidth, tileHeight, image, animations, hitbox) {
+    constructor(x, y, tileWidth, tileHeight, image, animations, hitbox) {
         super(x, y, tileWidth, tileHeight, hitbox);
 
         /** @type {Image} */
@@ -52,7 +52,7 @@ export class Sprite extends Model {
     /**
      * @private
      */
-    getNextFrame () {
+    getNextFrame() {
         let currentAnimation = this.animations[this.currentAnimation];
         let currentFrame = currentAnimation.frames[this.currentFrame];
 
@@ -86,7 +86,7 @@ export class Sprite extends Model {
     /**
      * @param {number} dt - Delta between two frames
      */
-    step (dt) {
+    step(dt) {
         this.time += dt;
 
         if (this.time >= 0.25 && !this.stopped) {
@@ -99,7 +99,7 @@ export class Sprite extends Model {
      * Play animation
      * @param {String} animation
      */
-    play (animation) {
+    play(animation) {
         let currentAnimation = this.animations.filter(anim => anim.name === animation);
 
         if (!!currentAnimation) {
@@ -118,14 +118,14 @@ export class Sprite extends Model {
     /**
      * Stop animation
      */
-    stop () {
+    stop() {
         this.stopped = true;
     }
 
     /**
      * Reset animation
      */
-    reset () {
+    reset() {
         this.frame = { x: 0, y: 0 };
     }
 
@@ -133,7 +133,7 @@ export class Sprite extends Model {
      * Render the sprite
      * @param {RenderingContext} context
      */
-    render (context = null) {
+    render(context = null) {
         let ctx = context || this.parent.ctx;
         let currentAnimation = this.animations[this.currentAnimation];
         ctx.save();
@@ -156,4 +156,77 @@ export class Sprite extends Model {
         );
         ctx.restore();
     }
+
+    /**
+     * @return {Object}
+     * @property {number} x
+     * @property {number} y
+     * @property {number} width
+     * @property {number} height
+     * @property {Object} hitbox
+     * @property {Image} image
+     * @property {Object} animations
+     * @property {number} time
+     * @property {boolean} stopped
+     * @property {Object} frame
+     * @property {number} currentAnimation
+     * @property {number} currentFrame
+     */
+    serialize() {
+        return Object.assign(super.serialize(), {
+            image: this.image,
+            animations: this.animations,
+            time: this.time,
+            stopped: this.stopped,
+            frame: this.frame,
+            currentAnimation: this.currentAnimation,
+            currentFrame: this.currentFrame
+        });
+    }
+
+    /**
+     * @param {Object} data
+     * @param {number} data.x
+     * @param {number} data.y
+     * @param {number} data.width
+     * @param {number} data.height
+     * @param {Object} data.hitbox
+     * @param {boolean} data.collision
+     * @param {Image} data.image
+     * @param {Object} data.animations
+     * @param {number} data.time
+     * @param {boolean} data.stopped
+     * @param {Object} data.frame
+     * @param {number} data.currentAnimation
+     * @param {number} data.currentFrame
+     * @return {Sprite}
+     */
+    static deserialize({
+        x,
+        y,
+        width,
+        height,
+        hitbox,
+        collision,
+        image,
+        animations,
+        time,
+        stopped,
+        frame,
+        currentAnimation,
+        currentFrame
+    }) {
+        const sprite = new Sprite(x, y, width, height, image, animations, hitbox);
+
+        sprite.collision = collision;
+        sprite.time = time;
+        sprite.stopped = stopped;
+        sprite.frame = frame;
+        sprite.currentAnimation = currentAnimation;
+        sprite.currentFrame = currentFrame;
+
+        return sprite;
+    }
 }
+
+module.exports = Sprite;

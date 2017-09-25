@@ -1,11 +1,11 @@
-import { Drawer } from './drawer';
+const Drawer = require('./drawer');
 
 /**
  * Create a new container with a canvas element
  * @example
  * let container = new Container({ width: 200, height: 200, background: 'gray' });
  */
-export class Container extends Drawer {
+class Container extends Drawer {
 
     /**
      * Create a new canvas
@@ -16,7 +16,7 @@ export class Container extends Drawer {
      * @param {number} [options.height] - default window height
      * @param {hex} [options.background=0xffffff]
      */
-    constructor (options = {}) {
+    constructor(options = {}) {
         super();
 
         /** @type {number} */
@@ -48,9 +48,11 @@ export class Container extends Drawer {
      * @param {number} x
      * @param {number} y
      */
-    render (ctx, x = 0, y = 0) {
+    render(ctx, x = 0, y = 0) {
         ctx.save();
         ctx.drawImage(this.canvas, x, y);
         ctx.restore();
     }
 }
+
+module.exports = Container;

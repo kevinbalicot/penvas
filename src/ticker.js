@@ -1,10 +1,10 @@
-import { EventEmitter } from './event-emitter';
+const EventEmitter = require('./event-emitter');
 
 /**
  * Timer class
  * You can stop and start the game
  */
-export class Ticker extends EventEmitter {
+class Ticker extends EventEmitter {
 
     constructor () {
         super();
@@ -75,3 +75,5 @@ export class Ticker extends EventEmitter {
         this.dispatch('render', dt);
     }
 }
+
+module.exports = Ticker;

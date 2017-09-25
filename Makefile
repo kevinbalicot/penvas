@@ -14,7 +14,7 @@ doc: node_modules
 test: node_modules
 	$(BIN_DIR)/mocha ./test
 
-.PHONY: build clean doc
+.PHONY: build clean doc test
 
 node_modules: package.json
 	npm install --ignore-scripts

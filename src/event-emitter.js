@@ -7,7 +7,7 @@
  *     }
  * }
  */
-export class EventEmitter {
+class EventEmitter {
 
     constructor () {
         /**
@@ -41,3 +41,5 @@ export class EventEmitter {
         });
     }
 }
+
+module.exports = EventEmitter;

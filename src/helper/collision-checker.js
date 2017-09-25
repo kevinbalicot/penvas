@@ -1,24 +1,23 @@
 /**
  * @ignore
  */
-export class CollisionChecker {
+class CollisionChecker {
 
-    constructor () {
-        this.pair = [];
+    constructor() {
+        this.pairs = [];
     }
 
-    add (model, platforms, event) {
-
+    add(model, platforms, event = () => {}) {
         if (!Array.isArray(platforms)) {
             platforms = [platforms];
         }
 
-        this.pair.push({ model, platforms, event });
+        this.pairs.push({ model, platforms, event });
     }
 
-    check (td) {
+    check(td) {
         let model, platform;
-        this.pair.forEach(pair => {
+        this.pairs.forEach(pair => {
             model = Object.create(pair.model);
             model.step(td);
             platform = model.hasCollisions(pair.platforms);
@@ -29,7 +28,9 @@ export class CollisionChecker {
         });
     }
 
-    clear () {
-        this.pair = [];
+    clear() {
+        this.pairs = [];
     }
 }
+
+module.exports = CollisionChecker;

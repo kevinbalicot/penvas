@@ -32,49 +32,50 @@
 <nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/application.js~Application.html">Application</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/container.js~Container.html">Container</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/drawer.js~Drawer.html">Drawer</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/event-emitter.js~EventEmitter.html">EventEmitter</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/loader.js~Loader.html">Loader</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/model.js~Model.html">Model</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/mouse.js~Mouse.html">Mouse</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/sprite.js~Sprite.html">Sprite</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ticker.js~Ticker.html">Ticker</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html">Tileset</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEYS">KEYS</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-MOUSE">MOUSE</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-io">io</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-loader">loader</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-mouse">mouse</a></span></span></li>
-</ul>
+  </ul>
 </div>
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/index.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { Application } from  &apos;./application&apos;;
-import { Container } from  &apos;./container&apos;;
-import { EventEmitter } from  &apos;./event-emitter&apos;;
-import { Model } from  &apos;./model&apos;;
-import { Sprite } from  &apos;./sprite&apos;;
-import { Ticker } from  &apos;./ticker&apos;;
-import { Tileset } from  &apos;./tileset&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">const lib = {
+    Application: require(&apos;./application&apos;),
+    Container: require(&apos;./container&apos;),
+    EventEmitter: require(&apos;./event-emitter&apos;),
+    Model: require(&apos;./model&apos;),
+    Sprite: require(&apos;./sprite&apos;),
+    Ticker: require(&apos;./ticker&apos;),
+    Tileset: require(&apos;./tileset&apos;),
+    Drawer: require(&apos;./drawer&apos;),
 
-import io from  &apos;./io&apos;;
-import loader from &apos;./loader&apos;;
-import mouse from &apos;./mouse&apos;;
+    io: require(&apos;./io&apos;),
+    loader: require(&apos;./loader&apos;),
+    mouse: require(&apos;./mouse&apos;),
+    events: new (require(&apos;./event-emitter&apos;))(),
 
-window.Application = Application;
-window.Container = Container;
-window.EventEmitter = EventEmitter;
-window.Model = Model;
-window.Sprite = Sprite;
-window.Ticker = Ticker;
-window.Tileset = Tileset;
+    Map: require(&apos;./helper/map&apos;),
+    CollisionChecker: require(&apos;./helper/collision-checker&apos;),
+    Renderer: require(&apos;./helper/renderer&apos;)
+};
 
-window.io = io;
-window.loader = loader;
-window.mouse = mouse;
+window.Application = lib.Application;
+window.Container = lib.Container;
+window.EventEmitter = lib.EventEmitter;
+window.Model = lib.Model;
+window.Sprite = lib.Sprite;
+window.Ticker = lib.Ticker;
+window.Tileset = lib.Tileset;
+window.Drawer = lib.Drawer;
+
+window.io = lib.io;
+window.loader = lib.loader;
+window.mouse = lib.mouse;
+window.events = lib.events;
+
+window.Map = lib.Map;
+window.CollisionChecker = lib.CollisionChecker;
+window.Renderer = lib.Renderer;
+
+module.exports = lib;
 </code></pre>
 
 </div>
