@@ -861,6 +861,9 @@ var Map = function () {
         this.layers = {};
         this.tilesets = {};
         this.platforms = {};
+
+        this.width = tileWidth * columns;
+        this.height = tileHeight * rows;
     }
 
     _createClass(Map, [{
@@ -935,6 +938,7 @@ var Map = function () {
         value: function render(ctx) {
             var minZ = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
             var maxZ = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 999;
+            var limits = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : { x: 0, y: 0, width: 9999, height: 9999 };
 
             var tileset = null;
             var layer = null;
@@ -955,7 +959,11 @@ var Map = function () {
                         tileset.x = columns * this.tileWidth;
                         tileset.y = rows * this.tileHeight;
 
-                        tileset.render(layer.tiles[t] || 0, ctx);
+                        // Check if tile is into limits
+                        if (tileset.x + this.tileWidth >= limits.x && tileset.x <= limits.x + limits.width && tileset.y + this.tileHeight >= limits.y && tileset.y <= limits.y + limits.height) {
+                            tileset.render(layer.tiles[t] || 0, ctx);
+                        }
+
                         t++;
                     }
                 }
