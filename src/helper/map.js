@@ -13,6 +13,9 @@ class Map {
         this.layers = {};
         this.tilesets = {};
         this.platforms = {};
+
+        this.width = tileWidth * columns;
+        this.height = tileHeight * rows;
     }
 
     addLayer(layer, name, z = 0, tileset = null) {
@@ -73,7 +76,7 @@ class Map {
         return this.tilesets[name] || null;
     }
 
-    render(ctx, minZ = 0, maxZ = 999) {
+    render(ctx, minZ = 0, maxZ = 999, limits = { x: 0, y: 0, width: 9999, height: 9999 }) {
         let tileset = null;
         let layer = null;
         let layers = this.layers;
@@ -93,7 +96,16 @@ class Map {
                     tileset.x = columns * this.tileWidth;
                     tileset.y = rows * this.tileHeight;
 
-                    tileset.render(layer.tiles[t] || 0, ctx);
+                    // Check if tile is into limits
+                    if (
+                        tileset.x + this.tileWidth >= limits.x &&
+                        tileset.x <= limits.x + limits.width &&
+                        tileset.y + this.tileHeight >= limits.y &&
+                        tileset.y <= limits.y + limits.height
+                    ) {
+                        tileset.render(layer.tiles[t] || 0, ctx);
+                    }
+
                     t++;
                 }
             }
