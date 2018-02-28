@@ -32,37 +32,68 @@
 <nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  </ul>
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/application.js~Application.html">Application</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/container.js~Container.html">Container</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/drawer.js~Drawer.html">Drawer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/event-emitter.js~EventEmitter.html">EventEmitter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/loader.js~Loader.html">Loader</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/model.js~Model.html">Model</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/mouse.js~Mouse.html">Mouse</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/particle.js~Particle.html">Particle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/sprite.js~Sprite.html">Sprite</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ticker.js~Ticker.html">Ticker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html">Tileset</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/viewport.js~Viewport.html">Viewport</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-io">io</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-keys">keys</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">helper</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collection.js~Collection.html">Collection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collision-checker.js~CollisionChecker.html">CollisionChecker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/renderer.js~Renderer.html">Renderer</a></span></span></li>
+</ul>
 </div>
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/application.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">const Ticker = require(&apos;./ticker&apos;);
-const Model = require(&apos;./model&apos;);
-const Drawer = require(&apos;./drawer&apos;);
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { Model } from &apos;./model&apos;;
+import { Drawer } from &apos;./drawer&apos;;
 
-const io = require(&apos;./io&apos;);
-const loader = require(&apos;./loader&apos;);
-const mouse = require(&apos;./mouse&apos;);
+import ticker from &apos;./ticker&apos;;
+import io from &apos;./io&apos;;
+import loader from &apos;./loader&apos;;
+import mouse from &apos;./mouse&apos;;
 
 /**
  * Create a new application
  * @example
  * let app = new Application({ container: document.getElementById(&apos;my-canvas&apos;), width: 500, height: 300 });
  */
-class Application extends Drawer {
+export class Application extends Drawer {
 
     /**
      * @param {Object} [options]
      * @param {HTMLElement} [options.container] - HTML container (default: body element)
      * @param {number} [options.width] - canvas width (default: window width)
      * @param {number} [options.height] - canvas height (default: window height)
-     * @param {hex} [options.background=0xffffff] - canvas background (default: 0xffffff)
+     * @param {string} [options.background=#ffffff] - canvas background (default: 0xffffff)
      * @param {function} [options.create] - called to load assets
      * @param {function} [options.render] - called at every frame
      * @param {function} [options.ready] - called when application is ready (need to use loader)
+     * @example
+     * const app = new Application({
+     *   width: 500,
+     *   height: 500,
+     *   container: document.getElementById(&apos;my-canvas&apos;),
+     *
+     *   create: function() {
+     *       loader.add(&apos;images/player-sprite.png&apos;, &apos;player&apos;);
+     *   },
+     *
+     *   ready: function() {
+     *       this.addLayer(layer, &apos;home&apos;);
+     *   }
+     * });
      */
-    constructor (options = {}) {
+    constructor(options = {}) {
         super();
 
         /**
@@ -108,7 +139,7 @@ class Application extends Drawer {
          * Canvas background color
          * @type {hex}
          */
-        this.background = options.background || 0xffffff;
+        this.background = options.background || &apos;#ffffff&apos;;
 
         if (typeof options.container != &apos;object&apos;) {
             options.container = document.querySelector(&apos;body&apos;);
@@ -122,6 +153,7 @@ class Application extends Drawer {
 
         /** @type {CanvasRenderingContext2D} */
         this.context = this.canvas.getContext(&apos;2d&apos;);
+
         /** @type {CanvasRenderingContext2D} */
         this.ctx = this.context;
 
@@ -140,13 +172,13 @@ class Application extends Drawer {
         }
 
         /** @type {Ticker} */
-        this.ticker = new Ticker();
+        this.ticker = ticker;
 
         this.ticker.on(&apos;step&apos;, this.step, this);
         this.ticker.on(&apos;render&apos;, this.render, this);
 
         if (this.loader.ready) {
-            this.ticker.start();
+            this.ready();
         }
     }
 
@@ -155,7 +187,7 @@ class Application extends Drawer {
      * @protected
      * @param {number} dt - Delta between two frames
      */
-    step (dt) {
+    step(dt) {
         try {
             if (!!this.options.step) {
                 this.options.step.call(this, dt);
@@ -174,7 +206,7 @@ class Application extends Drawer {
      * @protected
      * @param {number} dt - Delta between two frames
      */
-    render (dt) {
+    render(dt) {
         try {
             if (!!this.options.render) {
                 this.options.render.call(this, dt);
@@ -195,33 +227,55 @@ class Application extends Drawer {
      * @param {function} layer.step - called at every frame
      * @param {function} layer.render - called at every frame
      * @param {String} name
+     * @example
+     * const layer = {
+     *   create: function() {
+     *       this.player = new Model(this.width / 2, this.height / 2, 100, 100);
+     *   },
+     *
+     *   step: function() {
+     *       this.player.x += 1;
+     *       if (this.player.x &gt; this.width) {
+     *          this.player.x = -100;
+     *       }
+     *   },
+     *
+     *   render: function() {
+     *       this.clearLayer();
+     *       this.drawRect(this.player.x, this.player.y, this.player.width, this.player.height);
+     *   }
+     * };
+     *
+     * app.addLayer(&apos;scene1&apos;, layer);
      */
-    addLayer (layer, name) {
+    addLayer(layer, name) {
         this.layers.push({ layer, name });
 
         if (this.layers.length === 1)&#xA0;{
             this.changeLayer(name);
         }
 
-        layer.create.call(this);
-
         //maybe it&apos;s too hight concept for ligth canvas lib
-        for (let prop in this) {
+        /*for (let prop in this) {
             if (this[prop] instanceof Model) {
                 this[prop].parent = this;
             }
-        }
+        }*/
     }
 
     /**
      * Switch the current layer
      * @param {String} name
      */
-    changeLayer (name) {
+    changeLayer(name) {
         let layer = this.layers.find(layer =&gt; layer.name === name);
 
         if (!!layer) {
             this.currentLayer = layer.layer;
+
+            if (!!this.currentLayer.create) {
+                this.currentLayer.create.call(this);
+            }
         }
     }
 
@@ -229,7 +283,7 @@ class Application extends Drawer {
      * Start timer and called application ready function
      * @protected
      */
-    ready () {
+    ready() {
         this.ticker.start();
 
         if (!!this.options.ready) {
@@ -238,57 +292,16 @@ class Application extends Drawer {
     }
 
     /**
-     * Display model&apos;s x,y positions information
-     * @private
-     * @param {Model} model
-     */
-    renderDebug (model) {
-        this.ctx.save();
-        this.ctx.font = &apos;12px sans-serif&apos;;
-        this.ctx.beginPath();
-        this.ctx.strokeStyle = &apos;red&apos;;
-        this.ctx.rect(model.x, model.y, model.width, model.height);
-        this.ctx.stroke();
-        this.ctx.fillText(`[${Math.round(model.x)}, ${Math.round(model.y)}]`, model.x, model.y - 10);
-        this.ctx.beginPath();
-        this.ctx.strokeStyle = &apos;blue&apos;;
-        this.ctx.rect(model.hitbox.x, model.hitbox.y, model.hitbox.width, model.hitbox.height);
-        this.ctx.stroke();
-        this.ctx.fillText(`[${Math.round(model.hitbox.x)}, ${Math.round(model.hitbox.y)}]`, model.hitbox.x, model.hitbox.y - 10);
-        this.ctx.restore();
-    }
-
-    /**
-     * Add models to debug
-     * @param {Array&lt;Model&gt;|Model} models
-     */
-    debug (models = []) {
-        [].concat(models).forEach(model =&gt; {
-            if (model instanceof Model) {
-                this.renderDebug(model);
-            }
-        });
-    }
-
-    /**
      * @private
      * @param {Error} err
      */
-    handleError (err) {
+    handleError(err) {
         this.ticker.stop();
         console.log(err);
 
-        if (this.debug) {
-            this.ctx.save();
-            this.ctx.font = &apos;12px sans-serif&apos;;
-            this.ctx.fillStyle = &apos;red&apos;;
-            this.ctx.fillText(err, 50, 50);
-            this.ctx.restore();
-        }
+        this.drawText(err, 10, 50, &apos;10px&apos;, &apos;sans-serif&apos;, &apos;red&apos;);
     }
 }
-
-module.exports = Application;
 </code></pre>
 
 </div>

@@ -1,4 +1,4 @@
-const EventEmitter = require('./event-emitter');
+import { EventEmitter } from './event-emitter';
 
 /**
  * Service to load asset
@@ -15,25 +15,33 @@ const EventEmitter = require('./event-emitter');
  *     }
  * }
  */
-class Loader extends EventEmitter {
-
-    constructor () {
+export class Loader extends EventEmitter {
+    constructor() {
         super();
 
+        /** @type {number} */
         this.count = 0;
+
+        /** @type {number} */
         this.queue = 0;
+
+        /** @type {number} */
         this.progress = 0;
+
+        /** @type {boolean} */
         this.ready = true;
+
+        /** @type {Array} */
         this.collection = [];
     }
 
     /**
      * Add asset to load
-     * @param {String} src
-     * @param {String} id
-     * @param {String} type - (image or json)
+     * @param {string} src
+     * @param {string} id
+     * @param {string} type - (image or json)
      */
-    add (src, id, type = 'image') {
+    add(src, id, type = 'image') {
         this.count++;
         this.queue++;
         this.ready = false;
@@ -51,11 +59,11 @@ class Loader extends EventEmitter {
     /**
      * Add asset into the collection and dispatch event
      * @param {mixed} el
-     * @param {String} id
+     * @param {string} id
      * @emits {load} emit when asset is loaded
      * @emits {ready} emit when all assets are loaded
      */
-    load (el, id) {
+    load(el, id) {
         this.queue--;
         this.progress = 1 - this.queue / this.count;
 
@@ -73,10 +81,10 @@ class Loader extends EventEmitter {
     /**
      * Load image
      * @private
-     * @param {String} src
-     * @param {String} id
+     * @param {string} src
+     * @param {string} id
      */
-    loadImage (src, id) {
+    loadImage(src, id) {
         let img = new Image();
         img.src = src;
         img.onload = () => this.load(img, id);
@@ -85,10 +93,10 @@ class Loader extends EventEmitter {
     /**
      * Load json file
      * @private
-     * @param {String} src
-     * @param {String} id
+     * @param {string} src
+     * @param {string} id
      */
-    loadJson (src, id) {
+    loadJson(src, id) {
         var request = new XMLHttpRequest();
 
         request.open("GET", src, true);
@@ -102,10 +110,10 @@ class Loader extends EventEmitter {
 
     /**
      * Get asset by id
-     * @param {String} id
+     * @param {string} id
      * @return {mixed}
      */
-    get (id) {
+    get(id) {
         let items = this.collection.filter(el => el.id === id);
 
         if (items.length == 0) {
@@ -116,4 +124,5 @@ class Loader extends EventEmitter {
     }
 }
 
-module.exports = new Loader();
+const loader = new Loader();
+export default loader;

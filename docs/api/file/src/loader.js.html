@@ -32,12 +32,29 @@
 <nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  </ul>
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/application.js~Application.html">Application</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/container.js~Container.html">Container</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/drawer.js~Drawer.html">Drawer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/event-emitter.js~EventEmitter.html">EventEmitter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/loader.js~Loader.html">Loader</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/model.js~Model.html">Model</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/mouse.js~Mouse.html">Mouse</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/particle.js~Particle.html">Particle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/sprite.js~Sprite.html">Sprite</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ticker.js~Ticker.html">Ticker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html">Tileset</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/viewport.js~Viewport.html">Viewport</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-io">io</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-keys">keys</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">helper</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collection.js~Collection.html">Collection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collision-checker.js~CollisionChecker.html">CollisionChecker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/renderer.js~Renderer.html">Renderer</a></span></span></li>
+</ul>
 </div>
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/loader.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">const EventEmitter = require(&apos;./event-emitter&apos;);
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { EventEmitter } from &apos;./event-emitter&apos;;
 
 /**
  * Service to load asset
@@ -54,25 +71,33 @@
  *     }
  * }
  */
-class Loader extends EventEmitter {
-
-    constructor () {
+export class Loader extends EventEmitter {
+    constructor() {
         super();
 
+        /** @type {number} */
         this.count = 0;
+
+        /** @type {number} */
         this.queue = 0;
+
+        /** @type {number} */
         this.progress = 0;
+
+        /** @type {boolean} */
         this.ready = true;
+
+        /** @type {Array} */
         this.collection = [];
     }
 
     /**
      * Add asset to load
-     * @param {String} src
-     * @param {String} id
-     * @param {String} type - (image or json)
+     * @param {string} src
+     * @param {string} id
+     * @param {string} type - (image or json)
      */
-    add (src, id, type = &apos;image&apos;) {
+    add(src, id, type = &apos;image&apos;) {
         this.count++;
         this.queue++;
         this.ready = false;
@@ -90,11 +115,11 @@ class Loader extends EventEmitter {
     /**
      * Add asset into the collection and dispatch event
      * @param {mixed} el
-     * @param {String} id
+     * @param {string} id
      * @emits {load} emit when asset is loaded
      * @emits {ready} emit when all assets are loaded
      */
-    load (el, id) {
+    load(el, id) {
         this.queue--;
         this.progress = 1 - this.queue / this.count;
 
@@ -112,10 +137,10 @@ class Loader extends EventEmitter {
     /**
      * Load image
      * @private
-     * @param {String} src
-     * @param {String} id
+     * @param {string} src
+     * @param {string} id
      */
-    loadImage (src, id) {
+    loadImage(src, id) {
         let img = new Image();
         img.src = src;
         img.onload = () =&gt; this.load(img, id);
@@ -124,10 +149,10 @@ class Loader extends EventEmitter {
     /**
      * Load json file
      * @private
-     * @param {String} src
-     * @param {String} id
+     * @param {string} src
+     * @param {string} id
      */
-    loadJson (src, id) {
+    loadJson(src, id) {
         var request = new XMLHttpRequest();
 
         request.open(&quot;GET&quot;, src, true);
@@ -141,10 +166,10 @@ class Loader extends EventEmitter {
 
     /**
      * Get asset by id
-     * @param {String} id
+     * @param {string} id
      * @return {mixed}
      */
-    get (id) {
+    get(id) {
         let items = this.collection.filter(el =&gt; el.id === id);
 
         if (items.length == 0) {
@@ -155,7 +180,8 @@ class Loader extends EventEmitter {
     }
 }
 
-module.exports = new Loader();
+const loader = new Loader();
+export default loader;
 </code></pre>
 
 </div>

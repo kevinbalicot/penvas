@@ -1,12 +1,11 @@
-/**
- * @ignore
- */
-class Renderer {
+import { Model } from './../model';
+import { Collection } from './collection';
 
-    constructor() {
-        this.models = [];
-    }
-
+export class Renderer extends Collection {
+    /**
+     * @param {Array<Model>|Model} models
+     * @param {Callable} [order=function()]
+     */
     add(models, order = () => 0) {
         if (!Array.isArray(models)) {
             models = [models];
@@ -16,13 +15,20 @@ class Renderer {
             order = () => order;
         }
 
-        models.forEach(model => {
-            this.models.push({ model, order });
+        models.forEach((model, index) => {
+            if (!model instanceof Model) {
+                throw new Error(`Parameter from models[${index}] has to be an instance of Model, it's an instance of ${typeof model} instead.`);
+            }
+
+            this.push({ model, order });
         });
     }
 
-    sort() {
-        return this.models.sort((a, b) => {
+    /**
+     * @return {Array<Model>}
+     */
+    sortModels() {
+        return this.sort((a, b) => {
             const orderA = a.order(a.model);
             const orderB = b.order(b.model);
 
@@ -36,18 +42,32 @@ class Renderer {
         });
     }
 
-    render(ctx) {
-        this.sort();
-        this.models.forEach(el => {
+    /**
+     * @param {Callable} callback
+     */
+    remove(callback) {
+        const index = this.items.findIndex(item => callback(item.model));
+
+        if (index > -1) {
+            return this.items.splice(index, 1);
+        }
+
+        return false;
+    }
+
+    /**
+     * @param {Drawer} drawer
+     */
+    render(drawer) {
+        if (!drawer instanceof Drawer) {
+            throw new Error(`Parameter drawer has to be an instance of Drawer, it's an instance of ${typeof drawer} instead.`);
+        }
+
+        this.sortModels();
+        this.forEach(el => {
             if (!!el.model.render) {
-                el.model.render(ctx);
+                drawer.drawModel(el.model);
             }
         });
     }
-
-    clear() {
-        this.models = [];
-    }
 }
-
-module.exports = Renderer;

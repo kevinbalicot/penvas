@@ -7,9 +7,8 @@
  *     }
  * }
  */
-class EventEmitter {
-
-    constructor () {
+export class EventEmitter {
+    constructor() {
         /**
          * List of registers
          * @protected
@@ -24,7 +23,7 @@ class EventEmitter {
      * @param {function} callback
      * @param {mixed} context
      */
-    on (event, callback, context) {
+    on(event, callback, context) {
         this.registered.push({ event, callback, context });
     }
 
@@ -33,7 +32,7 @@ class EventEmitter {
      * @param {String} event
      * @param {mixed} args
      */
-    dispatch (event, args) {
+    dispatch(event, args) {
         this.registered.forEach(register => {
             if (register.event === event) {
                 register.callback.call(register.context || this, args);
@@ -41,5 +40,3 @@ class EventEmitter {
         });
     }
 }
-
-module.exports = EventEmitter;

@@ -32,17 +32,36 @@
 <nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  </ul>
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/application.js~Application.html">Application</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/container.js~Container.html">Container</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/drawer.js~Drawer.html">Drawer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/event-emitter.js~EventEmitter.html">EventEmitter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/loader.js~Loader.html">Loader</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/model.js~Model.html">Model</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/mouse.js~Mouse.html">Mouse</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/particle.js~Particle.html">Particle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/sprite.js~Sprite.html">Sprite</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ticker.js~Ticker.html">Ticker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html">Tileset</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/viewport.js~Viewport.html">Viewport</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-io">io</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-keys">keys</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">helper</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collection.js~Collection.html">Collection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collision-checker.js~CollisionChecker.html">CollisionChecker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/renderer.js~Renderer.html">Renderer</a></span></span></li>
+</ul>
 </div>
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/model.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { EventEmitter } from &apos;./event-emitter&apos;;
+
+/**
  * Base class for every model entity
  * @example
  * let model = new Model(10, 10, 100, 200);
  */
-class Model {
+export class Model extends EventEmitter {
 
     /**
      * @param {number} x
@@ -56,13 +75,15 @@ class Model {
      * @param {number} [hitbox.height]
      */
     constructor(x, y, width, height, hitbox = {}) {
-        /** @type {Number} */
+        super();
+
+        /** @type {number} */
         this.x = x;
-        /** @type {Number} */
+        /** @type {number} */
         this.y = y;
-        /** @type {Number} */
+        /** @type {number} */
         this.width = width;
-        /** @type {Number} */
+        /** @type {number} */
         this.height = height;
 
         this.hitbox = hitbox;
@@ -82,7 +103,8 @@ class Model {
             x: this.x + this._hitbox.x,
             y: this.y + this._hitbox.y,
             width: this._hitbox.width,
-            height: this._hitbox.height
+            height: this._hitbox.height,
+            radius: this._hitbox.radius
         }
     }
 
@@ -98,37 +120,49 @@ class Model {
             x: hitbox.x || 0,
             y: hitbox.y || 0,
             width: hitbox.width || this.width,
-            height: hitbox.height || this.height
+            height: hitbox.height || this.height,
+            radius: hitbox.radius || null
         }
     }
 
     /**
-     * Check if there are any collisions with models
-     * @param {Array&lt;Model&gt;|Models} models
+     * @property {number} value
      */
-    hasCollisions(models) {
-
-        if (!Array.isArray(models)) {
-            models = [models];
-        }
-
-        let model;
-        for (let i = 0; i &lt; models.length; i++) {
-            model = models[i];
-
-            if (this.hitbox.x &lt; model.hitbox.x + model.hitbox.width &amp;&amp;
-                this.hitbox.x + this.hitbox.width &gt; model.hitbox.x &amp;&amp;
-                this.hitbox.y &lt; model.hitbox.y + model.hitbox.height &amp;&amp;
-                this.hitbox.y + this.hitbox.height &gt; model.hitbox.y
-            ) {
-                return model;
-            }
-        }
-
-        return false;
+    set x(value) {
+        this._x = Math.round(value);
     }
 
-    step() {}
+    /**
+     * @return {number}
+     */
+    get x() {
+        return this._x;
+    }
+
+    /**
+     * @property {number} value
+     */
+    set y(value) {
+        this._y = Math.round(value);
+    }
+
+    /**
+     * @return {number}
+     */
+    get y() {
+        return this._y;
+    }
+
+    /**
+     * @param {number} dt
+     */
+    step(dt) {}
+
+    /**
+     * @param {RenderingContext} ctx
+     * @param {Drawer} [drawer=null]
+     */
+    render(ctx, drawer = null) {}
 
     /**
      * @return {Object}
@@ -157,7 +191,7 @@ class Model {
      * @param {number} data.width
      * @param {number} data.height
      * @param {Object} data.hitbox
-     * @param {boolean} collision
+     * @param {boolean} data.collision
      * @return {Model}
      */
     static deserialize({ x, y, width, height, hitbox, collision }) {
@@ -168,8 +202,6 @@ class Model {
         return model;
     }
 }
-
-module.exports = Model;
 </code></pre>
 
 </div>

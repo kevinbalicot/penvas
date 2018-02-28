@@ -32,16 +32,33 @@
 <nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  </ul>
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/application.js~Application.html">Application</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/container.js~Container.html">Container</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/drawer.js~Drawer.html">Drawer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/event-emitter.js~EventEmitter.html">EventEmitter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/loader.js~Loader.html">Loader</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/model.js~Model.html">Model</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/mouse.js~Mouse.html">Mouse</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/particle.js~Particle.html">Particle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/sprite.js~Sprite.html">Sprite</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ticker.js~Ticker.html">Ticker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html">Tileset</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/viewport.js~Viewport.html">Viewport</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-io">io</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-keys">keys</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">helper</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collection.js~Collection.html">Collection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collision-checker.js~CollisionChecker.html">CollisionChecker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/renderer.js~Renderer.html">Renderer</a></span></span></li>
+</ul>
 </div>
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/mouse.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">const Model = require(&apos;./model&apos;);
-const Container = require(&apos;./container&apos;);
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { Model } from &apos;./model&apos;;
+import { Container } from &apos;./container&apos;;
 
-const io = require(&apos;./io&apos;);
-const keys = require(&apos;./keys&apos;);
+import io from &apos;./io&apos;;
+import keys from &apos;./keys&apos;;
 
 /**
  * Mouse service
@@ -51,11 +68,25 @@ const keys = require(&apos;./keys&apos;);
  *     tile.backgroundColor = &apos;red&apos;;
  * }
  */
-class Mouse {
-
+export class Mouse {
     constructor() {
+        /** @type {number} */
         this.x = 0;
+
+        /** @type {number} */
         this.y = 0;
+
+        /** @type {number} - absolute x position */
+        this.ax = 0;
+
+        /** @type {number} - absolute y postion */
+        this.ay = 0;
+
+        /** @type {number} */
+        this.scaleX = 1;
+
+        /** @type {number} */
+        this.scaleY = 1;
     }
 
     /**
@@ -68,15 +99,18 @@ class Mouse {
      * @param {number} object.height
      */
     hasCollision(object) {
-
         if (object.x === undefined || object.y === undefined || object.width === undefined || object.height === undefined) {
             throw new Error(`Object ${object} is not valid, needs x, y, width and height parameters.`);
         }
 
-        if (this.x &lt;= object.x + object.width &amp;&amp;
-        object.x &lt;= this.x &amp;&amp;
-        this.y &lt;= object.y + object.height &amp;&amp;
-        object.y &lt;= this.y) {
+        const x = this.ax &gt; this.x ? this.ax : this.x;
+        const y = this.ay &gt; this.y ? this.ay : this.y;
+
+        if (x / this.scaleX &lt;= object.x + object.width &amp;&amp;
+            object.x &lt;= x / this.scaleX &amp;&amp;
+            y / this.scaleY &lt;= object.y + object.height &amp;&amp;
+            object.y &lt;= y / this.scaleY
+        ) {
             return true;
         }
 
@@ -134,9 +168,30 @@ class Mouse {
     isClickOut(object) {
         return io[keys.LEFT_CLICK] &amp;&amp; this.isOut(object);
     }
+
+    /**
+     * @param {Object} target
+     * @param {number} target.x
+     * @param {number} target.y
+     * @param {number} target.width
+     * @return {number}
+     */
+    getAngle(object) {
+        if (object.x === undefined || object.y === undefined || object.width === undefined || object.height === undefined) {
+            throw new Error(`Object ${object} is not valid, needs x, y, width and height parameters.`);
+        }
+
+        const x = this.ax &gt; this.x ? this.ax : this.x;
+        const y = this.ay &gt; this.y ? this.ay : this.y;
+
+        const rad = Math.atan2((y / this.scaleY)- (object.y + object.height / this.scaleY), (x / this.scaleX) - (object.x + object.width / this.scaleX));
+
+        return rad * 180 / Math.PI;
+    }
 }
 
-module.exports = new Mouse();
+const mouse = new Mouse();
+export default mouse;
 </code></pre>
 
 </div>

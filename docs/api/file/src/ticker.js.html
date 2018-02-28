@@ -32,32 +32,52 @@
 <nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  </ul>
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/application.js~Application.html">Application</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/container.js~Container.html">Container</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/drawer.js~Drawer.html">Drawer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/event-emitter.js~EventEmitter.html">EventEmitter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/loader.js~Loader.html">Loader</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/model.js~Model.html">Model</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/mouse.js~Mouse.html">Mouse</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/particle.js~Particle.html">Particle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/sprite.js~Sprite.html">Sprite</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ticker.js~Ticker.html">Ticker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html">Tileset</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/viewport.js~Viewport.html">Viewport</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-io">io</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-keys">keys</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">helper</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collection.js~Collection.html">Collection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collision-checker.js~CollisionChecker.html">CollisionChecker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/renderer.js~Renderer.html">Renderer</a></span></span></li>
+</ul>
 </div>
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/ticker.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">const EventEmitter = require(&apos;./event-emitter&apos;);
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { EventEmitter } from &apos;./event-emitter&apos;;
 
 /**
  * Timer class
  * You can stop and start the game
  */
-class Ticker extends EventEmitter {
-
+export class Ticker extends EventEmitter {
     constructor () {
         super();
 
+        /** @type {number} */
         this.lastTick = Date.now();
+
+        /** @type {boolean} */
         this.stopped = true;
+
+        /** @type {number} */
         this.frame = 0;
-        this.frameskip = 1;
     }
 
     /**
      * @private
      */
-    loop () {
+    loop() {
         if (this.stopped) {
             return;
         }
@@ -71,6 +91,7 @@ class Ticker extends EventEmitter {
             return;
         }
 
+        this.frame++;
         let dt = delta / 1000;
 
         this.step(dt);
@@ -80,7 +101,7 @@ class Ticker extends EventEmitter {
     /**
      * Start timer
      */
-    start () {
+    start() {
         if (this.stopped) {
             this.stopped = false;
             requestAnimationFrame(this.loop.bind(this));
@@ -90,7 +111,7 @@ class Ticker extends EventEmitter {
     /**
      * Stop timer
      */
-    stop () {
+    stop() {
         this.stopped = true;
     }
 
@@ -100,7 +121,7 @@ class Ticker extends EventEmitter {
      * @param {number} dt
      * @emits {step}
      */
-    step (dt) {
+    step(dt) {
         this.dispatch(&apos;step&apos;, dt);
     }
 
@@ -110,12 +131,19 @@ class Ticker extends EventEmitter {
      * @param {number} dt
      * @emits {render}
      */
-    render (dt) {
+    render(dt) {
         this.dispatch(&apos;render&apos;, dt);
+    }
+
+    every(frame, callback) {
+        if (this.frame % frame === 0) {
+            callback();
+        }
     }
 }
 
-module.exports = Ticker;
+const ticker = new Ticker();
+export default ticker;
 </code></pre>
 
 </div>

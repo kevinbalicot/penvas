@@ -32,12 +32,29 @@
 <nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  </ul>
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/application.js~Application.html">Application</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/container.js~Container.html">Container</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/drawer.js~Drawer.html">Drawer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/event-emitter.js~EventEmitter.html">EventEmitter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/loader.js~Loader.html">Loader</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/model.js~Model.html">Model</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/mouse.js~Mouse.html">Mouse</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/particle.js~Particle.html">Particle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/sprite.js~Sprite.html">Sprite</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ticker.js~Ticker.html">Ticker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html">Tileset</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/viewport.js~Viewport.html">Viewport</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-io">io</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-keys">keys</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">helper</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collection.js~Collection.html">Collection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collision-checker.js~CollisionChecker.html">CollisionChecker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/renderer.js~Renderer.html">Renderer</a></span></span></li>
+</ul>
 </div>
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/sprite.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">const Model = require(&apos;./model&apos;);
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { Model } from &apos;./model&apos;;
 
 /**
  * The class to use sprite image
@@ -50,7 +67,7 @@
  * sprite.play(&apos;walk&apos;);
  * sprite.render();
  */
-class Sprite extends Model {
+export class Sprite extends Model {
 
     /**
      * @param {number} x
@@ -59,15 +76,16 @@ class Sprite extends Model {
      * @param {number} tileHeight - height tile
      * @param {Image} image
      * @param {Array&lt;Object&gt;} animations - list of animations
-     * @example
-     * new Sprite(0, 0, 20, 20, image, [{ frames: [9, 10, 11, 12], name: &apos;walk&apos;, loop: true, flip: false }]);
-     * @param {Object} [hitbox]
+     * @param {Object} [hitbox={}]
      * @param {number} [hitbox.x]
      * @param {number} [hitbox.y]
      * @param {number} [hitbox.width]
      * @param {number} [hitbox.height]
+     *
+     * @example
+     * new Sprite(0, 0, 20, 20, image, [{ frames: [9, 10, 11, 12], name: &apos;walk&apos;, loop: true, flip: false }]);
      */
-    constructor(x, y, tileWidth, tileHeight, image, animations, hitbox) {
+    constructor(x, y, tileWidth, tileHeight, image, animations, hitbox = {}) {
         super(x, y, tileWidth, tileHeight, hitbox);
 
         /** @type {Image} */
@@ -75,16 +93,26 @@ class Sprite extends Model {
         /** @type {Array&lt;Object&gt;} */
         this.animations = animations;
 
+        /** @type {number} */
         this.time = 1;
+
+        /** @type {boolean} */
         this.stopped = true;
+
+        /** @type {Object} */
         this.frame = { x: 0, y: 0 };
+
+        /** @type {Object} */
         this.frames = {
             width: image.width / tileWidth,
             height: image.height / tileHeight,
             total: (image.width / tileWidth) * (image.height / tileHeight)
         };
 
+        /** @type {number} */
         this.currentAnimation = 0;
+
+        /** @type {number} */
         this.currentFrame = 0;
     }
 
@@ -170,10 +198,13 @@ class Sprite extends Model {
 
     /**
      * Render the sprite
-     * @param {RenderingContext} context
+     * @param {RenderingContext} [ctx=null]
+     * @param {Drawer} [drawer=null]
      */
-    render(context = null) {
-        let ctx = context || this.parent.ctx;
+    render(ctx = null, drawer = null) {
+        ctx = ctx || this.parent.ctx;
+        drawer = drawer || this.parent;
+
         let currentAnimation = this.animations[this.currentAnimation];
         ctx.save();
 
@@ -267,8 +298,6 @@ class Sprite extends Model {
         return sprite;
     }
 }
-
-module.exports = Sprite;
 </code></pre>
 
 </div>

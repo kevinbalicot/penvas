@@ -1,4 +1,4 @@
-const keys = require('./keys');
+import keys from './keys';
 
 /**
  * Array of Input
@@ -16,7 +16,7 @@ const keys = require('./keys');
  *     this.player.attack();
  * }
  */
-const io = [];
+const io = {};
 
 document.addEventListener('keydown', (e) => {
     io[e.keyCode] = true;
@@ -34,4 +34,4 @@ document.addEventListener('mouseup', () => {
     io[keys.LEFT_CLICK] = false;
 });
 
-module.exports = io;
+export default io;

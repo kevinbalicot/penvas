@@ -32,17 +32,36 @@
 <nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  </ul>
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/application.js~Application.html">Application</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/container.js~Container.html">Container</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/drawer.js~Drawer.html">Drawer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/event-emitter.js~EventEmitter.html">EventEmitter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/loader.js~Loader.html">Loader</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/model.js~Model.html">Model</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/mouse.js~Mouse.html">Mouse</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/particle.js~Particle.html">Particle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/sprite.js~Sprite.html">Sprite</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ticker.js~Ticker.html">Ticker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html">Tileset</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/viewport.js~Viewport.html">Viewport</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-io">io</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-keys">keys</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">helper</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collection.js~Collection.html">Collection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collision-checker.js~CollisionChecker.html">CollisionChecker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/renderer.js~Renderer.html">Renderer</a></span></span></li>
+</ul>
 </div>
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/helper/map.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">const Model = require(&apos;./../model&apos;);
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { Model } from &apos;./../model&apos;;
+import { Drawer } from &apos;./../drawer&apos;;
+import { AStar } from &apos;./pathfinds/a-star&apos;;
 
 /**
  * @ignore
  */
-class Map {
+export class Map {
     constructor(tileWidth, tileHeight, columns, rows) {
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
@@ -52,6 +71,10 @@ class Map {
         this.layers = {};
         this.tilesets = {};
         this.platforms = {};
+        this.pathFindingLayer = {};
+
+        this.width = tileWidth * columns;
+        this.height = tileHeight * rows;
     }
 
     addLayer(layer, name, z = 0, tileset = null) {
@@ -100,6 +123,33 @@ class Map {
         }
     }
 
+    addPathFindingLayer(layer, name) {
+        const tiles = layer.data || layer.tiles || [];
+        const rows = layer.height || layer.rows || this.rows;
+        const columns = layer.width || layer.columns || this.columns;
+        const nodes = [];
+
+        let x, y;
+        let t = 0;
+        for (let c = 0; c &lt; columns; c++) {
+            for (let r = 0; r &lt; rows; r++) {
+                x = r * this.tileWidth;
+                y = c * this.tileHeight;
+
+                nodes.push({
+                    x, y,
+                    posX: r, posY: c,
+                    walkable: 0 === tiles[t],
+                    g: 0, h: 0
+                });
+
+                t++;
+            }
+        }
+
+        this.pathFindingLayer[name] = { nodes, rows, columns, name };
+    }
+
     getLayer(name) {
         return this.layers[name] || null;
     }
@@ -112,7 +162,37 @@ class Map {
         return this.tilesets[name] || null;
     }
 
-    render(ctx, minZ = 0, maxZ = 999) {
+    findPathBetweenPositions(name, objectA, objectB) {
+        const layer = this.pathFindingLayer[name];
+        const finder = new AStar();
+
+        if (!!layer) {
+            const startPosX = Math.floor(objectA.x / this.tileWidth);
+            const startPosY = Math.floor(objectA.y / this.tileHeight);
+
+            const endPosX = Math.floor(objectB.x / this.tileWidth);
+            const endPosY = Math.floor(objectB.y / this.tileHeight);
+
+            const startNode = { posX: startPosX, posY: startPosY, f: 0, g: 0, h: 0 };
+            const endNode = { posX: endPosX, posY: endPosY, f: 0, g: 0, h: 0 };
+
+            return finder.findPath(layer.nodes, startNode, endNode);
+        }
+
+        return [];
+    }
+
+    render(drawer, options) {
+        if (!drawer instanceof Drawer) {
+            throw new Error(`Parameter drawer has to be an instance of Drawer, it&apos;s an instance of ${typeof drawer} instead.`);
+        }
+
+        const ctx = drawer.ctx;
+        const minZ = options.minZ || 0;
+        const maxZ = options.maxZ || 999;
+        const limits = options.limits || { x: 0, y: 0, width: 9999, height: 9999 };
+        const onlyLayer = options.layer || null;
+
         let tileset = null;
         let layer = null;
         let layers = this.layers;
@@ -120,27 +200,34 @@ class Map {
         for (let layerName in this.layers) {
             layer = this.layers[layerName];
 
-            if (layer.z &lt; minZ || layer.z &gt; maxZ) {
+            if (layer.z &lt; minZ || layer.z &gt; maxZ || (null !== onlyLayer &amp;&amp; onlyLayer !== layerName)) {
                 continue;
             }
 
             tileset = null !== layer.tileset ? this.getTileset(layer.tileset) : this.defaultTileset;
 
             let t = 0;
-            for (let rows = 0; rows &lt; layer.rows; rows++) {
-                for (let columns = 0; columns &lt; layer.columns; columns++) {
-                    tileset.x = columns * this.tileWidth;
-                    tileset.y = rows * this.tileHeight;
+            for (let columns = 0; columns &lt; layer.columns; columns++) {
+                for (let rows = 0; rows &lt; layer.rows; rows++) {
+                    tileset.x = rows * this.tileWidth;
+                    tileset.y = columns * this.tileHeight;
 
-                    tileset.render(layer.tiles[t] || 0, ctx);
+                    // Check if tile is into limits
+                    if (
+                        tileset.x + this.tileWidth &gt;= limits.x &amp;&amp;
+                        tileset.x &lt;= limits.x + limits.width &amp;&amp;
+                        tileset.y + this.tileHeight &gt;= limits.y &amp;&amp;
+                        tileset.y &lt;= limits.y + limits.height
+                    ) {
+                        tileset.renderTile(layer.tiles[t] || 0, ctx);
+                    }
+
                     t++;
                 }
             }
         }
     }
 }
-
-module.exports = Map;
 </code></pre>
 
 </div>

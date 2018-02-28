@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/particle.js | Penvas API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/application.js~Application.html">Application</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/container.js~Container.html">Container</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/drawer.js~Drawer.html">Drawer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/event-emitter.js~EventEmitter.html">EventEmitter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/loader.js~Loader.html">Loader</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/model.js~Model.html">Model</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/mouse.js~Mouse.html">Mouse</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/particle.js~Particle.html">Particle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/sprite.js~Sprite.html">Sprite</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ticker.js~Ticker.html">Ticker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html">Tileset</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/viewport.js~Viewport.html">Viewport</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-io">io</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-keys">keys</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">helper</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collection.js~Collection.html">Collection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collision-checker.js~CollisionChecker.html">CollisionChecker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/renderer.js~Renderer.html">Renderer</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/particle.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { Model } from &apos;./model&apos;;
+
+// @TODO : doc
+export class Particle extends Model {
+
+    constructor(x, y, type, options) {
+        super(x, y);
+
+        this.type = type;
+        this.options = options;
+        this.opacity = 1;
+    }
+
+    step(dt) {
+        if (this.opacity &gt; 0) {
+            this.opacity -= this.options.step || 0.01;
+            this.opacity = this.opacity &lt; 0 ? 0 : this.opacity;
+
+            this.x += Math.cos(this.options.rotate || 0) * this.options.velocity || 0;
+            this.y += Math.sin(this.options.rotate || Math.PI / 2) * this.options.velocity || 0;
+        }
+    }
+
+    render(ctx, drawer) {
+        if (this.opacity &lt;= 0 || null === drawer) {
+            return;
+        }
+
+        drawer.save();
+        drawer.ctx.globalAlpha = this.opacity;
+
+        switch (this.type) {
+            case &apos;text&apos;:
+                drawer.drawText(
+                    this.options.text,
+                    this.x,
+                    this.y,
+                    this.options.size || &apos;8pt&apos;,
+                    this.options.font || &apos;Arial, sans-serif&apos;,
+                    this.options.color || &apos;black&apos;,
+                    this.options.style || &apos;&apos;,
+                    this.options.align || &apos;left&apos;
+                );
+                break;
+            case &apos;image&apos;:
+                if (!!this.options.image) {
+                    drawer.drawImage(this.options.image, this.x, this.y);
+                }
+                break;
+            case &apos;rect&apos;:
+            case &apos;rectangle&apos;:
+                if (!!this.options.width &amp;&amp; !!this.options.height) {
+                    drawer.drawRect(
+                        this.x,
+                        this.y,
+                        this.options.width,
+                        this.options.height,
+                        this.options.size,
+                        this.options.color
+                    );
+                }
+                break;
+            case &apos;fillrect&apos;:
+            case &apos;fillrectangle&apos;:
+            case &apos;fill-rectangle&apos;:
+                if (!!this.options.width &amp;&amp; !!this.options.height) {
+                    drawer.drawFillRect(
+                        this.x,
+                        this.y,
+                        this.options.width,
+                        this.options.height,
+                        this.options.color,
+                        this.options.lineSize,
+                        this.options.lineColor
+                    );
+                }
+                break;
+            case &apos;circ&apos;:
+            case &apos;circle&apos;:
+                if (!!this.options.radius) {
+                    drawer.drawCircle(
+                        this.x,
+                        this.y,
+                        this.options.radius,
+                        this.options.size,
+                        this.options.color,
+                        this.options.start,
+                        this.options.end
+                    );
+                }
+                break;
+            case &apos;fillcirc&apos;:
+            case &apos;fillcircle&apos;:
+            case &apos;fill-circle&apos;:
+                if (!!this.options.radius) {
+                    drawer.drawFillCircle(
+                        this.x,
+                        this.y,
+                        this.options.radius,
+                        this.options.color,
+                        this.options.lineSize,
+                        this.options.lineColor,
+                        this.options.start,
+                        this.options.end
+                    );
+                }
+                break;
+        }
+        drawer.restore();
+
+        if (!!this.options.rotate) {
+            drawer.rotateModel(
+                this,
+                this.options.rotate,
+                this.options.pivotX,
+                this.options.pivotY
+            );
+        }
+    }
+
+    serialize() {
+        return Object.assign(super.serialize(), {
+            type: this.type,
+            options: this.options,
+            opacity: this.opacity
+        });
+    }
+
+    static deserialize({
+        x,
+        y,
+        type,
+        options,
+        opacity
+    }) {
+        const particle = new Particle(x, y, type, options);
+
+        particle.opacity = opacity;
+
+        return particle;
+    }
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.5.2)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

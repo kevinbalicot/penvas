@@ -1,39 +1,43 @@
-const lib = {
-    Application: require('./application'),
-    Container: require('./container'),
-    EventEmitter: require('./event-emitter'),
-    Model: require('./model'),
-    Sprite: require('./sprite'),
-    Ticker: require('./ticker'),
-    Tileset: require('./tileset'),
-    Drawer: require('./drawer'),
+import { Application } from './application';
+import { Container } from './container';
+import { Drawer } from './drawer';
+import { EventEmitter } from './event-emitter';
+import { Model } from './model';
+import { Sprite } from './sprite';
+import { Tileset } from './tileset';
+import { Ticker } from './ticker';
+import { Viewport } from './viewport';
+import { Particle } from './particle';
 
-    io: require('./io'),
-    loader: require('./loader'),
-    mouse: require('./mouse'),
-    events: new (require('./event-emitter'))(),
+import { Map } from './helper/map';
+import { CollisionChecker } from './helper/collision-checker';
+import { Renderer } from './helper/renderer';
+import { Collection } from './helper/collection';
 
-    Map: require('./helper/map'),
-    CollisionChecker: require('./helper/collision-checker'),
-    Renderer: require('./helper/renderer')
-};
+import io from './io';
+import keys from './keys';
+import loader from './loader';
+import mouse from './mouse';
+import ticker from './ticker';
 
-window.Application = lib.Application;
-window.Container = lib.Container;
-window.EventEmitter = lib.EventEmitter;
-window.Model = lib.Model;
-window.Sprite = lib.Sprite;
-window.Ticker = lib.Ticker;
-window.Tileset = lib.Tileset;
-window.Drawer = lib.Drawer;
+window.Application = Application;
+window.Container = Container;
+window.EventEmitter = EventEmitter;
+window.Model = Model;
+window.Sprite = Sprite;
+window.Tileset = Tileset;
+window.Drawer = Drawer;
+window.Viewport = Viewport;
+window.Particle = Particle;
 
-window.io = lib.io;
-window.loader = lib.loader;
-window.mouse = lib.mouse;
-window.events = lib.events;
+window.io = io;
+window.KEYS = keys;
+window.loader = loader;
+window.mouse = mouse;
+window.ticker = ticker;
+window.events = new EventEmitter();
 
-window.Map = lib.Map;
-window.CollisionChecker = lib.CollisionChecker;
-window.Renderer = lib.Renderer;
-
-module.exports = lib;
+window.Map = Map;
+window.CollisionChecker = CollisionChecker;
+window.Renderer = Renderer;
+window.Collection = Collection;

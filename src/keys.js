@@ -26,7 +26,7 @@ const keys = {
     WIN: 91,
     MAC: 91,
     UP: 38,
-    DOWN: 40,
+    BOTTOM: 40,
     LEFT: 37,
     RIGHT: 39,
     ESC: 27,
@@ -49,4 +49,4 @@ const keys = {
     MIDDLE_CLICK: 'middle_click'
 }
 
-module.exports = keys;
+export default keys;

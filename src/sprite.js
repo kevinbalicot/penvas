@@ -1,4 +1,4 @@
-const Model = require('./model');
+import { Model } from './model';
 
 /**
  * The class to use sprite image
@@ -11,7 +11,7 @@ const Model = require('./model');
  * sprite.play('walk');
  * sprite.render();
  */
-class Sprite extends Model {
+export class Sprite extends Model {
 
     /**
      * @param {number} x
@@ -20,15 +20,16 @@ class Sprite extends Model {
      * @param {number} tileHeight - height tile
      * @param {Image} image
      * @param {Array<Object>} animations - list of animations
-     * @example
-     * new Sprite(0, 0, 20, 20, image, [{ frames: [9, 10, 11, 12], name: 'walk', loop: true, flip: false }]);
-     * @param {Object} [hitbox]
+     * @param {Object} [hitbox={}]
      * @param {number} [hitbox.x]
      * @param {number} [hitbox.y]
      * @param {number} [hitbox.width]
      * @param {number} [hitbox.height]
+     *
+     * @example
+     * new Sprite(0, 0, 20, 20, image, [{ frames: [9, 10, 11, 12], name: 'walk', loop: true, flip: false }]);
      */
-    constructor(x, y, tileWidth, tileHeight, image, animations, hitbox) {
+    constructor(x, y, tileWidth, tileHeight, image, animations, hitbox = {}) {
         super(x, y, tileWidth, tileHeight, hitbox);
 
         /** @type {Image} */
@@ -36,16 +37,26 @@ class Sprite extends Model {
         /** @type {Array<Object>} */
         this.animations = animations;
 
+        /** @type {number} */
         this.time = 1;
+
+        /** @type {boolean} */
         this.stopped = true;
+
+        /** @type {Object} */
         this.frame = { x: 0, y: 0 };
+
+        /** @type {Object} */
         this.frames = {
             width: image.width / tileWidth,
             height: image.height / tileHeight,
             total: (image.width / tileWidth) * (image.height / tileHeight)
         };
 
+        /** @type {number} */
         this.currentAnimation = 0;
+
+        /** @type {number} */
         this.currentFrame = 0;
     }
 
@@ -131,10 +142,13 @@ class Sprite extends Model {
 
     /**
      * Render the sprite
-     * @param {RenderingContext} context
+     * @param {RenderingContext} [ctx=null]
+     * @param {Drawer} [drawer=null]
      */
-    render(context = null) {
-        let ctx = context || this.parent.ctx;
+    render(ctx = null, drawer = null) {
+        ctx = ctx || this.parent.ctx;
+        drawer = drawer || this.parent;
+
         let currentAnimation = this.animations[this.currentAnimation];
         ctx.save();
 
@@ -228,5 +242,3 @@ class Sprite extends Model {
         return sprite;
     }
 }
-
-module.exports = Sprite;

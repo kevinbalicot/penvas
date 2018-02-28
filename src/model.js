@@ -1,9 +1,11 @@
+import { EventEmitter } from './event-emitter';
+
 /**
  * Base class for every model entity
  * @example
  * let model = new Model(10, 10, 100, 200);
  */
-class Model {
+export class Model extends EventEmitter {
 
     /**
      * @param {number} x
@@ -17,13 +19,15 @@ class Model {
      * @param {number} [hitbox.height]
      */
     constructor(x, y, width, height, hitbox = {}) {
-        /** @type {Number} */
+        super();
+
+        /** @type {number} */
         this.x = x;
-        /** @type {Number} */
+        /** @type {number} */
         this.y = y;
-        /** @type {Number} */
+        /** @type {number} */
         this.width = width;
-        /** @type {Number} */
+        /** @type {number} */
         this.height = height;
 
         this.hitbox = hitbox;
@@ -43,7 +47,8 @@ class Model {
             x: this.x + this._hitbox.x,
             y: this.y + this._hitbox.y,
             width: this._hitbox.width,
-            height: this._hitbox.height
+            height: this._hitbox.height,
+            radius: this._hitbox.radius
         }
     }
 
@@ -59,37 +64,49 @@ class Model {
             x: hitbox.x || 0,
             y: hitbox.y || 0,
             width: hitbox.width || this.width,
-            height: hitbox.height || this.height
+            height: hitbox.height || this.height,
+            radius: hitbox.radius || null
         }
     }
 
     /**
-     * Check if there are any collisions with models
-     * @param {Array<Model>|Models} models
+     * @property {number} value
      */
-    hasCollisions(models) {
-
-        if (!Array.isArray(models)) {
-            models = [models];
-        }
-
-        let model;
-        for (let i = 0; i < models.length; i++) {
-            model = models[i];
-
-            if (this.hitbox.x < model.hitbox.x + model.hitbox.width &&
-                this.hitbox.x + this.hitbox.width > model.hitbox.x &&
-                this.hitbox.y < model.hitbox.y + model.hitbox.height &&
-                this.hitbox.y + this.hitbox.height > model.hitbox.y
-            ) {
-                return model;
-            }
-        }
-
-        return false;
+    set x(value) {
+        this._x = Math.round(value);
     }
 
-    step() {}
+    /**
+     * @return {number}
+     */
+    get x() {
+        return this._x;
+    }
+
+    /**
+     * @property {number} value
+     */
+    set y(value) {
+        this._y = Math.round(value);
+    }
+
+    /**
+     * @return {number}
+     */
+    get y() {
+        return this._y;
+    }
+
+    /**
+     * @param {number} dt
+     */
+    step(dt) {}
+
+    /**
+     * @param {RenderingContext} ctx
+     * @param {Drawer} [drawer=null]
+     */
+    render(ctx, drawer = null) {}
 
     /**
      * @return {Object}
@@ -118,7 +135,7 @@ class Model {
      * @param {number} data.width
      * @param {number} data.height
      * @param {Object} data.hitbox
-     * @param {boolean} collision
+     * @param {boolean} data.collision
      * @return {Model}
      */
     static deserialize({ x, y, width, height, hitbox, collision }) {
@@ -129,5 +146,3 @@ class Model {
         return model;
     }
 }
-
-module.exports = Model;

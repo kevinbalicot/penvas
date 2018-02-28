@@ -39,14 +39,16 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/loader.js~Loader.html">Loader</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/model.js~Model.html">Model</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/mouse.js~Mouse.html">Mouse</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/particle.js~Particle.html">Particle</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/sprite.js~Sprite.html">Sprite</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ticker.js~Ticker.html">Ticker</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html">Tileset</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEYS">KEYS</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-MOUSE">MOUSE</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/viewport.js~Viewport.html">Viewport</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-io">io</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-loader">loader</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-mouse">mouse</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-keys">keys</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">helper</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collection.js~Collection.html">Collection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collision-checker.js~CollisionChecker.html">CollisionChecker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/renderer.js~Renderer.html">Renderer</a></span></span></li>
 </ul>
 </div>
 </nav>
@@ -68,7 +70,7 @@
 
   
   
-  <div class="flat-list" data-ice="extendsChain"><h4>Extends:</h4><div><span><a href="class/src/model.js~Model.html">Model</a></span> &#x2192; Tileset</div></div>
+  <div class="flat-list" data-ice="extendsChain"><h4>Extends:</h4><div><span><a href="class/src/event-emitter.js~EventEmitter.html">EventEmitter</a></span> &#x2192; <span><a href="class/src/model.js~Model.html">Model</a></span> &#x2192; Tileset</div></div>
   
   
   
@@ -324,7 +326,7 @@ tileset.render(1);</code></pre>
         <p>
           
           
-          <span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html#instance-method-render">render</a></span></span><span data-ice="signature">(id: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>, context: <span>RenderingContext</span>)</span>
+          <span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html#instance-method-renderTile">renderTile</a></span></span><span data-ice="signature">(id: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>, ctx: <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">CanvasRenderingContext2D</a></span>)</span>
         </p>
       </div>
       <div>
@@ -344,10 +346,128 @@ tileset.render(1);</code></pre>
 </div>
 
 <div class="inherited-summary" data-ice="inheritedSummary"><h2>Inherited Summary</h2><table class="summary" data-ice="summary">
+  <thead><tr><td data-ice="title" colspan="3"><span class="toggle closed"></span> From class <span><a href="class/src/event-emitter.js~EventEmitter.html">EventEmitter</a></span></td></tr></thead>
+  <tbody>
+  
+  <tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">protected</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/src/event-emitter.js~EventEmitter.html#instance-member-registered">registered</a></span></span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>List of registers</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/src/event-emitter.js~EventEmitter.html#instance-method-dispatch">dispatch</a></span></span><span data-ice="signature">(event: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, args: <span>mixed</span>)</span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>Dispatch event</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/src/event-emitter.js~EventEmitter.html#instance-method-on">on</a></span></span><span data-ice="signature">(event: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, callback: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">function</a></span>, context: <span>mixed</span>)</span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>Listen event</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+</tbody>
+</table>
+
+<table class="summary" data-ice="summary">
   <thead><tr><td data-ice="title" colspan="3"><span class="toggle closed"></span> From class <span><a href="class/src/model.js~Model.html">Model</a></span></td></tr></thead>
   <tbody>
   
   <tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      <span data-ice="static">static</span>
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/src/model.js~Model.html#static-method-deserialize">deserialize</a></span></span><span data-ice="signature">(data: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span><a href="class/src/model.js~Model.html">Model</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
     <td>
       <span class="access" data-ice="access">public</span>
       
@@ -360,7 +480,7 @@ tileset.render(1);</code></pre>
         <p>
           
           
-          <span data-ice="name"><span><a href="class/src/model.js~Model.html#instance-get-hitbox">hitbox</a></span></span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>: {&quot;x&quot;: <span>*</span>, &quot;y&quot;: <span>*</span>, &quot;width&quot;: <span>*</span>, &quot;height&quot;: <span>*</span>}</span>
+          <span data-ice="name"><span><a href="class/src/model.js~Model.html#instance-get-hitbox">hitbox</a></span></span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>: {&quot;x&quot;: <span>*</span>, &quot;y&quot;: <span>*</span>, &quot;width&quot;: <span>*</span>, &quot;height&quot;: <span>*</span>, &quot;radius&quot;: <span>*</span>}</span>
         </p>
       </div>
       <div>
@@ -388,6 +508,114 @@ tileset.render(1);</code></pre>
           
           
           <span data-ice="name"><span><a href="class/src/model.js~Model.html#instance-set-hitbox">hitbox</a></span></span><span data-ice="signature">(hitbox: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span>*</span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      <span class="kind" data-ice="kind">get</span>
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/src/model.js~Model.html#instance-get-x">x</a></span></span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>: <span>*</span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      <span class="kind" data-ice="kind">set</span>
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/src/model.js~Model.html#instance-set-x">x</a></span></span><span data-ice="signature">: <span>*</span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      <span class="kind" data-ice="kind">get</span>
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/src/model.js~Model.html#instance-get-y">y</a></span></span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>: <span>*</span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      <span class="kind" data-ice="kind">set</span>
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/src/model.js~Model.html#instance-set-y">y</a></span></span><span data-ice="signature">: <span>*</span></span>
         </p>
       </div>
       <div>
@@ -441,7 +669,7 @@ tileset.render(1);</code></pre>
         <p>
           
           
-          <span data-ice="name"><span><a href="class/src/model.js~Model.html#instance-member-height">height</a></span></span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></span></span>
+          <span data-ice="name"><span><a href="class/src/model.js~Model.html#instance-member-height">height</a></span></span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
         </p>
       </div>
       <div>
@@ -495,7 +723,7 @@ tileset.render(1);</code></pre>
         <p>
           
           
-          <span data-ice="name"><span><a href="class/src/model.js~Model.html#instance-member-width">width</a></span></span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></span></span>
+          <span data-ice="name"><span><a href="class/src/model.js~Model.html#instance-member-width">width</a></span></span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
         </p>
       </div>
       <div>
@@ -522,7 +750,7 @@ tileset.render(1);</code></pre>
         <p>
           
           
-          <span data-ice="name"><span><a href="class/src/model.js~Model.html#instance-member-x">x</a></span></span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></span></span>
+          <span data-ice="name"><span><a href="class/src/model.js~Model.html#instance-method-render">render</a></span></span><span data-ice="signature">(ctx: <span>RenderingContext</span>, drawer: <span><a href="class/src/drawer.js~Drawer.html">Drawer</a></span>)</span>
         </p>
       </div>
       <div>
@@ -549,7 +777,7 @@ tileset.render(1);</code></pre>
         <p>
           
           
-          <span data-ice="name"><span><a href="class/src/model.js~Model.html#instance-member-y">y</a></span></span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></span></span>
+          <span data-ice="name"><span><a href="class/src/model.js~Model.html#instance-method-serialize">serialize</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></span>
         </p>
       </div>
       <div>
@@ -576,14 +804,13 @@ tileset.render(1);</code></pre>
         <p>
           
           
-          <span data-ice="name"><span><a href="class/src/model.js~Model.html#instance-method-hasCollisions">hasCollisions</a></span></span><span data-ice="signature">(models: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>&lt;<span><a href="class/src/model.js~Model.html">Model</a></span>&gt; | <span>Models</span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+          <span data-ice="name"><span><a href="class/src/model.js~Model.html#instance-method-step">step</a></span></span><span data-ice="signature">(dt: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>)</span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Check if there are any collisions with models</p>
-</div>
+        
       </div>
     </td>
     <td>
@@ -697,7 +924,7 @@ tileset.render(1);</code></pre>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tileset.js.html#lineNumber31">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tileset.js.html#lineNumber34">source</a></span></span>
     </span>
   </h3>
 
@@ -740,7 +967,7 @@ tileset.render(1);</code></pre>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tileset.js.html#lineNumber29">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tileset.js.html#lineNumber31">source</a></span></span>
     </span>
   </h3>
 
@@ -783,7 +1010,7 @@ tileset.render(1);</code></pre>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tileset.js.html#lineNumber33">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tileset.js.html#lineNumber37">source</a></span></span>
     </span>
   </h3>
 
@@ -826,7 +1053,7 @@ tileset.render(1);</code></pre>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tileset.js.html#lineNumber27">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tileset.js.html#lineNumber28">source</a></span></span>
     </span>
   </h3>
 
@@ -912,7 +1139,7 @@ tileset.render(1);</code></pre>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tileset.js.html#lineNumber35">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tileset.js.html#lineNumber40">source</a></span></span>
     </span>
   </h3>
 
@@ -947,18 +1174,18 @@ tileset.render(1);</code></pre>
 <div data-ice="methodDetails"><h2 data-ice="title">Public Methods</h2>
 
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-render">
+  <h3 data-ice="anchor" id="instance-method-renderTile">
     <span class="access" data-ice="access">public</span>
     
     
     
     
     
-    <span data-ice="name">render</span><span data-ice="signature">(id: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>, context: <span>RenderingContext</span>)</span>
+    <span data-ice="name">renderTile</span><span data-ice="signature">(id: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>, ctx: <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">CanvasRenderingContext2D</a></span>)</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tileset.js.html#lineNumber71">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tileset.js.html#lineNumber77">source</a></span></span>
     </span>
   </h3>
 
@@ -985,9 +1212,10 @@ tileset.render(1);</code></pre>
       <td data-ice="description"></td>
     </tr>
 <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">context</td>
-      <td data-ice="type"><span>RenderingContext</span></td>
-      <td data-ice="appendix"></td>
+      <td data-ice="name" data-depth="0">ctx</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">CanvasRenderingContext2D</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default: null</li></ul></td>
       <td data-ice="description"></td>
     </tr>
 </tbody>

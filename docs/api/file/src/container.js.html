@@ -32,19 +32,36 @@
 <nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  </ul>
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/application.js~Application.html">Application</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/container.js~Container.html">Container</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/drawer.js~Drawer.html">Drawer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/event-emitter.js~EventEmitter.html">EventEmitter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/loader.js~Loader.html">Loader</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/model.js~Model.html">Model</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/mouse.js~Mouse.html">Mouse</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/particle.js~Particle.html">Particle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/sprite.js~Sprite.html">Sprite</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ticker.js~Ticker.html">Ticker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html">Tileset</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/viewport.js~Viewport.html">Viewport</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-io">io</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-keys">keys</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">helper</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collection.js~Collection.html">Collection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collision-checker.js~CollisionChecker.html">CollisionChecker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/renderer.js~Renderer.html">Renderer</a></span></span></li>
+</ul>
 </div>
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/container.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">const Drawer = require(&apos;./drawer&apos;);
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { Drawer } from &apos;./drawer&apos;;
 
 /**
  * Create a new container with a canvas element
  * @example
  * let container = new Container({ width: 200, height: 200, background: &apos;gray&apos; });
  */
-class Container extends Drawer {
+export class Container extends Drawer {
 
     /**
      * Create a new canvas
@@ -53,21 +70,25 @@ class Container extends Drawer {
      * @param {number} [options.y=0]
      * @param {number} [options.width] - default window width
      * @param {number} [options.height] - default window height
-     * @param {hex} [options.background=0xffffff]
+     * @param {string} [options.background=#ffffff]
      */
     constructor(options = {}) {
         super();
 
         /** @type {number} */
         this.x = options.x || 0;
+
         /** @type {number} */
         this.y = options.y || 0;
+
         /** @type {number} */
         this.width = options.width || window.innerWidth;
+
         /** @type {number} */
         this.height = options.height || window.innerHeight;
+
         /** @type {hex} */
-        this.background = options.background || 0xffffff;
+        this.background = options.background || &apos;#ffffff&apos;;
 
         /** @type {HTMLCanvasElement} */
         this.canvas = document.createElement(&apos;canvas&apos;);
@@ -77,24 +98,11 @@ class Container extends Drawer {
 
         /** @type {CanvasRenderingContext2D} */
         this.context = this.canvas.getContext(&apos;2d&apos;);
+
         /** @type {CanvasRenderingContext2D} */
         this.ctx = this.context;
     }
-
-    /**
-     * Render this canvas into another canvas
-     * @param {RenderingContext} ctx - Another canvas
-     * @param {number} x
-     * @param {number} y
-     */
-    render(ctx, x = 0, y = 0) {
-        ctx.save();
-        ctx.drawImage(this.canvas, x, y);
-        ctx.restore();
-    }
 }
-
-module.exports = Container;
 </code></pre>
 
 </div>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/viewport.js | Penvas API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/application.js~Application.html">Application</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/container.js~Container.html">Container</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/drawer.js~Drawer.html">Drawer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/event-emitter.js~EventEmitter.html">EventEmitter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/loader.js~Loader.html">Loader</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/model.js~Model.html">Model</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/mouse.js~Mouse.html">Mouse</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/particle.js~Particle.html">Particle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/sprite.js~Sprite.html">Sprite</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ticker.js~Ticker.html">Ticker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html">Tileset</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/viewport.js~Viewport.html">Viewport</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-io">io</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-keys">keys</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">helper</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collection.js~Collection.html">Collection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collision-checker.js~CollisionChecker.html">CollisionChecker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/renderer.js~Renderer.html">Renderer</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/viewport.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { Model } from &apos;./model&apos;;
+import { Drawer } from &apos;./drawer&apos;;
+
+import mouse from &apos;./mouse&apos;;
+
+/**
+ * Create a new Viewport
+ * @example
+ * const app = new Application({ width: 200, height: 200 });
+ * const player = new Sprite(...);
+ * const world = new Container(...);
+ * const viewport = new Viewport(0, 0, app.canvas, 1, 1, app.width / 2, app.height / 2);
+ *
+ * viewport.follow(player, world);
+ * viewport.drawImage(world);
+ */
+export class Viewport extends Model {
+
+    /**
+     * @param {number} x - x position of viewport into world
+     * @param {number} y - y position of viewport into world
+     * @param {CanvasRenderingContext2D} canvas - canvas where to draw image
+     * @param {number} [scaleX=1]
+     * @param {number} [scaleY=1]
+     * @param {number} [deadZoneX=0] - x position of dead zone (where viewport move when following target)
+     * @param {number} [deadZoneY=0] - y position of dead zone (where viewport move when following target)
+     */
+    constructor(x, y, canvas, scaleX = 1, scaleY = 1, deadZoneX = 0, deadZoneY = 0) {
+        super(x, y, canvas.width, canvas.height);
+
+        /** @type {CanvasRenderingContext2D} */
+        this.canvas = canvas;
+
+        /** @type {number} */
+        this.scaleX = scaleX;
+
+        /** @type {number} */
+        this.scaleY = scaleY;
+
+        /** @type {number} */
+        this.deadZoneX = deadZoneX;
+
+        /** @type {number} */
+        this.deadZoneY = deadZoneY;
+
+        // Update mouse coordinates
+        this.canvas.addEventListener(&apos;mousemove&apos;, event =&gt; {
+            mouse.ax = mouse.x + (this.x * this.scaleX);
+            mouse.ay = mouse.y + (this.y * this.scaleY);
+        });
+
+        mouse.scaleX = this.scaleX;
+        mouse.scaleY = this.scaleY;
+
+        this.ctx = this.canvas.getContext(&apos;2d&apos;);
+    }
+
+    /**
+     * Viewport follow target into world
+     * @param {Object} target
+     * @param {Object} world
+     */
+    follow(target, world) {
+        // Follow target
+        if (target.x - this.x + (this.deadZoneX / this.scaleX) &gt; this.width / this.scaleX) {
+            this.x = target.x - ((this.width / this.scaleX) - (this.deadZoneX / this.scaleX));
+        } else if (target.x - (this.deadZoneX / this.scaleX) &lt; this.x) {
+            this.x = target.x - (this.deadZoneX / this.scaleX);
+        }
+
+        if (target.y - this.y + (this.deadZoneY / this.scaleY) &gt; (this.height / this.scaleY)) {
+            this.y = target.y - ((this.height / this.scaleY) - (this.deadZoneY / this.scaleY));
+        } else if (target.y - (this.deadZoneY / this.scaleY) &lt; this.y) {
+            this.y = target.y - (this.deadZoneY / this.scaleY);
+        }
+
+        // Rest into world
+        if (this.x &lt; world.x) {
+            this.x = world.x;
+        }
+
+        if (this.x + (this.width / this.scaleX) &gt; world.x + world.width) {
+            this.x = (world.x + world.width) - (this.width / this.scaleX);
+        }
+
+        if (this.y &lt; world.y) {
+            this.y = world.y;
+        }
+
+        if (this.y + (this.height / this.scaleY) &gt; world.y + world.height) {
+            this.y = (world.y + world.height) - (this.height / this.scaleY);
+        }
+    }
+
+    /**
+     * Drawn image from source into canvas with viewport
+     * @param {Drawer} source
+     * @param {number} [x=0]
+     * @param {number} [y=0]
+     * @param {number} [width=null]
+     * @param {number} [height=null]
+     */
+    drawImage(source, x = 0, y = 0, width = null, height = null) {
+        if (!source instanceof Drawer) {
+            throw new Error(`Parameter source has to be an instance of Drawer, it&apos;s an instance of ${typeof model} instead.`);
+        }
+
+        this.ctx.drawImage(
+            source.canvas,
+            this.x,
+            this.y,
+            this.width,
+            this.height,
+            x,
+            y,
+            width || this.canvas.width,
+            height || this.canvas.height
+        );
+    }
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.5.2)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

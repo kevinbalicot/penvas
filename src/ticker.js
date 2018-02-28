@@ -1,24 +1,27 @@
-const EventEmitter = require('./event-emitter');
+import { EventEmitter } from './event-emitter';
 
 /**
  * Timer class
  * You can stop and start the game
  */
-class Ticker extends EventEmitter {
-
+export class Ticker extends EventEmitter {
     constructor () {
         super();
 
+        /** @type {number} */
         this.lastTick = Date.now();
+
+        /** @type {boolean} */
         this.stopped = true;
+
+        /** @type {number} */
         this.frame = 0;
-        this.frameskip = 1;
     }
 
     /**
      * @private
      */
-    loop () {
+    loop() {
         if (this.stopped) {
             return;
         }
@@ -32,6 +35,7 @@ class Ticker extends EventEmitter {
             return;
         }
 
+        this.frame++;
         let dt = delta / 1000;
 
         this.step(dt);
@@ -41,7 +45,7 @@ class Ticker extends EventEmitter {
     /**
      * Start timer
      */
-    start () {
+    start() {
         if (this.stopped) {
             this.stopped = false;
             requestAnimationFrame(this.loop.bind(this));
@@ -51,7 +55,7 @@ class Ticker extends EventEmitter {
     /**
      * Stop timer
      */
-    stop () {
+    stop() {
         this.stopped = true;
     }
 
@@ -61,7 +65,7 @@ class Ticker extends EventEmitter {
      * @param {number} dt
      * @emits {step}
      */
-    step (dt) {
+    step(dt) {
         this.dispatch('step', dt);
     }
 
@@ -71,9 +75,16 @@ class Ticker extends EventEmitter {
      * @param {number} dt
      * @emits {render}
      */
-    render (dt) {
+    render(dt) {
         this.dispatch('render', dt);
+    }
+
+    every(frame, callback) {
+        if (this.frame % frame === 0) {
+            callback();
+        }
     }
 }
 
-module.exports = Ticker;
+const ticker = new Ticker();
+export default ticker;

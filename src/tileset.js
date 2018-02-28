@@ -1,4 +1,4 @@
-const Model = require('./model');
+import { Model } from './model';
 
 /**
  * The class to use tileset image
@@ -9,7 +9,7 @@ const Model = require('./model');
  * // render the first tile of tileset
  * tileset.render(1);
  */
-class Tileset extends Model {
+export class Tileset extends Model {
 
     /**
      * @param {number} x
@@ -18,19 +18,24 @@ class Tileset extends Model {
      * @param {number} tileHeight
      * @param {Image} image
      */
-    constructor (x, y, tileWidth, tileHeight, image) {
+    constructor(x, y, tileWidth, tileHeight, image) {
         super(x, y, tileWidth, tileHeight);
 
         /** @type {number} */
         this.tileWidth = tileWidth;
+
         /** @type {number} */
         this.tileHeight = tileHeight;
+
         /** @type {Image} */
         this.image = image;
+
         /** @type {number} */
         this.columns = this.image.width / this.tileWidth;
+
         /** @type {number} */
         this.rows = this.image.height / this.tileHeight;
+
         /** @type {number} */
         this.tiles = this.columns * this.rows;
     }
@@ -43,7 +48,7 @@ class Tileset extends Model {
      * @property {number} x
      * @property {number} y
      */
-    getTilePosition (id) {
+    getTilePosition(id) {
         id = id > this.tiles ? this.tiles : id;
 
         const percent = (id * this.tileWidth) / this.image.width;
@@ -67,11 +72,12 @@ class Tileset extends Model {
     /**
      * Render a tile
      * @param {number} id
-     * @param {RenderingContext} context
+     * @param {CanvasRenderingContext2D} [ctx=null]
      */
-    render (id, context = null) {
+    renderTile(id, ctx = null) {
+        ctx = ctx || this.parent.ctx;
+
         if (id > 0) {
-            let ctx = context || this.parent.ctx;
             let tile = this.getTilePosition(id);
 
             ctx.save();
@@ -90,5 +96,3 @@ class Tileset extends Model {
         }
     }
 }
-
-module.exports = Tileset;

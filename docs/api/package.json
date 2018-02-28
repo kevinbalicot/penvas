@@ -1,6 +1,6 @@
 {
   "name": "penvas",
-  "version": "0.3.0",
+  "version": "0.5.0",
   "description": "A light video game 2D framework",
   "main": "src/index.js",
   "scripts": {
@@ -13,14 +13,18 @@
     "babel-preset-es2015": "^6.9.0",
     "babelify": "^7.3.0",
     "browserify": "^13.0.1",
-    "esdoc": "^0.5.1",
+    "esdoc": "^0.5.2",
     "http-server": "^0.9.0"
   },
   "babel": {
-    "presets": ["es2015"]
+    "presets": [
+      "es2015"
+    ]
   },
   "browserify": {
-    "transform": ["babelify"]
+    "transform": [
+      "babelify"
+    ]
   },
   "esdoc": {
     "title": "Penvas",

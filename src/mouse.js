@@ -1,8 +1,8 @@
-const Model = require('./model');
-const Container = require('./container');
+import { Model } from './model';
+import { Container } from './container';
 
-const io = require('./io');
-const keys = require('./keys');
+import io from './io';
+import keys from './keys';
 
 /**
  * Mouse service
@@ -12,11 +12,25 @@ const keys = require('./keys');
  *     tile.backgroundColor = 'red';
  * }
  */
-class Mouse {
-
+export class Mouse {
     constructor() {
+        /** @type {number} */
         this.x = 0;
+
+        /** @type {number} */
         this.y = 0;
+
+        /** @type {number} - absolute x position */
+        this.ax = 0;
+
+        /** @type {number} - absolute y postion */
+        this.ay = 0;
+
+        /** @type {number} */
+        this.scaleX = 1;
+
+        /** @type {number} */
+        this.scaleY = 1;
     }
 
     /**
@@ -29,15 +43,18 @@ class Mouse {
      * @param {number} object.height
      */
     hasCollision(object) {
-
         if (object.x === undefined || object.y === undefined || object.width === undefined || object.height === undefined) {
             throw new Error(`Object ${object} is not valid, needs x, y, width and height parameters.`);
         }
 
-        if (this.x <= object.x + object.width &&
-        object.x <= this.x &&
-        this.y <= object.y + object.height &&
-        object.y <= this.y) {
+        const x = this.ax > this.x ? this.ax : this.x;
+        const y = this.ay > this.y ? this.ay : this.y;
+
+        if (x / this.scaleX <= object.x + object.width &&
+            object.x <= x / this.scaleX &&
+            y / this.scaleY <= object.y + object.height &&
+            object.y <= y / this.scaleY
+        ) {
             return true;
         }
 
@@ -95,6 +112,27 @@ class Mouse {
     isClickOut(object) {
         return io[keys.LEFT_CLICK] && this.isOut(object);
     }
+
+    /**
+     * @param {Object} target
+     * @param {number} target.x
+     * @param {number} target.y
+     * @param {number} target.width
+     * @return {number}
+     */
+    getAngle(object) {
+        if (object.x === undefined || object.y === undefined || object.width === undefined || object.height === undefined) {
+            throw new Error(`Object ${object} is not valid, needs x, y, width and height parameters.`);
+        }
+
+        const x = this.ax > this.x ? this.ax : this.x;
+        const y = this.ay > this.y ? this.ay : this.y;
+
+        const rad = Math.atan2((y / this.scaleY)- (object.y + object.height / this.scaleY), (x / this.scaleX) - (object.x + object.width / this.scaleX));
+
+        return rad * 180 / Math.PI;
+    }
 }
 
-module.exports = new Mouse();
+const mouse = new Mouse();
+export default mouse;
