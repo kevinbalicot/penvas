@@ -167,10 +167,30 @@ var Application = exports.Application = function (_Drawer) {
         _this.ctx = _this.context;
 
         // Update mouse coordinates
-        _this.canvas.addEventListener('mousemove', function (event) {
+        document.addEventListener('mousemove', function (event) {
             var rect = _this.canvas.getBoundingClientRect();
             _this.mouse.x = event.clientX - rect.left;
             _this.mouse.y = event.clientY - rect.top;
+        });
+
+        document.addEventListener('keydown', function (e) {
+            try {
+                if (!!_this.options.onKeydown) {
+                    _this.options.onKeydown.call(_this, e, _io2.default);
+                }
+            } catch (e) {
+                _this.handleError(e);
+            }
+        });
+
+        document.addEventListener('keyup', function (e) {
+            try {
+                if (!!_this.options.onKeyup) {
+                    _this.options.onKeyup.call(_this, e, _io2.default);
+                }
+            } catch (e) {
+                _this.handleError(e);
+            }
         });
 
         options.container.appendChild(_this.canvas);
@@ -240,11 +260,11 @@ var Application = exports.Application = function (_Drawer) {
 
         /**
          * Add layer to application
+         * @param {String} name
          * @param {Object} layer
          * @param {function} layer.create - called to create models
          * @param {function} layer.step - called at every frame
          * @param {function} layer.render - called at every frame
-         * @param {String} name
          * @example
          * const layer = {
          *   create: function() {
@@ -269,12 +289,8 @@ var Application = exports.Application = function (_Drawer) {
 
     }, {
         key: 'addLayer',
-        value: function addLayer(layer, name) {
+        value: function addLayer(name, layer) {
             this.layers.push({ layer: layer, name: name });
-
-            if (this.layers.length === 1) {
-                this.changeLayer(name);
-            }
 
             //maybe it's too hight concept for ligth canvas lib
             /*for (let prop in this) {
@@ -287,11 +303,14 @@ var Application = exports.Application = function (_Drawer) {
         /**
          * Switch the current layer
          * @param {String} name
+         * @param {*} [data=null]
          */
 
     }, {
         key: 'changeLayer',
         value: function changeLayer(name) {
+            var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
             var layer = this.layers.find(function (layer) {
                 return layer.name === name;
             });
@@ -300,7 +319,7 @@ var Application = exports.Application = function (_Drawer) {
                 this.currentLayer = layer.layer;
 
                 if (!!this.currentLayer.create) {
-                    this.currentLayer.create.call(this);
+                    this.currentLayer.create.call(this, data);
                 }
             }
         }
@@ -1141,7 +1160,7 @@ var CollisionChecker = exports.CollisionChecker = function (_Collection) {
                     return m;
                 } else if (!model.hitbox.radius && !!m.hitbox.radius && CollisionChecker.hasCollisionBetweenCircleAndRectangle(m.hitbox, model.hitbox)) {
                     return m;
-                } else if (CollisionChecker.hasCollisionBetweenRectangleAndRectangle(model.hitbox, m.hitbox)) {
+                } else if (!model.hitbox.radius && !m.hitbox.radius && CollisionChecker.hasCollisionBetweenRectangleAndRectangle(model.hitbox, m.hitbox)) {
                     return m;
                 }
             }
@@ -2726,6 +2745,11 @@ var Particle = exports.Particle = function (_Model) {
             }
 
             drawer.save();
+
+            if (!!this.options.rotate) {
+                drawer.rotateModel(this, this.options.rotate, this.options.pivotX, this.options.pivotY);
+            }
+
             drawer.ctx.globalAlpha = this.opacity;
 
             switch (this.type) {
@@ -2764,11 +2788,8 @@ var Particle = exports.Particle = function (_Model) {
                     }
                     break;
             }
-            drawer.restore();
 
-            if (!!this.options.rotate) {
-                drawer.rotateModel(this, this.options.rotate, this.options.pivotX, this.options.pivotY);
-            }
+            drawer.restore();
         }
     }, {
         key: 'serialize',
@@ -2894,6 +2915,7 @@ var Sprite = exports.Sprite = function (_Model) {
         var _this = _possibleConstructorReturn(this, (Sprite.__proto__ || Object.getPrototypeOf(Sprite)).call(this, x, y, tileWidth, tileHeight, hitbox));
 
         _this.image = image;
+
         /** @type {Array<Object>} */
         _this.animations = animations;
 
@@ -3544,7 +3566,7 @@ var Viewport = exports.Viewport = function (_Model) {
         _this.deadZoneY = deadZoneY;
 
         // Update mouse coordinates
-        _this.canvas.addEventListener('mousemove', function (event) {
+        document.addEventListener('mousemove', function (event) {
             _mouse2.default.ax = _mouse2.default.x + _this.x * _this.scaleX;
             _mouse2.default.ay = _mouse2.default.y + _this.y * _this.scaleY;
         });

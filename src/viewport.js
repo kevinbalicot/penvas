@@ -44,7 +44,7 @@ export class Viewport extends Model {
         this.deadZoneY = deadZoneY;
 
         // Update mouse coordinates
-        this.canvas.addEventListener('mousemove', event => {
+        document.addEventListener('mousemove', event => {
             mouse.ax = mouse.x + (this.x * this.scaleX);
             mouse.ay = mouse.y + (this.y * this.scaleY);
         });

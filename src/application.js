@@ -102,10 +102,30 @@ export class Application extends Drawer {
         this.ctx = this.context;
 
         // Update mouse coordinates
-        this.canvas.addEventListener('mousemove', event => {
+        document.addEventListener('mousemove', event => {
             const rect = this.canvas.getBoundingClientRect();
             this.mouse.x = event.clientX - rect.left;
             this.mouse.y = event.clientY - rect.top;
+        });
+
+        document.addEventListener('keydown', (e) => {
+            try {
+                if (!!this.options.onKeydown) {
+                    this.options.onKeydown.call(this, e, io);
+                }
+            } catch(e) {
+                this.handleError(e);
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            try {
+                if (!!this.options.onKeyup) {
+                    this.options.onKeyup.call(this, e, io);
+                }
+            } catch(e) {
+                this.handleError(e);
+            }
         });
 
         options.container.appendChild(this.canvas);
@@ -166,11 +186,11 @@ export class Application extends Drawer {
 
     /**
      * Add layer to application
+     * @param {String} name
      * @param {Object} layer
      * @param {function} layer.create - called to create models
      * @param {function} layer.step - called at every frame
      * @param {function} layer.render - called at every frame
-     * @param {String} name
      * @example
      * const layer = {
      *   create: function() {
@@ -192,12 +212,8 @@ export class Application extends Drawer {
      *
      * app.addLayer('scene1', layer);
      */
-    addLayer(layer, name) {
+    addLayer(name, layer) {
         this.layers.push({ layer, name });
-
-        if (this.layers.length === 1) {
-            this.changeLayer(name);
-        }
 
         //maybe it's too hight concept for ligth canvas lib
         /*for (let prop in this) {
@@ -210,15 +226,16 @@ export class Application extends Drawer {
     /**
      * Switch the current layer
      * @param {String} name
+     * @param {*} [data=null]
      */
-    changeLayer(name) {
+    changeLayer(name, data = null) {
         let layer = this.layers.find(layer => layer.name === name);
 
         if (!!layer) {
             this.currentLayer = layer.layer;
 
             if (!!this.currentLayer.create) {
-                this.currentLayer.create.call(this);
+                this.currentLayer.create.call(this, data);
             }
         }
     }

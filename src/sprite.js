@@ -34,6 +34,7 @@ export class Sprite extends Model {
 
         /** @type {Image} */
         this.image = image;
+
         /** @type {Array<Object>} */
         this.animations = animations;
 

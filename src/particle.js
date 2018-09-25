@@ -27,6 +27,16 @@ export class Particle extends Model {
         }
 
         drawer.save();
+
+        if (!!this.options.rotate) {
+            drawer.rotateModel(
+                this,
+                this.options.rotate,
+                this.options.pivotX,
+                this.options.pivotY
+            );
+        }
+
         drawer.ctx.globalAlpha = this.opacity;
 
         switch (this.type) {
@@ -106,16 +116,8 @@ export class Particle extends Model {
                 }
                 break;
         }
-        drawer.restore();
 
-        if (!!this.options.rotate) {
-            drawer.rotateModel(
-                this,
-                this.options.rotate,
-                this.options.pivotX,
-                this.options.pivotY
-            );
-        }
+        drawer.restore();
     }
 
     serialize() {

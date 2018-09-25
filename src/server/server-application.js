@@ -1,41 +1,32 @@
+const EventEmitter = require('events');
 const Ticker = require('./ticker');
 
 /**
  * @ignore
  */
-class ServerApplication {
+class Server extends EventEmitter {
 
-    constructor (options = {}) {
+    constructor(options = {}) {
+        super();
 
         this.options = options;
-
         this.ticker = new Ticker();
-        this.ticker.on('step', this.step, this);
+        this.ticker.on('step', dt => this.step.call(this, dt));
 
         if (!!this.options.create) {
             this.options.create.call(this);
         }
-
-        this.ready();
     }
 
-    step (dt) {
+    step(dt) {
         if (!!this.options.step) {
             this.options.step.call(this, dt);
         }
     }
 
-    ready () {
+    ready() {
         this.ticker.start();
-    }
-
-    debug (models = []) {
-        [].concat(models).forEach(model => {
-            if (model instanceof Model) {
-
-            }
-        });
     }
 }
 
-module.exports = ServerApplication;
+module.exports = Server;

@@ -3,11 +3,11 @@
  */
 class CollisionChecker {
 
-    constructor () {
+    constructor() {
         this.pair = [];
     }
 
-    add (model, platforms, event) {
+    add(model, platforms, event) {
 
         if (!Array.isArray(platforms)) {
             platforms = [platforms];
@@ -16,7 +16,7 @@ class CollisionChecker {
         this.pair.push({ model, platforms, event });
     }
 
-    check (td) {
+    check(td) {
         let model, hasCollision;
         this.pair.forEach(pair => {
             model = Object.create(pair.model);
@@ -29,7 +29,7 @@ class CollisionChecker {
         });
     }
 
-    hasCollision (hitbox, hitboxes) {
+    hasCollision(hitbox, hitboxes) {
 
         if (!Array.isArray(hitboxes)) {
             hitboxes = [hitboxes];
@@ -51,7 +51,7 @@ class CollisionChecker {
         return false;
     }
 
-    getHitbox (model) {
+    getHitbox(model) {
         if (!!model.hitbox) {
             return {
                 x: model.x + model.hitbox.x,
@@ -69,7 +69,7 @@ class CollisionChecker {
         }
     }
 
-    clear () {
+    clear() {
         this.pair = [];
     }
 }

@@ -84,7 +84,11 @@ export class CollisionChecker extends Collection {
                 CollisionChecker.hasCollisionBetweenCircleAndRectangle(m.hitbox, model.hitbox)
             ) {
                 return m;
-            } else if (CollisionChecker.hasCollisionBetweenRectangleAndRectangle(model.hitbox, m.hitbox)) {
+            } else if (
+                !model.hitbox.radius &&
+                !m.hitbox.radius &&
+                CollisionChecker.hasCollisionBetweenRectangleAndRectangle(model.hitbox, m.hitbox)
+            ) {
                 return m;
             }
         }

@@ -1,11 +1,11 @@
-const EventEmitter = require('./../event-emitter');
+const EventEmitter = require('events');
 
 /**
  * @ignore
  */
 class Ticker extends EventEmitter {
 
-    constructor () {
+    constructor() {
         super();
 
         this.lastTick = Date.now();
@@ -13,7 +13,7 @@ class Ticker extends EventEmitter {
         this.timer = null;
     }
 
-    loop () {
+    loop() {
 
         if (this.stopped) {
             return;
@@ -31,20 +31,20 @@ class Ticker extends EventEmitter {
         this.step(dt);
     }
 
-    start () {
+    start() {
         if (this.stopped) {
             this.stopped = false;
             this.time = setInterval(() => this.loop(), 10);
         }
     }
 
-    stop () {
+    stop() {
         this.stopped = true;
         clearInterval(this.timer);
     }
 
-    step (dt) {
-        this.dispatch('step', dt);
+    step(dt) {
+        this.emit('step', dt);
     }
 }
 
