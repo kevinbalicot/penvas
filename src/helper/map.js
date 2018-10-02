@@ -126,7 +126,7 @@ export class Map {
         return [];
     }
 
-    render(drawer, options) {
+    render(drawer, options = {}) {
         if (!drawer instanceof Drawer) {
             throw new Error(`Parameter drawer has to be an instance of Drawer, it's an instance of ${typeof drawer} instead.`);
         }

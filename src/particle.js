@@ -21,7 +21,7 @@ export class Particle extends Model {
         }
     }
 
-    render(ctx, drawer) {
+    render(drawer) {
         if (this.opacity <= 0 || null === drawer) {
             return;
         }
