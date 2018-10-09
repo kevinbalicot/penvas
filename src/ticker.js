@@ -79,6 +79,11 @@ export class Ticker extends EventEmitter {
         this.dispatch('render', dt);
     }
 
+    /**
+     * Call callback every frame
+     * @param {number} frame
+     * @param {function} callback
+     */
     every(frame, callback) {
         if (this.frame % frame === 0) {
             callback();

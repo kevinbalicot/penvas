@@ -26,6 +26,10 @@ export class Model extends EventEmitter {
         /** @type {number} */
         this.y = y;
         /** @type {number} */
+        this.rx = x;
+        /** @type {number} */
+        this.ry = y;
+        /** @type {number} */
         this.width = width;
         /** @type {number} */
         this.height = height;
@@ -73,7 +77,8 @@ export class Model extends EventEmitter {
      * @property {number} value
      */
     set x(value) {
-        this._x = Math.round(value);
+        this._x = value;
+        this.rx = Math.round(value);
     }
 
     /**
@@ -87,7 +92,8 @@ export class Model extends EventEmitter {
      * @property {number} value
      */
     set y(value) {
-        this._y = Math.round(value);
+        this._y = value;
+        this.ry = Math.round(value);
     }
 
     /**
@@ -103,10 +109,10 @@ export class Model extends EventEmitter {
     step(dt) {}
 
     /**
-     * @param {RenderingContext} ctx
      * @param {Drawer} [drawer=null]
+     * @param {Object} [options={}]
      */
-    render(ctx, drawer = null) {}
+    render(drawer = null, options = {}) {}
 
     /**
      * @return {Object}

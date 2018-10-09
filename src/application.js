@@ -1,5 +1,6 @@
 import { Model } from './model';
 import { Drawer } from './drawer';
+import { Scene } from './scene';
 
 import ticker from './ticker';
 import io from './io';
@@ -113,6 +114,12 @@ export class Application extends Drawer {
                 if (!!this.options.onKeydown) {
                     this.options.onKeydown.call(this, e, io);
                 }
+
+                if (this.currentLayer instanceof Scene) {
+                    this.currentLayer.onKeydown(e, io);
+                } else if (!!this.currentLayer && !!this.currentLayer.onKeydown) {
+                    this.currentLayer.onKeydown.call(this, e, io);
+                }
             } catch(e) {
                 this.handleError(e);
             }
@@ -122,6 +129,12 @@ export class Application extends Drawer {
             try {
                 if (!!this.options.onKeyup) {
                     this.options.onKeyup.call(this, e, io);
+                }
+
+                if (this.currentLayer instanceof Scene) {
+                    this.currentLayer.onKeyup(e, io);
+                } else if (!!this.currentLayer && !!this.currentLayer.onKeyup) {
+                    this.currentLayer.onKeyup.call(this, e, io);
                 }
             } catch(e) {
                 this.handleError(e);
@@ -157,7 +170,9 @@ export class Application extends Drawer {
                 this.options.step.call(this, dt);
             }
 
-            if (!!this.currentLayer && !!this.currentLayer.step) {
+            if (this.currentLayer instanceof Scene) {
+                this.currentLayer.step(dt);
+            } else if (!!this.currentLayer && !!this.currentLayer.step) {
                 this.currentLayer.step.call(this, dt);
             }
         } catch(e) {
@@ -176,7 +191,9 @@ export class Application extends Drawer {
                 this.options.render.call(this, dt);
             }
 
-            if (!!this.currentLayer && !!this.currentLayer.render) {
+            if (this.currentLayer instanceof Scene) {
+                this.currentLayer.render(dt);
+            } else if (!!this.currentLayer && !!this.currentLayer.render) {
                 this.currentLayer.render.call(this, dt);
             }
         } catch(e) {
@@ -213,14 +230,7 @@ export class Application extends Drawer {
      * app.addLayer('scene1', layer);
      */
     addLayer(name, layer) {
-        this.layers.push({ layer, name });
-
-        //maybe it's too hight concept for ligth canvas lib
-        /*for (let prop in this) {
-            if (this[prop] instanceof Model) {
-                this[prop].parent = this;
-            }
-        }*/
+        this.layers.push({ name, layer });
     }
 
     /**
@@ -229,12 +239,18 @@ export class Application extends Drawer {
      * @param {*} [data=null]
      */
     changeLayer(name, data = null) {
-        let layer = this.layers.find(layer => layer.name === name);
+        const { layer } = this.layers.find(layer => layer.name === name);
 
         if (!!layer) {
-            this.currentLayer = layer.layer;
+            if (typeof layer === 'function') {
+                this.currentLayer = new layer(this);
+            } else {
+                this.currentLayer = layer;
+            }
 
-            if (!!this.currentLayer.create) {
+            if (this.currentLayer instanceof Scene) {
+                this.currentLayer.create(data);
+            } else if (!!this.currentLayer.create) {
                 this.currentLayer.create.call(this, data);
             }
         }

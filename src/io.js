@@ -1,4 +1,4 @@
-import keys from './keys';
+import KEYS from './keys';
 
 /**
  * Array of Input
@@ -12,7 +12,7 @@ import keys from './keys';
  *    this.player.walkRight();
  * }
  *
- * if (io[MOUSE.LEFT_CLICK]) {
+ * if (io[KEYS.LEFT_CLICK]) {
  *     this.player.attack();
  * }
  */
@@ -27,11 +27,11 @@ document.addEventListener('keyup', (e) => {
 });
 
 document.addEventListener('mousedown', () => {
-    io[keys.LEFT_CLICK] = true;
+    io[KEYS.LEFT_CLICK] = true;
 });
 
 document.addEventListener('mouseup', () => {
-    io[keys.LEFT_CLICK] = false;
+    io[KEYS.LEFT_CLICK] = false;
 });
 
 export default io;

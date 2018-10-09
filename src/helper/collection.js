@@ -1,3 +1,4 @@
+import { Drawer } from './../drawer';
 
 export class Collection {
     constructor() {
@@ -25,13 +26,38 @@ export class Collection {
     }
 
     remove(callback) {
-        const index = this.items.findIndex(callback);
+        let index = -1;
+        if (typeof callback === 'function') {
+            index = this.items.findIndex(callback);
+        } else {
+            index = this.items.indexOf(callback);
+        }
 
         if (index > -1) {
             return this.items.splice(index, 1);
         }
 
         return false;
+    }
+
+    step(dt) {
+        this.items.forEach(item => {
+            if (!!item.step && typeof item.step === 'function') {
+                item.step(dt);
+            }
+        });
+    }
+
+    render(drawer) {
+        if (!drawer instanceof Drawer) {
+            throw new Error(`Parameter drawer has to be an instance of Drawer, it's an instance of ${typeof drawer} instead.`);
+        }
+
+        this.items.forEach(item => {
+            if (!!item.render && typeof item.render === 'function') {
+                item.render(drawer);
+            }
+        });
     }
 
     clear() {

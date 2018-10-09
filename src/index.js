@@ -8,6 +8,7 @@ import { Tileset } from './tileset';
 import { Ticker } from './ticker';
 import { Viewport } from './viewport';
 import { Particle } from './particle';
+import { Scene } from './scene';
 
 import { Map } from './helper/map';
 import { CollisionChecker } from './helper/collision-checker';
@@ -29,6 +30,7 @@ window.Tileset = Tileset;
 window.Drawer = Drawer;
 window.Viewport = Viewport;
 window.Particle = Particle;
+window.Scene = Scene;
 
 window.io = io;
 window.KEYS = keys;

@@ -7,7 +7,7 @@ import { Model } from './model';
  * let tileset = new Tileset(0, 0, 32, 32, image);
  *
  * // render the first tile of tileset
- * tileset.render(1);
+ * tileset.renderTile(1, this.application);
  */
 export class Tileset extends Model {
 
@@ -72,16 +72,20 @@ export class Tileset extends Model {
     /**
      * Render a tile
      * @param {number} id
-     * @param {CanvasRenderingContext2D} [ctx=null]
+     * @param {Drawer} [drawer=null]
      */
-    renderTile(id, ctx = null) {
-        ctx = ctx || this.parent.ctx;
+    renderTile(id, drawer = null) {
+        drawer = drawer || this.parent;
+
+        if (!drawer instanceof Drawer) {
+            throw new Error(`Parameter drawer has to be an instance of Drawer, it's an instance of ${typeof drawer} instead.`);
+        }
 
         if (id > 0) {
             let tile = this.getTilePosition(id);
 
-            ctx.save();
-            ctx.drawImage(
+            drawer.ctx.save();
+            drawer.ctx.drawImage(
                 this.image,     // image
                 tile.x * this.tileWidth,    // pos x
                 tile.y * this.tileHeight,   // pos y
@@ -92,7 +96,7 @@ export class Tileset extends Model {
                 this.width,     // destination frame width
                 this.height     // destination frame height
             );
-            ctx.restore();
+            drawer.ctx.restore();
         }
     }
 }

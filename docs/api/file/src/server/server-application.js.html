@@ -45,7 +45,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html">Tileset</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/viewport.js~Viewport.html">Viewport</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-io">io</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-keys">keys</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEYS">KEYS</a></span></span></li>
 <li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">helper</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collection.js~Collection.html">Collection</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collision-checker.js~CollisionChecker.html">CollisionChecker</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/renderer.js~Renderer.html">Renderer</a></span></span></li>
@@ -54,47 +54,38 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/server/server-application.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">const Ticker = require(&apos;./ticker&apos;);
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">const EventEmitter = require(&apos;events&apos;);
+const Ticker = require(&apos;./ticker&apos;);
 
 /**
  * @ignore
  */
-class ServerApplication {
+class Server extends EventEmitter {
 
-    constructor (options = {}) {
+    constructor(options = {}) {
+        super();
 
         this.options = options;
-
         this.ticker = new Ticker();
-        this.ticker.on(&apos;step&apos;, this.step, this);
+        this.ticker.on(&apos;step&apos;, dt =&gt; this.step.call(this, dt));
 
         if (!!this.options.create) {
             this.options.create.call(this);
         }
-
-        this.ready();
     }
 
-    step (dt) {
+    step(dt) {
         if (!!this.options.step) {
             this.options.step.call(this, dt);
         }
     }
 
-    ready () {
+    ready() {
         this.ticker.start();
-    }
-
-    debug (models = []) {
-        [].concat(models).forEach(model =&gt; {
-            if (model instanceof Model) {
-
-            }
-        });
     }
 }
 
-module.exports = ServerApplication;
+module.exports = Server;
 </code></pre>
 
 </div>

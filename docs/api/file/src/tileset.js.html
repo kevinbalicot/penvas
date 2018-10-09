@@ -45,7 +45,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html">Tileset</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/viewport.js~Viewport.html">Viewport</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-io">io</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-keys">keys</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEYS">KEYS</a></span></span></li>
 <li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">helper</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collection.js~Collection.html">Collection</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collision-checker.js~CollisionChecker.html">CollisionChecker</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/renderer.js~Renderer.html">Renderer</a></span></span></li>
@@ -63,7 +63,7 @@
  * let tileset = new Tileset(0, 0, 32, 32, image);
  *
  * // render the first tile of tileset
- * tileset.render(1);
+ * tileset.renderTile(1, this.application);
  */
 export class Tileset extends Model {
 
@@ -128,16 +128,20 @@ export class Tileset extends Model {
     /**
      * Render a tile
      * @param {number} id
-     * @param {CanvasRenderingContext2D} [ctx=null]
+     * @param {Drawer} [drawer=null]
      */
-    renderTile(id, ctx = null) {
-        ctx = ctx || this.parent.ctx;
+    renderTile(id, drawer = null) {
+        drawer = drawer || this.parent;
+
+        if (!drawer instanceof Drawer) {
+            throw new Error(`Parameter drawer has to be an instance of Drawer, it&apos;s an instance of ${typeof drawer} instead.`);
+        }
 
         if (id &gt; 0) {
             let tile = this.getTilePosition(id);
 
-            ctx.save();
-            ctx.drawImage(
+            drawer.ctx.save();
+            drawer.ctx.drawImage(
                 this.image,     // image
                 tile.x * this.tileWidth,    // pos x
                 tile.y * this.tileHeight,   // pos y
@@ -148,7 +152,7 @@ export class Tileset extends Model {
                 this.width,     // destination frame width
                 this.height     // destination frame height
             );
-            ctx.restore();
+            drawer.ctx.restore();
         }
     }
 }

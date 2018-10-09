@@ -70,9 +70,9 @@
                   "line": 12,
                   "column": 10
                 },
-                "identifierName": "keys"
+                "identifierName": "KEYS"
               },
-              "name": "keys",
+              "name": "KEYS",
               "leadingComments": null
             },
             "init": {
@@ -2107,9 +2107,9 @@
               "line": 52,
               "column": 19
             },
-            "identifierName": "keys"
+            "identifierName": "KEYS"
           },
-          "name": "keys"
+          "name": "KEYS"
         },
         "name": "_",
         "leadingComments": [],
@@ -2171,9 +2171,9 @@
                     "line": 12,
                     "column": 10
                   },
-                  "identifierName": "keys"
+                  "identifierName": "KEYS"
                 },
-                "name": "keys",
+                "name": "KEYS",
                 "leadingComments": null
               },
               "init": {
@@ -4276,7 +4276,7 @@
         "postfix": false,
         "binop": null
       },
-      "value": "keys",
+      "value": "KEYS",
       "start": 312,
       "end": 316,
       "loc": {
@@ -8189,7 +8189,7 @@
         "postfix": false,
         "binop": null
       },
-      "value": "keys",
+      "value": "KEYS",
       "start": 902,
       "end": 906,
       "loc": {

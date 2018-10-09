@@ -45,7 +45,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html">Tileset</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/viewport.js~Viewport.html">Viewport</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-io">io</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-keys">keys</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEYS">KEYS</a></span></span></li>
 <li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">helper</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collection.js~Collection.html">Collection</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collision-checker.js~CollisionChecker.html">CollisionChecker</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/renderer.js~Renderer.html">Renderer</a></span></span></li>
@@ -62,7 +62,7 @@
 <h2 id="how-to-use-it">How to use it</h2>
 <pre><code class="lang-javascript"><code class="source-code prettyprint">&lt;script type=&quot;text/javascript&quot; src=&quot;node_modules/penvas/dist/penvas.js&quot;&gt;&lt;/script&gt;
 &lt;script type=&quot;application/javascript&quot;&gt;
-    var homeLayer = {
+    var main = {
         create: function () {
             this.rect = new Model(this.width / 2, this.height / 2, 50, 100);
         },
@@ -84,7 +84,9 @@
     };
 
     var app = new Application();
-    app.addLayer(homeLayer, &apos;home&apos;);
+
+    app.addLayer(&apos;main&apos;, main);
+    app.changeLayer(&apos;main&apos;);
 &lt;/script&gt;</code>
 </code></pre>
 <h2 id="documentation">Documentation</h2>

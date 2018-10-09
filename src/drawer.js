@@ -257,16 +257,17 @@ export class Drawer {
     /**
      * Draw model
      * @param {Model} model
+     * @param {Object} [options={}]
      *
      * @return {Drawer}
      */
-    drawModel(model) {
+    drawModel(model, options = {}) {
         if (!model instanceof Model) {
             throw new Error(`Parameter model has to be an instance of Model, it's an instance of ${typeof model} instead.`);
         }
 
         this.ctx.save();
-        model.render(this.ctx, this);
+        model.render(this, options);
         this.ctx.restore();
 
         return this;

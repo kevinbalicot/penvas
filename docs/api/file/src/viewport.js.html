@@ -45,7 +45,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html">Tileset</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/viewport.js~Viewport.html">Viewport</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-io">io</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-keys">keys</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEYS">KEYS</a></span></span></li>
 <li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">helper</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collection.js~Collection.html">Collection</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collision-checker.js~CollisionChecker.html">CollisionChecker</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/renderer.js~Renderer.html">Renderer</a></span></span></li>
@@ -100,7 +100,7 @@ export class Viewport extends Model {
         this.deadZoneY = deadZoneY;
 
         // Update mouse coordinates
-        this.canvas.addEventListener(&apos;mousemove&apos;, event =&gt; {
+        document.addEventListener(&apos;mousemove&apos;, event =&gt; {
             mouse.ax = mouse.x + (this.x * this.scaleX);
             mouse.ay = mouse.y + (this.y * this.scaleY);
         });

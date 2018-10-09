@@ -45,7 +45,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html">Tileset</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/viewport.js~Viewport.html">Viewport</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-io">io</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-keys">keys</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEYS">KEYS</a></span></span></li>
 <li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">helper</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collection.js~Collection.html">Collection</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collision-checker.js~CollisionChecker.html">CollisionChecker</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/renderer.js~Renderer.html">Renderer</a></span></span></li>
@@ -158,10 +158,34 @@ export class Application extends Drawer {
         this.ctx = this.context;
 
         // Update mouse coordinates
-        this.canvas.addEventListener(&apos;mousemove&apos;, event =&gt; {
+        document.addEventListener(&apos;mousemove&apos;, event =&gt; {
             const rect = this.canvas.getBoundingClientRect();
             this.mouse.x = event.clientX - rect.left;
             this.mouse.y = event.clientY - rect.top;
+        });
+
+        document.addEventListener(&apos;keydown&apos;, (e) =&gt; {
+            try {
+                if (!!this.options.onKeydown) {
+                    this.options.onKeydown.call(this, e, io);
+                }
+            } catch(e) {
+                this.handleError(e);
+            }
+        });
+
+        document.addEventListener(&apos;keyup&apos;, (e) =&gt; {
+            try {
+                if (!!this.options.onKeyup) {
+                    this.options.onKeyup.call(this, e, io);
+                }
+
+                if (!!this.currentLayer &amp;&amp; !!this.currentLayer.onKeyup) {
+                    this.currentLayer.onKeyup.call(this, e, io);
+                }
+            } catch(e) {
+                this.handleError(e);
+            }
         });
 
         options.container.appendChild(this.canvas);
@@ -222,11 +246,11 @@ export class Application extends Drawer {
 
     /**
      * Add layer to application
+     * @param {String} name
      * @param {Object} layer
      * @param {function} layer.create - called to create models
      * @param {function} layer.step - called at every frame
      * @param {function} layer.render - called at every frame
-     * @param {String} name
      * @example
      * const layer = {
      *   create: function() {
@@ -248,33 +272,23 @@ export class Application extends Drawer {
      *
      * app.addLayer(&apos;scene1&apos;, layer);
      */
-    addLayer(layer, name) {
+    addLayer(name, layer) {
         this.layers.push({ layer, name });
-
-        if (this.layers.length === 1)&#xA0;{
-            this.changeLayer(name);
-        }
-
-        //maybe it&apos;s too hight concept for ligth canvas lib
-        /*for (let prop in this) {
-            if (this[prop] instanceof Model) {
-                this[prop].parent = this;
-            }
-        }*/
     }
 
     /**
      * Switch the current layer
      * @param {String} name
+     * @param {*} [data=null]
      */
-    changeLayer(name) {
+    changeLayer(name, data = null) {
         let layer = this.layers.find(layer =&gt; layer.name === name);
 
         if (!!layer) {
             this.currentLayer = layer.layer;
 
             if (!!this.currentLayer.create) {
-                this.currentLayer.create.call(this);
+                this.currentLayer.create.call(this, data);
             }
         }
     }

@@ -45,7 +45,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html">Tileset</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/viewport.js~Viewport.html">Viewport</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-io">io</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-keys">keys</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEYS">KEYS</a></span></span></li>
 <li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">helper</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collection.js~Collection.html">Collection</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collision-checker.js~CollisionChecker.html">CollisionChecker</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/renderer.js~Renderer.html">Renderer</a></span></span></li>
@@ -54,13 +54,13 @@
 </nav>
 
 <div class="content" data-ice="content"><div class="header-notice">
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {Particle} from &apos;<span><a href="file/src/particle.js.html#lineNumber4">penvas/src/particle.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {Particle} from &apos;<span><a href="file/src/particle.js.html#lineNumber12">penvas/src/particle.js</a></span>&apos;</code></pre></div>
   <span data-ice="access">public</span>
   <span data-ice="kind">class</span>
   
   
   
-  <span data-ice="source">| <span><a href="file/src/particle.js.html#lineNumber4">source</a></span></span>
+  <span data-ice="source">| <span><a href="file/src/particle.js.html#lineNumber12">source</a></span></span>
 </div>
 
 <div class="self-detail detail">
@@ -80,12 +80,24 @@
 
   
   
-  
+  <div class="description" data-ice="description"><p>Particle entity</p>
+</div>
   
 
   
 
-  
+  <div data-ice="exampleDocs">
+    <h4>Example:</h4>
+    
+  <div class="example-doc" data-ice="exampleDoc">
+      
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">let particle = new Particle(0, 0, &apos;fillcirc&apos;, {
+     radius: 10,
+     color: &apos;red&apos;,
+     lineSize: 2
+});</code></pre>
+    </div>
+</div>
 
   
 
@@ -110,7 +122,7 @@
         <p>
           
           
-          <span data-ice="name"><span><a href="class/src/particle.js~Particle.html#static-method-deserialize">deserialize</a></span></span><span data-ice="signature">(objectPattern: {&quot;x&quot;: <span>*</span>, &quot;y&quot;: <span>*</span>, &quot;type&quot;: <span>*</span>, &quot;options&quot;: <span>*</span>, &quot;opacity&quot;: <span>*</span>}): <span>*</span></span>
+          <span data-ice="name"><span><a href="class/src/particle.js~Particle.html#static-method-deserialize">deserialize</a></span></span><span data-ice="signature">(data: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span><a href="class/src/particle.js~Particle.html">Particle</a></span></span>
         </p>
       </div>
       <div>
@@ -144,7 +156,7 @@
         <p>
           
           
-          <span data-ice="name"><span><a href="class/src/particle.js~Particle.html#instance-constructor-constructor">constructor</a></span></span><span data-ice="signature">(x: <span>*</span>, y: <span>*</span>, type: <span>*</span>, options: <span>*</span>)</span>
+          <span data-ice="name"><span><a href="class/src/particle.js~Particle.html#instance-constructor-constructor">constructor</a></span></span><span data-ice="signature">(x: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>, y: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>, type: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>)</span>
         </p>
       </div>
       <div>
@@ -320,7 +332,35 @@
         <p>
           
           
-          <span data-ice="name"><span><a href="class/src/particle.js~Particle.html#instance-method-render">render</a></span></span><span data-ice="signature">(ctx: <span>*</span>, drawer: <span>*</span>)</span>
+          <span data-ice="name"><span><a href="class/src/particle.js~Particle.html#instance-method-render">render</a></span></span><span data-ice="signature">(drawer: <span><a href="class/src/drawer.js~Drawer.html">Drawer</a></span>)</span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>Render particle</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/src/particle.js~Particle.html#instance-method-serialize">serialize</a></span></span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></span>
         </p>
       </div>
       <div>
@@ -347,34 +387,7 @@
         <p>
           
           
-          <span data-ice="name"><span><a href="class/src/particle.js~Particle.html#instance-method-serialize">serialize</a></span></span><span data-ice="signature">(): <span>*</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          <span data-ice="name"><span><a href="class/src/particle.js~Particle.html#instance-method-step">step</a></span></span><span data-ice="signature">(dt: <span>*</span>)</span>
+          <span data-ice="name"><span><a href="class/src/particle.js~Particle.html#instance-method-step">step</a></span></span><span data-ice="signature">(dt: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>)</span>
         </p>
       </div>
       <div>
@@ -797,7 +810,7 @@
         <p>
           
           
-          <span data-ice="name"><span><a href="class/src/model.js~Model.html#instance-method-render">render</a></span></span><span data-ice="signature">(ctx: <span>RenderingContext</span>, drawer: <span><a href="class/src/drawer.js~Drawer.html">Drawer</a></span>)</span>
+          <span data-ice="name"><span><a href="class/src/model.js~Model.html#instance-method-render">render</a></span></span><span data-ice="signature">(drawer: <span><a href="class/src/drawer.js~Drawer.html">Drawer</a></span>)</span>
         </p>
       </div>
       <div>
@@ -880,11 +893,11 @@
     
     
     
-    <span data-ice="name">deserialize</span><span data-ice="signature">(objectPattern: {&quot;x&quot;: <span>*</span>, &quot;y&quot;: <span>*</span>, &quot;type&quot;: <span>*</span>, &quot;options&quot;: <span>*</span>, &quot;opacity&quot;: <span>*</span>}): <span>*</span></span>
+    <span data-ice="name">deserialize</span><span data-ice="signature">(data: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span><a href="class/src/particle.js~Particle.html">Particle</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/particle.js.html#lineNumber129">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/particle.js.html#lineNumber185">source</a></span></span>
     </span>
   </h3>
 
@@ -904,9 +917,39 @@
     <tbody>
     
     <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">objectPattern</td>
-      <td data-ice="type">{&quot;x&quot;: <span>*</span>, &quot;y&quot;: <span>*</span>, &quot;type&quot;: <span>*</span>, &quot;options&quot;: <span>*</span>, &quot;opacity&quot;: <span>*</span>}</td>
-      <td data-ice="appendix"><ul><li>default: {&quot;x&quot;:null,&quot;y&quot;:null,&quot;type&quot;:null,&quot;options&quot;:null,&quot;opacity&quot;:null}</li></ul></td>
+      <td data-ice="name" data-depth="0">data</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">data.x</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">data.y</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">data.type</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">data.options</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">data.opacity</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"></td>
       <td data-ice="description"></td>
     </tr>
 </tbody>
@@ -919,7 +962,7 @@
     <table>
       <tbody>
         <tr>
-          <td class="return-type" data-ice="returnType"><span>*</span></td>
+          <td class="return-type" data-ice="returnType"><span><a href="class/src/particle.js~Particle.html">Particle</a></span></td>
           
         </tr>
       </tbody>
@@ -954,11 +997,11 @@
     
     
     
-    <span data-ice="name">constructor</span><span data-ice="signature">(x: <span>*</span>, y: <span>*</span>, type: <span>*</span>, options: <span>*</span>)</span>
+    <span data-ice="name">constructor</span><span data-ice="signature">(x: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>, y: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>, type: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>)</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/particle.js.html#lineNumber6">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/particle.js.html#lineNumber35">source</a></span></span>
     </span>
   </h3>
 
@@ -979,26 +1022,123 @@
     
     <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">x</td>
-      <td data-ice="type"><span>*</span></td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"></td>
     </tr>
 <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">y</td>
-      <td data-ice="type"><span>*</span></td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"></td>
     </tr>
 <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">type</td>
-      <td data-ice="type"><span>*</span></td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
       <td data-ice="appendix"></td>
+      <td data-ice="description"><p>type of particle, text, image, rectangle, circle ...</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">options.width</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
       <td data-ice="description"></td>
     </tr>
-<tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">options</td>
-      <td data-ice="type"><span>*</span></td>
-      <td data-ice="appendix"></td>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">options.height</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">options.rotate</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">options.velocity</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">options.pivotX</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">options.pivotY</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">options.text</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">options.size</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">options.font</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">options.color</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">options.style</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">options.align</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">options.lineSize</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">options.lineColor</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">options.radius</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">options.start</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">options.end</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
       <td data-ice="description"></td>
     </tr>
 </tbody>
@@ -1038,7 +1178,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/particle.js.html#lineNumber11">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/particle.js.html#lineNumber40">source</a></span></span>
     </span>
   </h3>
 
@@ -1081,7 +1221,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/particle.js.html#lineNumber10">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/particle.js.html#lineNumber39">source</a></span></span>
     </span>
   </h3>
 
@@ -1124,7 +1264,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/particle.js.html#lineNumber9">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/particle.js.html#lineNumber38">source</a></span></span>
     </span>
   </h3>
 
@@ -1167,7 +1307,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/particle.js.html#lineNumber19">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/particle.js.html#lineNumber51">source</a></span></span>
     </span>
   </h3>
 
@@ -1210,7 +1350,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/particle.js.html#lineNumber20">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/particle.js.html#lineNumber52">source</a></span></span>
     </span>
   </h3>
 
@@ -1252,18 +1392,19 @@
     
     
     
-    <span data-ice="name">render</span><span data-ice="signature">(ctx: <span>*</span>, drawer: <span>*</span>)</span>
+    <span data-ice="name">render</span><span data-ice="signature">(drawer: <span><a href="class/src/drawer.js~Drawer.html">Drawer</a></span>)</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/particle.js.html#lineNumber24">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/particle.js.html#lineNumber60">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  
+  <div data-ice="description"><p>Render particle</p>
+</div>
 
   <div data-ice="override"><h4>Override:</h4><span><a href="class/src/model.js~Model.html#instance-method-render">Model#render</a></span></div>
 
@@ -1276,15 +1417,10 @@
     <tbody>
     
     <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">ctx</td>
-      <td data-ice="type"><span>*</span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
-    </tr>
-<tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">drawer</td>
-      <td data-ice="type"><span>*</span></td>
-      <td data-ice="appendix"></td>
+      <td data-ice="type"><span><a href="class/src/drawer.js~Drawer.html">Drawer</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default: null</li></ul></td>
       <td data-ice="description"></td>
     </tr>
 </tbody>
@@ -1317,11 +1453,11 @@
     
     
     
-    <span data-ice="name">serialize</span><span data-ice="signature">(): <span>*</span></span>
+    <span data-ice="name">serialize</span><span data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/particle.js.html#lineNumber121">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/particle.js.html#lineNumber168">source</a></span></span>
     </span>
   </h3>
 
@@ -1340,7 +1476,7 @@
     <table>
       <tbody>
         <tr>
-          <td class="return-type" data-ice="returnType"><span>*</span></td>
+          <td class="return-type" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></td>
           
         </tr>
       </tbody>
@@ -1372,11 +1508,11 @@
     
     
     
-    <span data-ice="name">step</span><span data-ice="signature">(dt: <span>*</span>)</span>
+    <span data-ice="name">step</span><span data-ice="signature">(dt: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>)</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/particle.js.html#lineNumber14">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/particle.js.html#lineNumber46">source</a></span></span>
     </span>
   </h3>
 
@@ -1397,9 +1533,10 @@
     
     <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">dt</td>
-      <td data-ice="type"><span>*</span></td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
+      <td data-ice="description"><p>Delta between two frames</p>
+</td>
     </tr>
 </tbody>
   </table>

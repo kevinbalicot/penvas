@@ -1,8 +1,37 @@
 import { Model } from './model';
 
-// @TODO : doc
+/**
+ * Particle entity
+ * @example
+ * let particle = new Particle(0, 0, 'fillcirc', {
+ *      radius: 10,
+ *      color: 'red',
+ *      lineSize: 2
+ * });
+ */
 export class Particle extends Model {
-
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @param {string} type - type of particle, text, image, rectangle, circle ...
+     * @param {number} [options.width]
+     * @param {number} [options.height]
+     * @param {number} [options.rotate]
+     * @param {number} [options.velocity]
+     * @param {number} [options.pivotX]
+     * @param {number} [options.pivotY]
+     * @param {number} [options.text]
+     * @param {number} [options.size]
+     * @param {number} [options.font]
+     * @param {number} [options.color]
+     * @param {number} [options.style]
+     * @param {number} [options.align]
+     * @param {number} [options.lineSize]
+     * @param {number} [options.lineColor]
+     * @param {number} [options.radius]
+     * @param {number} [options.start]
+     * @param {number} [options.end]
+     */
     constructor(x, y, type, options) {
         super(x, y);
 
@@ -11,6 +40,9 @@ export class Particle extends Model {
         this.opacity = 1;
     }
 
+    /**
+     * @param {number} dt - Delta between two frames
+     */
     step(dt) {
         if (this.opacity > 0) {
             this.opacity -= this.options.step || 0.01;
@@ -21,7 +53,17 @@ export class Particle extends Model {
         }
     }
 
+    /**
+     * Render particle
+     * @param {Drawer} [drawer=null]
+     */
     render(drawer) {
+        drawer = drawer || this.parent;
+
+        if (!drawer instanceof Drawer) {
+            throw new Error(`Parameter drawer has to be an instance of Drawer, it's an instance of ${typeof drawer} instead.`);
+        }
+
         if (this.opacity <= 0 || null === drawer) {
             return;
         }
@@ -120,6 +162,9 @@ export class Particle extends Model {
         drawer.restore();
     }
 
+    /**
+     * @return {Object}
+     */
     serialize() {
         return Object.assign(super.serialize(), {
             type: this.type,
@@ -128,6 +173,15 @@ export class Particle extends Model {
         });
     }
 
+    /**
+     * @param {Object} data
+     * @param {number} data.x
+     * @param {number} data.y
+     * @param {string} data.type
+     * @param {Object} data.options
+     * @param {number} data.opacity
+     * @return {Particle}
+     */
     static deserialize({
         x,
         y,

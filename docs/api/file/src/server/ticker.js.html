@@ -45,7 +45,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html">Tileset</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/viewport.js~Viewport.html">Viewport</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-io">io</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-keys">keys</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEYS">KEYS</a></span></span></li>
 <li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">helper</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collection.js~Collection.html">Collection</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collision-checker.js~CollisionChecker.html">CollisionChecker</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/renderer.js~Renderer.html">Renderer</a></span></span></li>
@@ -54,14 +54,14 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/server/ticker.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">const EventEmitter = require(&apos;./../event-emitter&apos;);
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">const EventEmitter = require(&apos;events&apos;);
 
 /**
  * @ignore
  */
 class Ticker extends EventEmitter {
 
-    constructor () {
+    constructor() {
         super();
 
         this.lastTick = Date.now();
@@ -69,7 +69,7 @@ class Ticker extends EventEmitter {
         this.timer = null;
     }
 
-    loop () {
+    loop() {
 
         if (this.stopped) {
             return;
@@ -87,20 +87,20 @@ class Ticker extends EventEmitter {
         this.step(dt);
     }
 
-    start () {
+    start() {
         if (this.stopped) {
             this.stopped = false;
             this.time = setInterval(() =&gt; this.loop(), 10);
         }
     }
 
-    stop () {
+    stop() {
         this.stopped = true;
         clearInterval(this.timer);
     }
 
-    step (dt) {
-        this.dispatch(&apos;step&apos;, dt);
+    step(dt) {
+        this.emit(&apos;step&apos;, dt);
     }
 }
 

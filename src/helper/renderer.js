@@ -3,6 +3,19 @@ import { Collection } from './collection';
 
 export class Renderer extends Collection {
     /**
+     * @param {Drawer} drawer
+     */
+    constructor(drawer) {
+        super();
+
+        if (!drawer instanceof Drawer) {
+            throw new Error(`Parameter drawer has to be an instance of Drawer, it's an instance of ${typeof drawer} instead.`);
+        }
+
+        this.drawer = drawer;
+    }
+
+    /**
      * @param {Array<Model>|Model} models
      * @param {Callable} [order=function()]
      */
@@ -43,10 +56,16 @@ export class Renderer extends Collection {
     }
 
     /**
-     * @param {Callable} callback
+     * @param {function|Object} callback
+     * @return {*}
      */
     remove(callback) {
-        const index = this.items.findIndex(item => callback(item.model));
+        let index = -1;
+        if (typeof callback === 'function') {
+            index = this.items.findIndex(item => callback(item.model));
+        } else {
+            index = this.items.findIndex(item => item.model === callback);
+        }
 
         if (index > -1) {
             return this.items.splice(index, 1);
@@ -56,9 +75,12 @@ export class Renderer extends Collection {
     }
 
     /**
-     * @param {Drawer} drawer
+     * @param {Drawer} [drawer=null]
+     * @param {Object} [options={}]
      */
-    render(drawer) {
+    render(drawer = null, options = {}) {
+        drawer = drawer || this.drawer;
+
         if (!drawer instanceof Drawer) {
             throw new Error(`Parameter drawer has to be an instance of Drawer, it's an instance of ${typeof drawer} instead.`);
         }
@@ -66,7 +88,7 @@ export class Renderer extends Collection {
         this.sortModels();
         this.forEach(el => {
             if (!!el.model.render) {
-                drawer.drawModel(el.model);
+                drawer.drawModel(el.model, options);
             }
         });
     }

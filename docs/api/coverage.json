@@ -1,7 +1,7 @@
 {
-  "coverage": "80.92%",
+  "coverage": "84.97%",
   "expectCount": 173,
-  "actualCount": 140,
+  "actualCount": 147,
   "files": {
     "src/application.js": {
       "expectCount": 20,
@@ -48,6 +48,11 @@
         11
       ]
     },
+    "src/keys.js": {
+      "expectCount": 1,
+      "actualCount": 1,
+      "undocumentLines": []
+    },
     "src/loader.js": {
       "expectCount": 10,
       "actualCount": 9,
@@ -72,19 +77,13 @@
     },
     "src/particle.js": {
       "expectCount": 11,
-      "actualCount": 0,
+      "actualCount": 6,
       "undocumentLines": [
-        4,
-        6,
-        129,
-        11,
-        10,
-        24,
-        121,
-        14,
-        9,
-        19,
-        20
+        40,
+        39,
+        38,
+        51,
+        52
       ]
     },
     "src/helper/renderer.js": {
@@ -101,10 +100,9 @@
     },
     "src/ticker.js": {
       "expectCount": 8,
-      "actualCount": 6,
+      "actualCount": 7,
       "undocumentLines": [
-        8,
-        82
+        8
       ]
     },
     "src/tileset.js": {
@@ -122,11 +120,6 @@
       ]
     },
     "src/io.js": {
-      "expectCount": 1,
-      "actualCount": 1,
-      "undocumentLines": []
-    },
-    "src/keys.js": {
       "expectCount": 1,
       "actualCount": 1,
       "undocumentLines": []

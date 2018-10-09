@@ -21,21 +21,30 @@ export class CollisionChecker extends Collection {
     check(dt) {
         let model, platform;
         this.items.forEach(pair => {
+            pair.model.collision = false;
+
             model = Object.create(pair.model);
             model.step(dt);
             platform = CollisionChecker.hasCollisions(model, pair.platforms);
 
             if (!!platform) {
+                pair.model.collision = true;
                 pair.event(pair.model, platform);
             }
         });
     }
 
     /**
-     * @param {Callable} callback
+     * @param {function|Object} callback
+     * @return {*}
      */
     remove(callback) {
-        const index = this.items.findIndex(item => callback(item.model));
+        let index = -1;
+        if (typeof callback === 'function') {
+            index = this.items.findIndex(item => callback(item.model));
+        } else {
+            index = this.items.findIndex(item => item.model === callback);
+        }
 
         if (index > -1) {
             return this.items.splice(index, 1);

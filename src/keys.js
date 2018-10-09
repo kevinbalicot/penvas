@@ -9,7 +9,7 @@
  * @property {string} MOUSE.RIGHT_CLICK
  * @property {string} MOUSE.MIDDLE_CLICK
  */
-const keys = {
+const KEYS = {
     STRG: 17,
     CTRL: 17,
     CTRLRIGHT: 18,
@@ -49,4 +49,4 @@ const keys = {
     MIDDLE_CLICK: 'middle_click'
 }
 
-export default keys;
+export default KEYS;

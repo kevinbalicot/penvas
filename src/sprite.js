@@ -9,7 +9,7 @@ import { Model } from './model';
  * let sprite = new Sprite(10, 10, 20, 20, image, animation);
  *
  * sprite.play('walk');
- * sprite.render();
+ * sprite.render(this.application);
  */
 export class Sprite extends Model {
 
@@ -143,22 +143,24 @@ export class Sprite extends Model {
 
     /**
      * Render the sprite
-     * @param {RenderingContext} [ctx=null]
      * @param {Drawer} [drawer=null]
      */
-    render(ctx = null, drawer = null) {
-        ctx = ctx || this.parent.ctx;
+    render(drawer = null) {
         drawer = drawer || this.parent;
 
-        let currentAnimation = this.animations[this.currentAnimation];
-        ctx.save();
-
-        if (!!currentAnimation && !!currentAnimation.flip) {
-            ctx.translate((this.x * 2) + this.width, 1);
-            ctx.scale(-1, 1);
+        if (!drawer instanceof Drawer) {
+            throw new Error(`Parameter drawer has to be an instance of Drawer, it's an instance of ${typeof drawer} instead.`);
         }
 
-        ctx.drawImage(
+        let currentAnimation = this.animations[this.currentAnimation];
+        drawer.ctx.save();
+
+        if (!!currentAnimation && !!currentAnimation.flip) {
+            drawer.ctx.translate((this.x * 2) + this.width, 1);
+            drawer.ctx.scale(-1, 1);
+        }
+
+        drawer.ctx.drawImage(
             this.image,     // image
             this.frame.x * this.width,  // pos x
             this.frame.y * this.height, // pos y
@@ -169,7 +171,7 @@ export class Sprite extends Model {
             this.width,     // destination frame width
             this.height     // destination frame height
         );
-        ctx.restore();
+        drawer.ctx.restore();
     }
 
     /**

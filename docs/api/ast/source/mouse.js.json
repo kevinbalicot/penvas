@@ -4416,7 +4416,7 @@
                 "trailingComments": [
                   {
                     "type": "CommentBlock",
-                    "value": "*\n     * @param {Object} target\n     * @param {number} target.x\n     * @param {number} target.y\n     * @param {number} target.width\n     * @return {number}\n     ",
+                    "value": "*\n     * @param {Object} object\n     * @param {number} object.x\n     * @param {number} object.y\n     * @param {number} object.width\n     * @return {number}\n     ",
                     "start": 2942,
                     "end": 3107,
                     "loc": {
@@ -6417,7 +6417,7 @@
                 "leadingComments": [
                   {
                     "type": "CommentBlock",
-                    "value": "*\n     * @param {Object} target\n     * @param {number} target.x\n     * @param {number} target.y\n     * @param {number} target.width\n     * @return {number}\n     ",
+                    "value": "*\n     * @param {Object} object\n     * @param {number} object.x\n     * @param {number} object.y\n     * @param {number} object.width\n     * @return {number}\n     ",
                     "start": 2942,
                     "end": 3107,
                     "loc": {
@@ -6792,7 +6792,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n     * @param {Object} target\n     * @param {number} target.x\n     * @param {number} target.y\n     * @param {number} target.width\n     * @return {number}\n     ",
+      "value": "*\n     * @param {Object} object\n     * @param {number} object.x\n     * @param {number} object.y\n     * @param {number} object.width\n     * @return {number}\n     ",
       "start": 2942,
       "end": 3107,
       "loc": {
@@ -14438,7 +14438,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n     * @param {Object} target\n     * @param {number} target.x\n     * @param {number} target.y\n     * @param {number} target.width\n     * @return {number}\n     ",
+      "value": "*\n     * @param {Object} object\n     * @param {number} object.x\n     * @param {number} object.y\n     * @param {number} object.width\n     * @return {number}\n     ",
       "start": 2942,
       "end": 3107,
       "loc": {

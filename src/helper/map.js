@@ -131,7 +131,6 @@ export class Map {
             throw new Error(`Parameter drawer has to be an instance of Drawer, it's an instance of ${typeof drawer} instead.`);
         }
 
-        const ctx = drawer.ctx;
         const minZ = options.minZ || 0;
         const maxZ = options.maxZ || 999;
         const limits = options.limits || { x: 0, y: 0, width: 9999, height: 9999 };
@@ -163,7 +162,7 @@ export class Map {
                         tileset.y + this.tileHeight >= limits.y &&
                         tileset.y <= limits.y + limits.height
                     ) {
-                        tileset.renderTile(layer.tiles[t] || 0, ctx);
+                        tileset.renderTile(layer.tiles[t] || 0, drawer);
                     }
 
                     t++;

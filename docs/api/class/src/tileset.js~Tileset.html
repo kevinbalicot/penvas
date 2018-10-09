@@ -45,7 +45,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html">Tileset</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/viewport.js~Viewport.html">Viewport</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-io">io</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-keys">keys</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-KEYS">KEYS</a></span></span></li>
 <li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">helper</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collection.js~Collection.html">Collection</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/collision-checker.js~CollisionChecker.html">CollisionChecker</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helper/renderer.js~Renderer.html">Renderer</a></span></span></li>
@@ -95,7 +95,7 @@
 let tileset = new Tileset(0, 0, 32, 32, image);
 
 // render the first tile of tileset
-tileset.render(1);</code></pre>
+tileset.renderTile(1, this.application);</code></pre>
     </div>
 </div>
 
@@ -326,7 +326,7 @@ tileset.render(1);</code></pre>
         <p>
           
           
-          <span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html#instance-method-renderTile">renderTile</a></span></span><span data-ice="signature">(id: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>, ctx: <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">CanvasRenderingContext2D</a></span>)</span>
+          <span data-ice="name"><span><a href="class/src/tileset.js~Tileset.html#instance-method-renderTile">renderTile</a></span></span><span data-ice="signature">(id: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>, drawer: <span><a href="class/src/drawer.js~Drawer.html">Drawer</a></span>)</span>
         </p>
       </div>
       <div>
@@ -750,7 +750,7 @@ tileset.render(1);</code></pre>
         <p>
           
           
-          <span data-ice="name"><span><a href="class/src/model.js~Model.html#instance-method-render">render</a></span></span><span data-ice="signature">(ctx: <span>RenderingContext</span>, drawer: <span><a href="class/src/drawer.js~Drawer.html">Drawer</a></span>)</span>
+          <span data-ice="name"><span><a href="class/src/model.js~Model.html#instance-method-render">render</a></span></span><span data-ice="signature">(drawer: <span><a href="class/src/drawer.js~Drawer.html">Drawer</a></span>)</span>
         </p>
       </div>
       <div>
@@ -1181,7 +1181,7 @@ tileset.render(1);</code></pre>
     
     
     
-    <span data-ice="name">renderTile</span><span data-ice="signature">(id: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>, ctx: <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">CanvasRenderingContext2D</a></span>)</span>
+    <span data-ice="name">renderTile</span><span data-ice="signature">(id: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>, drawer: <span><a href="class/src/drawer.js~Drawer.html">Drawer</a></span>)</span>
     <span class="right-info">
       
       
@@ -1212,8 +1212,8 @@ tileset.render(1);</code></pre>
       <td data-ice="description"></td>
     </tr>
 <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">ctx</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">CanvasRenderingContext2D</a></span></td>
+      <td data-ice="name" data-depth="0">drawer</td>
+      <td data-ice="type"><span><a href="class/src/drawer.js~Drawer.html">Drawer</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li>
 <li>default: null</li></ul></td>
       <td data-ice="description"></td>

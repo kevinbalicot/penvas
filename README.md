@@ -17,19 +17,19 @@ Go to `https://kevinbalicot.github.io/penvas/demo`
 ```javascript
 <script type="text/javascript" src="node_modules/penvas/dist/penvas.js"></script>
 <script type="application/javascript">
-    var homeLayer = {
-        create: function () {
+    var main = {
+        create: function() {
             this.rect = new Model(this.width / 2, this.height / 2, 50, 100);
         },
 
-        step: function (td) {
+        step: function(dt) {
             this.rect.x += 2;
             if (this.rect.x > this.width) {
                 this.rect.x = -this.rect.width;
             }
         },
 
-        render: function () {
+        render: function() {
             this.clearLayer();
 
             this.ctx.save();
@@ -39,7 +39,9 @@ Go to `https://kevinbalicot.github.io/penvas/demo`
     };
 
     var app = new Application();
-    app.addLayer(homeLayer, 'home');
+
+    app.addLayer('main', main);
+    app.changeLayer('main');
 </script>
 ```
 ## Documentation

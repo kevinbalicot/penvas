@@ -36,6 +36,12 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
+    "penvas/src/keys.js~keys",
+    "variable/index.html#static-variable-KEYS",
+    "<span>KEYS</span> <span class=\"search-result-import-path\">penvas/src/keys.js</span>",
+    "variable"
+  ],
+  [
     "penvas/src/loader.js~loader",
     "class/src/loader.js~Loader.html",
     "<span>Loader</span> <span class=\"search-result-import-path\">penvas/src/loader.js</span>",
@@ -93,12 +99,6 @@ window.esdocSearchIndex = [
     "penvas/src/io.js~io",
     "variable/index.html#static-variable-io",
     "<span>io</span> <span class=\"search-result-import-path\">penvas/src/io.js</span>",
-    "variable"
-  ],
-  [
-    "penvas/src/keys.js~keys",
-    "variable/index.html#static-variable-keys",
-    "<span>keys</span> <span class=\"search-result-import-path\">penvas/src/keys.js</span>",
     "variable"
   ],
   [
@@ -991,13 +991,13 @@ window.esdocSearchIndex = [
   ],
   [
     "src/model.js~model#hitbox",
-    "class/src/model.js~Model.html#instance-set-hitbox",
+    "class/src/model.js~Model.html#instance-get-hitbox",
     "src/model.js~Model#hitbox",
     "member"
   ],
   [
     "src/model.js~model#hitbox",
-    "class/src/model.js~Model.html#instance-get-hitbox",
+    "class/src/model.js~Model.html#instance-set-hitbox",
     "src/model.js~Model#hitbox",
     "member"
   ],
@@ -1033,13 +1033,13 @@ window.esdocSearchIndex = [
   ],
   [
     "src/model.js~model#x",
-    "class/src/model.js~Model.html#instance-get-x",
+    "class/src/model.js~Model.html#instance-set-x",
     "src/model.js~Model#x",
     "member"
   ],
   [
     "src/model.js~model#x",
-    "class/src/model.js~Model.html#instance-set-x",
+    "class/src/model.js~Model.html#instance-get-x",
     "src/model.js~Model#x",
     "member"
   ],
@@ -1215,6 +1215,12 @@ window.esdocSearchIndex = [
     "src/server/collision-checker.js",
     "file/src/server/collision-checker.js.html",
     "src/server/collision-checker.js",
+    "file"
+  ],
+  [
+    "src/server/index.js",
+    "file/src/server/index.js.html",
+    "src/server/index.js",
     "file"
   ],
   [

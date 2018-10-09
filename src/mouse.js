@@ -114,10 +114,10 @@ export class Mouse {
     }
 
     /**
-     * @param {Object} target
-     * @param {number} target.x
-     * @param {number} target.y
-     * @param {number} target.width
+     * @param {Object} object
+     * @param {number} object.x
+     * @param {number} object.y
+     * @param {number} object.width
      * @return {number}
      */
     getAngle(object) {
