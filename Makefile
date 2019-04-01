@@ -1,20 +1,18 @@
 DIST_DIR = ./dist
 BIN_DIR = ./node_modules/.bin
 BIN_FILE = $(DIST_DIR)/penvas.js
+BIN_FILE_MIN = $(DIST_DIR)/penvas.min.js
 
-build: $(DIST_DIR) node_modules
-	$(BIN_DIR)/browserify src/index.js -o $(BIN_FILE) -t [ babelify ]
+build-dev: $(DIST_DIR) node_modules
+	$(BIN_DIR)/browserify src/index.js -d -o $(BIN_FILE) -t [ babelify ]
+
+build: build-dev
+	$(BIN_DIR)/browserify src/index.js -t [ babelify ] | $(BIN_DIR)/uglifyjs --keep-fnames -c -o $(BIN_FILE_MIN)
 
 clean:
-	rm -rf ./node_modules
+	rm -rf ./node_modules && rm -rf $(DIST_DIR)
 
-doc: node_modules
-	${BIN_DIR}/esdoc
-
-test: node_modules
-	$(BIN_DIR)/mocha ./test
-
-.PHONY: build clean doc test
+.PHONY: build build-dev clean
 
 node_modules: package.json
 	npm install --ignore-scripts

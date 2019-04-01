@@ -1,66 +1,49 @@
-import { Model } from './model';
 import { Drawer } from './drawer';
+import { Canvas } from './canvas';
 
-import mouse from './mouse';
+export class Viewport extends Drawer {
+    constructor(width, height, container) {
+        super();
 
-/**
- * Create a new Viewport
- * @example
- * const app = new Application({ width: 200, height: 200 });
- * const player = new Sprite(...);
- * const world = new Container(...);
- * const viewport = new Viewport(0, 0, app.canvas, 1, 1, app.width / 2, app.height / 2);
- *
- * viewport.follow(player, world);
- * viewport.drawImage(world);
- */
-export class Viewport extends Model {
+        this.element = document.createElement('canvas');
+        this.element.width = width;
+        this.element.height = height;
 
-    /**
-     * @param {number} x - x position of viewport into world
-     * @param {number} y - y position of viewport into world
-     * @param {CanvasRenderingContext2D} canvas - canvas where to draw image
-     * @param {number} [scaleX=1]
-     * @param {number} [scaleY=1]
-     * @param {number} [deadZoneX=0] - x position of dead zone (where viewport move when following target)
-     * @param {number} [deadZoneY=0] - y position of dead zone (where viewport move when following target)
-     */
-    constructor(x, y, canvas, scaleX = 1, scaleY = 1, deadZoneX = 0, deadZoneY = 0) {
-        super(x, y, canvas.width, canvas.height);
+        this.ctx = this.element.getContext('2d');
 
-        /** @type {CanvasRenderingContext2D} */
-        this.canvas = canvas;
+        this.x = 0;
+        this.y = 0;
+        this.width = width;
+        this.height = height;
 
-        /** @type {number} */
-        this.scaleX = scaleX;
-
-        /** @type {number} */
-        this.scaleY = scaleY;
-
-        /** @type {number} */
-        this.deadZoneX = deadZoneX;
-
-        /** @type {number} */
-        this.deadZoneY = deadZoneY;
+        this.world = null;
+        this.deadZoneX = 0;
+        this.deadZoneY = 0;
+        this.scaleX = 1;
+        this.scaleY = 1;
 
         // Update mouse coordinates
         document.addEventListener('mousemove', event => {
-            mouse.ax = mouse.x + (this.x * this.scaleX);
-            mouse.ay = mouse.y + (this.y * this.scaleY);
+            //mouse.ax = mouse.x + (this.x * this.scaleX);
+            //mouse.ay = mouse.y + (this.y * this.scaleY);
         });
 
-        mouse.scaleX = this.scaleX;
-        mouse.scaleY = this.scaleY;
-
-        this.ctx = this.canvas.getContext('2d');
+        container.appendChild(this.element);
     }
 
-    /**
-     * Viewport follow target into world
-     * @param {Object} target
-     * @param {Object} world
-     */
-    follow(target, world) {
+    setWorld(world, deadZoneX = null, deadZoneY = null) {
+        if (!(world instanceof Canvas)) {
+            throw new Error(`World has to be instances of Canvas.`);
+        }
+
+        this.world = world.element;
+        this.deadZoneX = deadZoneX || world.width;
+        this.deadZoneY = deadZoneY || world.height;
+
+        // calculate scaleX and scaleY
+    }
+
+    follow(target) {
         // Follow target
         if (target.x - this.x + (this.deadZoneX / this.scaleX) > this.width / this.scaleX) {
             this.x = target.x - ((this.width / this.scaleX) - (this.deadZoneX / this.scaleX));
@@ -75,46 +58,35 @@ export class Viewport extends Model {
         }
 
         // Rest into world
-        if (this.x < world.x) {
-            this.x = world.x;
+        if (this.x < 0) {
+            this.x = 0;
         }
 
-        if (this.x + (this.width / this.scaleX) > world.x + world.width) {
-            this.x = (world.x + world.width) - (this.width / this.scaleX);
+        if (this.x + (this.width / this.scaleX) > this.world.width) {
+            this.x = this.world.width - (this.width / this.scaleX);
         }
 
-        if (this.y < world.y) {
-            this.y = world.y;
+        if (this.y < 0) {
+            this.y = 0;
         }
 
-        if (this.y + (this.height / this.scaleY) > world.y + world.height) {
-            this.y = (world.y + world.height) - (this.height / this.scaleY);
+        if (this.y + (this.height / this.scaleY) > this.world.height) {
+            this.y = this.world.height - (this.height / this.scaleY);
         }
     }
 
-    /**
-     * Drawn image from source into canvas with viewport
-     * @param {Drawer} source
-     * @param {number} [x=0]
-     * @param {number} [y=0]
-     * @param {number} [width=null]
-     * @param {number} [height=null]
-     */
-    drawImage(source, x = 0, y = 0, width = null, height = null) {
-        if (!source instanceof Drawer) {
-            throw new Error(`Parameter source has to be an instance of Drawer, it's an instance of ${typeof model} instead.`);
-        }
-
-        this.ctx.drawImage(
-            source.canvas,
+    render() {
+        this.clearLayer();
+        this.drawImage(
+            this.world,
             this.x,
             this.y,
             this.width,
             this.height,
-            x,
-            y,
-            width || this.canvas.width,
-            height || this.canvas.height
+            0,
+            0,
+            this.width,
+            this.height
         );
     }
 }

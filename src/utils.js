@@ -1,104 +1,47 @@
-import { Model } from './../model';
-import { Collection } from './collection';
-
-export class CollisionChecker extends Collection {
-    /**
-     * @param {Model} model
-     * @param {Array<Model>|Model} platforms
-     * @param {Callable} [event=function()]
-     */
-    add(model, platforms, event = () => {}) {
-        if (!Array.isArray(platforms)) {
-            platforms = [platforms];
-        }
-
-        this.push({ model, platforms, event });
-    }
-
-    /**
-     * @param {number} dt
-     */
-    check(dt) {
-        let model, platform;
-        this.items.forEach(pair => {
-            pair.model.collision = false;
-
-            model = Object.create(pair.model);
-            model.step(dt);
-            platform = CollisionChecker.hasCollisions(model, pair.platforms);
-
-            if (!!platform) {
-                pair.model.collision = true;
-                pair.event(pair.model, platform);
-            }
-        });
-    }
-
-    /**
-     * @param {function|Object} callback
-     * @return {*}
-     */
-    remove(callback) {
-        let index = -1;
-        if (typeof callback === 'function') {
-            index = this.items.findIndex(item => callback(item.model));
-        } else {
-            index = this.items.findIndex(item => item.model === callback);
-        }
-
-        if (index > -1) {
-            return this.items.splice(index, 1);
-        }
-
-        return false;
+export class Utils {
+    static angleBetweenPoints(point1, point2) {
+        return Math.atan2(point2.y - point1.y, point2.x - point1.x);
     }
 
     /**
      * Check if there are any collisions between model and array of models
-     * @param {Model} model
-     * @param {Array<Model>|Model} models
+     * @param {Object} object
+     * @param {Array<Objects>|Objects} objects
      * @return {boolean}
      */
-    static hasCollisions(model, models) {
-        if (!model instanceof Model) {
-            throw new Error(`Parameter model has to be an instance of Model, it's an instance of ${typeof model} instead.`);
+    static hasCollisions(object, objects) {
+        if (!Array.isArray(objects)) {
+            objects = [objects];
         }
 
-        if (!Array.isArray(models)) {
-            models = [models];
-        }
-
-        let m;
-        for (let i = 0; i < models.length; i++) {
-            m = models[i];
-            if (!model instanceof Model) {
-                throw new Error(`Parameter from models[${i}] has to be an instance of Model, it's an instance of ${typeof m} instead.`);
-            }
+        let o;
+        for (let i = 0; i < objects.length; i++) {
+            o = objects[i];
 
             if (
-                !!model.hitbox.radius &&
-                !!m.hitbox.radius &&
-                CollisionChecker.hasCollisionBetweenCircleAndCircle(model.hitbox, m.hitbox)
+                !!object.radius &&
+                !!o.radius &&
+                Utils.hasCollisionBetweenCircleAndCircle(object, o)
             ) {
-                return m;
+                return o;
             } else if (
-                !!model.hitbox.radius &&
-                !m.hitbox.radius &&
-                CollisionChecker.hasCollisionBetweenCircleAndRectangle(model.hitbox, m.hitbox)
+                !!object.radius &&
+                !o.radius &&
+                Utils.hasCollisionBetweenCircleAndRectangle(object, o)
             ) {
-                return m;
+                return o;
             } else if (
-                !model.hitbox.radius &&
-                !!m.hitbox.radius &&
-                CollisionChecker.hasCollisionBetweenCircleAndRectangle(m.hitbox, model.hitbox)
+                !object.radius &&
+                !!o.radius &&
+                Utils.hasCollisionBetweenCircleAndRectangle(o, object)
             ) {
-                return m;
+                return o;
             } else if (
-                !model.hitbox.radius &&
-                !m.hitbox.radius &&
-                CollisionChecker.hasCollisionBetweenRectangleAndRectangle(model.hitbox, m.hitbox)
+                !object.radius &&
+                !o.radius &&
+                Utils.hasCollisionBetweenRectangleAndRectangle(object, o)
             ) {
-                return m;
+                return o;
             }
         }
 

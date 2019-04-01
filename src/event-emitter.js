@@ -1,42 +1,47 @@
-/**
- * Use to emit events
- * @example
- * class MyClass extends EventEmitter {
- *     doSomething() {
- *        this.dispatch('my-event', { message: 'event' });
- *     }
- * }
- */
 export class EventEmitter {
     constructor() {
-        /**
-         * List of registers
-         * @protected
-         * @type {Array}
-         */
-        this.registered = [];
+        this.listeners = {};
     }
 
-    /**
-     * Listen event
-     * @param {String} event
-     * @param {function} callback
-     * @param {mixed} context
-     */
-    on(event, callback, context) {
-        this.registered.push({ event, callback, context });
+    on(eventName, callback, context, once = false) {
+        if (!this.listeners[eventName]) {
+            this.listeners[eventName] = [];
+        }
+
+        const listener = {
+            once,
+            callback,
+            context
+        };
+
+        this.listeners[eventName].push(listener);
+
+        return listener;
     }
 
-    /**
-     * Dispatch event
-     * @param {String} event
-     * @param {mixed} args
-     */
-    dispatch(event, args) {
-        this.registered.forEach(register => {
-            if (register.event === event) {
-                register.callback.call(register.context || this, args);
-            }
+    once(eventName, callback, context) {
+        this.on(eventName, callback, context, true);
+    }
+
+    off(eventName, callback = null) {
+        if (null === callback) {
+            return delete this.listeners[eventName];
+        }
+
+        this.listeners[eventName].forEach((listener, index) => {
+            this.listeners.splice(index, 1);
         });
+    }
+
+    emit(eventName, data = {}) {
+        if (this.listeners[eventName]) {
+            this.listeners[eventName].forEach((listener, index) => {
+                listener.callback.call(listener.context || this, data);
+
+                if (listener.once) {
+                    this.listeners.splice(index, 1);
+                }
+            });
+        }
     }
 }

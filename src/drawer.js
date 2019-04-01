@@ -1,5 +1,3 @@
-import { Model } from './model';
-
 /**
  * Draw class
  * @param {CanvasRenderingContext2D} ctx
@@ -13,9 +11,11 @@ export class Drawer {
     /**
      * @param {CanvasRenderingContext2D} [ctx=null]
      */
-    constructor(ctx = null) {
+    constructor(ctx = null, width = 0, height = 0) {
         /** @type {CanvasRenderingContext2D} */
         this.ctx = ctx;
+        this.width = width;
+        this.height = height;
     }
 
     /**
@@ -23,7 +23,7 @@ export class Drawer {
      */
     clearLayer() {
         this.ctx.save();
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.clearRect(0, 0, this.width, this.height);
         this.ctx.restore();
     }
 
@@ -172,14 +172,14 @@ export class Drawer {
     /**
      *  Draw images
      * @param {*} source - image or canvas
-     * @param {number} x - source pos x
-     * @param {number} y - source pos y
-     * @param {number} [width=null] - source width
-     * @param {number} [height=null] - source height
-     * @param {number} [destinationX=null] - destination x
-     * @param {number} [destinationY=null] - destination y
+     * @param {number} destinationX - destination pos x
+     * @param {number} destinationY - destination pos y
      * @param {number} [destinationWidth=null] - destination width
      * @param {number} [destinationHeight=null] - destination height
+     * @param {number} [sourceX=null] - source x
+     * @param {number} [sourceY=null] - source y
+     * @param {number} [sourceWidth=null] - source width
+     * @param {number} [sourceHeight=null] - source height
      */
     drawImage(source, x, y, width = null, height = null, destinationX  = null, destinationY  = null, destinationWidth  = null, destinationHeight  = null) {
         this.ctx.save();
@@ -231,15 +231,15 @@ export class Drawer {
     }
 
     /**
-     * Rotate model
-     * @param {Model} model
+     * Rotate
+     * @param {Object} model
      * @param {float} deg
      * @param {number} [pivotX=null]
      * @param {number} [pivotY=null]
      *
      * @return {Drawer}
      */
-    rotateModel(model, deg, pivotX = null, pivotY = null) {
+    rotate(model, deg, pivotX = null, pivotY = null) {
         pivotX = null !== pivotX ? pivotX : model.width / 2;
         pivotY = null !== pivotY ? pivotY : model.height / 2;
 
@@ -255,30 +255,11 @@ export class Drawer {
     }
 
     /**
-     * Draw model
-     * @param {Model} model
-     * @param {Object} [options={}]
-     *
-     * @return {Drawer}
-     */
-    drawModel(model, options = {}) {
-        if (!model instanceof Model) {
-            throw new Error(`Parameter model has to be an instance of Model, it's an instance of ${typeof model} instead.`);
-        }
-
-        this.ctx.save();
-        model.render(this, options);
-        this.ctx.restore();
-
-        return this;
-    }
-
-    /**
      * Display model's x,y positions and hitbox information
      * @private
      * @param {Model} model
      */
-    renderDebug(model) {
+    /*renderDebug(model) {
         if (!model instanceof Model) {
             throw new Error(`Parameter model has to be an instance of Model, it's an instance of ${typeof model} instead.`);
         }
@@ -306,17 +287,5 @@ export class Drawer {
             '12px',
             'sans-serif'
         );
-    }
-
-    /**
-     * Add models to debug
-     * @param {Array<Model>|Model} models
-     */
-    debug(models = []) {
-        [].concat(models).forEach(model => {
-            if (model instanceof Model) {
-                this.renderDebug(model);
-            }
-        });
-    }
+    }*/
 }

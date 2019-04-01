@@ -1,45 +1,125 @@
-import { Application } from './application';
-import { Container } from './container';
+/**
+ * PENVAS library
+ * Inspirations :
+ * https://github.com/RonenNess/SSCD.js
+ * http://vasir.net/blog/game-development/how-to-build-entity-component-system-in-javascript
+ * https://savas.ca/nomad
+ * https://github.com/qiao/ces.js
+ *
+ * https://gist.github.com/winduptoy/a1aa09c3499e09edbd33
+ * https://jsfiddle.net/kevinbalicot/jwfen1tc/
+ *
+ * https://isaacsukin.com/news/2015/01/detailed-explanation-javascript-game-loops-and-timing
+ */
+
 import { Drawer } from './drawer';
+import { Canvas } from './canvas';
+import { Component } from './component';
+import { Entity } from './entity';
+import { Environment } from './environment';
 import { EventEmitter } from './event-emitter';
-import { Model } from './model';
-import { Sprite } from './sprite';
-import { Tileset } from './tileset';
-import { Ticker } from './ticker';
+import { GameLoop } from './game-loop';
+import { Layer } from './layer';
+import { System } from './system';
+import { Render } from './render';
 import { Viewport } from './viewport';
-import { Particle } from './particle';
-import { Scene } from './scene';
 
-import { Map } from './helper/map';
-import { CollisionChecker } from './helper/collision-checker';
-import { Renderer } from './helper/renderer';
-import { Collection } from './helper/collection';
+import { Loader } from './services/loader';
 
-import io from './io';
-import keys from './keys';
-import loader from './loader';
-import mouse from './mouse';
-import ticker from './ticker';
+import { Vector } from './geometry/vector';
 
-window.Application = Application;
-window.Container = Container;
-window.EventEmitter = EventEmitter;
-window.Model = Model;
-window.Sprite = Sprite;
-window.Tileset = Tileset;
-window.Drawer = Drawer;
-window.Viewport = Viewport;
-window.Particle = Particle;
-window.Scene = Scene;
+import { Body } from './components/body';
+import { Sprite } from './components/sprite';
+import { Collision } from './components/collision';
+import { Gamepad } from './components/gamepad';
+import { Keyboard } from './components/keyboard';
+import { Motion } from './components/motion';
+import { Physic } from './components/physic';
 
-window.io = io;
-window.KEYS = keys;
-window.loader = loader;
-window.mouse = mouse;
-window.ticker = ticker;
-window.events = new EventEmitter();
+import { CollisionChecker } from './systems/collision-checker';
+import { Movement } from './systems/movement';
+import { Animation } from './systems/animation';
+import { PhysicChecker } from './systems/physic-checker';
+import { Inputs } from './systems/inputs';
+import { GamepadInputs } from './systems/gamepad-inputs';
 
-window.Map = Map;
-window.CollisionChecker = CollisionChecker;
-window.Renderer = Renderer;
-window.Collection = Collection;
+import { BoxRender } from './renders/box-render';
+import { SpriteRender } from './renders/sprite-render';
+
+import { UIElement } from './ui/element';
+import { UIContainer } from './ui/container';
+import { UISection } from './ui/section';
+import { UIButton } from './ui/button';
+import { UITable } from './ui/table';
+import { UIInput } from './ui/input';
+
+import loader from './services/loader';
+import KEYS from './services/keys';
+import GAMEPAD from './services/gamepad';
+
+Math.degree = function(radians) {
+  return radians * 180 / Math.PI;
+};
+
+Math.radian = function(degrees) {
+  return degrees * Math.PI / 180;
+};
+
+window.penvas = {
+    Drawer,
+    Canvas,
+    Component,
+    Entity,
+    Environment,
+    EventEmitter,
+    GameLoop,
+    Layer,
+    System,
+    Render,
+    Viewport,
+
+    services: {
+        Loader
+    },
+
+    geometry: {
+        Vector
+    },
+
+    systems: {
+        CollisionChecker,
+        Movement,
+        Animation,
+        PhysicChecker,
+        Inputs,
+        GamepadInputs
+    },
+
+    components: {
+        Body,
+        Sprite,
+        Collision,
+        Gamepad,
+        Keyboard,
+        Motion,
+        Physic
+    },
+
+    renders: {
+        BoxRender,
+        SpriteRender
+    },
+
+    ui: {
+        UIElement,
+        UIContainer,
+        UISection,
+        UIButton,
+        UITable,
+        UIInput
+    },
+
+    loader,
+    KEYS,
+    GAMEPAD
+};

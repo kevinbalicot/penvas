@@ -1,4 +1,4 @@
-import { EventEmitter } from './event-emitter';
+import { EventEmitter } from './../event-emitter';
 
 /**
  * Service to load asset
@@ -68,13 +68,13 @@ export class Loader extends EventEmitter {
         this.progress = 1 - this.queue / this.count;
 
         this.collection.push({ id: id, item: el });
-        this.dispatch('load', this.progress);
+        this.emit('loader:load', this.progress);
 
         if (this.queue == 0) {
             this.count = 0;
             this.progress = 0;
             this.ready = true;
-            this.dispatch('ready');
+            this.emit('loader:ready');
         }
     }
 
