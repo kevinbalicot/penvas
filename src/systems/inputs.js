@@ -24,7 +24,8 @@ export class Inputs extends System {
             direction.add(Vector.LEFT);
         }
 
-        const entities = this.environment.getEntities([Keyboard.name, Motion.name]);
-        entities.forEach(entity => entity.components.motion.direction = direction.clone().normalize());
+        this.environment.getEntities([Keyboard, Motion]).forEach(entity => {
+            entity.components.motion.direction = direction.clone().normalize();
+        });
     }
 }

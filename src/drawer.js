@@ -232,60 +232,36 @@ export class Drawer {
 
     /**
      * Rotate
-     * @param {Object} model
+     * @param {Object} rect
      * @param {float} deg
-     * @param {number} [pivotX=null]
-     * @param {number} [pivotY=null]
+     * @param {Point} [pivot=null]
      *
      * @return {Drawer}
      */
-    rotate(model, deg, pivotX = null, pivotY = null) {
-        pivotX = null !== pivotX ? pivotX : model.width / 2;
-        pivotY = null !== pivotY ? pivotY : model.height / 2;
+    rotate(rect, deg, pivot = null) {
+        const pivotX = null !== pivot ? pivot.x : rect.width / 2;
+        const pivotY = null !== pivot ? pivot.y : rect.height / 2;
 
-        this.ctx.translate(model.x, model.y);
+        this.ctx.translate(rect.x, rect.y);
         this.ctx.translate(pivotX, pivotY);
 
         this.ctx.rotate(deg * Math.PI / 180);
 
         this.ctx.translate(-1 * pivotX, -1 * pivotY);
-        this.ctx.translate(-1 * model.x, -1 * model.y);
+        this.ctx.translate(-1 * rect.x, -1 * rect.y);
 
         return this;
     }
 
-    /**
-     * Display model's x,y positions and hitbox information
-     * @private
-     * @param {Model} model
-     */
-    /*renderDebug(model) {
-        if (!model instanceof Model) {
-            throw new Error(`Parameter model has to be an instance of Model, it's an instance of ${typeof model} instead.`);
-        }
+    horizontalFlip(rect) {
+        this.ctx.translate(rect.x + rect.width / 2, 0);
+        this.ctx.scale(-1, 1);
+        this.ctx.translate(-1 * (rect.x + rect.width / 2), 0);
+    }
 
-        this.drawText(
-            `[${Math.round(model.x)}, ${Math.round(model.y)}]`,
-            model.x,
-            model.y - 10,
-            '12px',
-            'sans-serif'
-        );
-
-        this.drawRect(model.x, model.y, model.width, model.height, 1, 'red');
-
-        if (null !== model.hitbox.radius) {
-            this.drawCircle(model.hitbox.x, model.hitbox.y, model.hitbox.radius, 1, 'blue');
-        } else {
-            this.drawRect(model.hitbox.x, model.hitbox.y, model.hitbox.width, model.hitbox.height, 1, 'blue');
-        }
-
-        this.drawText(
-            `[${Math.round(model.hitbox.x)}, ${Math.round(model.hitbox.y)}]`,
-            model.hitbox.x,
-            model.hitbox.y - 10,
-            '12px',
-            'sans-serif'
-        );
-    }*/
+    verticalFlip(rect) {
+        this.ctx.translate(0, rect.y + rect.height / 2);
+        this.ctx.scale(1, -1);
+        this.ctx.translate(0, -1 * (rect.y + rect.height / 2));
+    }
 }

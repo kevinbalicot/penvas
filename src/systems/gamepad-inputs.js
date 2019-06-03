@@ -8,8 +8,7 @@ import { Motion } from './../components/motion';
 
 export class GamepadInputs extends System {
     update() {
-        const entities = this.environment.getEntities([Gamepad.name, Motion.name]);
-        entities.forEach(entity => {
+        this.environment.getEntities([Gamepad, Motion]).forEach(entity => {
             const gamepad = this.environment.canvas.gamepads.find(g => g.id === entity.components.gamepad.id);
 
             if (gamepad) {

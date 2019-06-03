@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Game</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-shim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fpsmeter/0.3.1/fpsmeter.min.js"></script>
+        <script src="https://github.com/kevinbalicot/penvas/releases/download/v0.7.0/penvas.js" charset="utf-8"></script>
+    </head>
+    <body>
+        <div id="fps"></div>
+        <script src="entites/player.js" charset="utf-8"></script>
+        <script src="entites/map.js" charset="utf-8"></script>
+        <script src="entites/world.js" charset="utf-8"></script>
+        <script src="entites/sword.js" charset="utf-8"></script>
+        <script src="entites/chest.js" charset="utf-8"></script>
+        <script src="entites/monster.js" charset="utf-8"></script>
+        <script>
+            var meter = new FPSMeter(document.getElementById('fps'));
+            var layer = {
+                create: function() {
+                    this.ctx.scale(2, 2);
+                    this.ctx.imageSmoothingEnabled = false;
+
+                    this.player = new Player(32, 32);
+                    this.sword = new Sword(32, 32);
+                    this.map = new DungeonMap('map1');
+                    this.world = new World(this.map.width, this.map.height);
+                    this.chest = new Chest(48, 48);
+                    this.monster = new Monster(64, 128);
+                    this.viewport = new Viewport(0, 0, this.canvas, 2, 2, this.width / 2, this.height / 2);
+                    this.particles = [];
+
+                    this.collision = new CollisionChecker();
+                    this.collision.add(this.player, this.map.getPlatform('platforms'), player => player.collision = true);
+                    this.collision.add(this.monster, this.map.getPlatform('platforms'), monster => monster.collision = true);
+                    this.collision.add(this.sword, this.chest, (sword, chest) => {
+                        if (sword.hitting) {
+                            chest.open();
+                        }
+                    });
+
+                    this.collision.add(this.sword, this.monster, (sword, monster) => {
+                        if (sword.hitting) {
+                            monster.hit(sword, this.player.direction);
+
+                            for (let i = 0; i < 50; i++) {
+                                this.particles.push(new Particle(monster.x, monster.y, 'fillrect', {
+                                    width: 2,
+                                    height: 2,
+                                    color: 'red',
+                                    velocity: 1,
+                                    step: 0.05,
+                                    rotate: Math.floor(Math.random() * 360)
+                                }));
+                            }
+                        }
+                    });
+
+                    this.renderer = new Renderer();
+                    this.renderer.add([this.player, this.monster, this.chest], el => el.y);
+                    this.renderer.add(this.sword, el => el.y + el.width);
+
+                    events.on('monster-dead', monster => {
+                        this.renderer.remove(el => el.id === monster.id);
+                        this.collision.remove(el => el.id === monster.id);
+                    });
+                },
+
+                step: function(dt) {
+                    this.player.collision = false;
+                    this.monster.collision = false;
+                    this.collision.check();
+
+                    if (!this.player.collision) {
+                        this.ticker.every(6, () => this.player.rotating());
+                        this.player.step(dt);
+                    }
+
+                    let playerPos = { x: this.player.hitbox.x + this.player.hitbox.width / 2, y: this.player.hitbox.y + this.player.hitbox.height / 2 };
+                    let monsterPos = { x: this.monster.x + this.monster.width / 2, y: this.monster.y + this.monster.height / 2 }
+                    this.path = this.map.findPathBetweenPositions('platforms', monsterPos, playerPos);
+
+                    this.sword.attachTo(this.player);
+                    this.sword.step(dt);
+
+                    this.chest.step(dt);
+
+                    this.ticker.every(5, () => this.monster.follow(this.path[1]));
+                    this.ticker.every(10, () => this.monster.rotating());
+                    this.monster.step(dt);
+
+                    this.viewport.follow(this.player, this.world);
+
+                    this.particles.forEach(p => p.step(dt));
+                },
+
+                render: function() {
+                    meter.tickStart();
+
+                    this.world.clearLayer();
+                    this.clearLayer();
+                    this.map.render(this.world, { minZ: 1, maxZ: 2, view: this.viewport });
+                    this.renderer.render(this.world);
+                    this.map.render(this.world, { layer: 'top', view: this.viewport });
+                    //this.world.debug([this.sword, this.monster]);
+
+                    this.path.forEach(tile => {
+                        this.world.save();
+                        this.world.ctx.globalAlpha = .1;
+                        this.world.drawFillRect(tile.x, tile.y, 16, 16, 'white');
+                        this.world.restore();
+                    });
+
+                    this.particles.forEach(p => this.world.drawModel(p));
+
+                    this.viewport.drawImage(this.world);
+
+                    meter.tick();
+                }
+            };
+
+            var app = new Application({
+                width: 500,
+                height: 500,
+
+                create: function() {
+                    loader.add('images/tileset.png', 'tileset');
+                    loader.add('maps/map1.json', 'map1', 'json');
+                },
+
+                ready: function() {
+                    this.addLayer('main', layer);
+                    this.changeLayer('main');
+                }
+             });
+        </script>
+    </body>
+</html>

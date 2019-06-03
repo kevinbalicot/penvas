@@ -18,8 +18,12 @@ export class Entity {
         return this;
     }
 
+    hasComponent(name) {
+        return !!this.components[name.name ? name.name.toLowerCase() : name.toLowerCase()];
+    }
+
     removeComponent(name) {
-        delete this.components[name.toLowerCase()];
+        delete this.components[name.name ? name.name.toLowerCase() : name.toLowerCase()];
 
         return this;
     }

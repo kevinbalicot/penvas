@@ -1,3 +1,5 @@
+import { Point } from './point';
+
 export class Vector {
     constructor(x, y) {
         this.x = x;
@@ -23,7 +25,7 @@ export class Vector {
     }
 
     add(value) {
-        if (value instanceof Vector) {
+        if (value instanceof Vector || value instanceof Point) {
             this.x += value.x;
             this.y += value.y;
         } else {
@@ -35,7 +37,7 @@ export class Vector {
     }
 
     subtract(value) {
-        if (value instanceof Vector) {
+        if (value instanceof Vector || value instanceof Point) {
             this.x -= value.x;
             this.y -= value.y;
         } else {
@@ -47,7 +49,7 @@ export class Vector {
     }
 
     multiply(value) {
-        if (value instanceof Vector) {
+        if (value instanceof Vector || value instanceof Point) {
             this.x *= value.x;
             this.y *= value.y;
         } else {
@@ -59,7 +61,7 @@ export class Vector {
     }
 
     divide(value) {
-        if (value instanceof Vector) {
+        if (value instanceof Vector || value instanceof Point) {
             this.x /= value.x;
             this.y /= value.y;
         } else {

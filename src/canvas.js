@@ -2,10 +2,11 @@ const uuid = require('uuid');
 
 import { GameLoop } from './game-loop';
 import { Drawer } from './drawer';
+import { Point } from './geometry/point';
 
 const keyboard = {};
 const gamepads = [];
-const mouse = {};
+const mouse = new Point(0, 0);
 
 document.addEventListener('keydown', (e) => {
     keyboard[e.which || e.keyCode] = true;
@@ -82,6 +83,14 @@ export class Canvas extends Drawer {
             this.layers.forEach(layer => layer.keyUp(event));
         });
 
+        document.addEventListener('mousemove', event => {
+            const rect = this.element.getBoundingClientRect();
+            this.mouse.x = event.clientX - rect.left;
+            this.mouse.y = event.clientY - rect.top;
+
+            this.layers.forEach(layer => layer.mouseMove(event));
+        });
+
         window.addEventListener('gamepadconnected', event => {
             this.layers.forEach(layer => layer.gamepadUp(event));
         });
@@ -92,11 +101,11 @@ export class Canvas extends Drawer {
     }
 
     step(delta) {
-        this.layers.forEach(layer => layer.step(this, delta));
+        this.layers.forEach(layer => layer.step(delta));
     }
 
     render(delta) {
-        this.layers.forEach(layer => layer.stepRender(this, delta));
+        this.layers.forEach(layer => layer.stepRender(delta));
     }
 
     setLayers(layers) {
@@ -104,6 +113,7 @@ export class Canvas extends Drawer {
             layers = [layers];
         }
 
+        this.layers.forEach(layer => layer.ending());
         this.layers = [];
 
         layers.forEach(layer => this.addLayer(layer));
@@ -111,6 +121,8 @@ export class Canvas extends Drawer {
 
     addLayer(layer) {
         layer.canvas = this;
+        layer.begin();
+
         this.layers.push(layer);
     }
 

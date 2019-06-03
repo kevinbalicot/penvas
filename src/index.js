@@ -23,10 +23,14 @@ import { Layer } from './layer';
 import { System } from './system';
 import { Render } from './render';
 import { Viewport } from './viewport';
+import { Utils } from './utils';
+import { TiledMap } from './tiled-map';
 
 import { Loader } from './services/loader';
 
 import { Vector } from './geometry/vector';
+import { Rectangle } from './geometry/rectangle';
+import { Point } from './geometry/point';
 
 import { Body } from './components/body';
 import { Sprite } from './components/sprite';
@@ -35,6 +39,9 @@ import { Gamepad } from './components/gamepad';
 import { Keyboard } from './components/keyboard';
 import { Motion } from './components/motion';
 import { Physic } from './components/physic';
+import { Rotate } from './components/rotate';
+import { Flip } from './components/flip';
+import { Tiles } from './components/tiles';
 
 import { CollisionChecker } from './systems/collision-checker';
 import { Movement } from './systems/movement';
@@ -45,6 +52,9 @@ import { GamepadInputs } from './systems/gamepad-inputs';
 
 import { BoxRender } from './renders/box-render';
 import { SpriteRender } from './renders/sprite-render';
+import { RotationRender } from './renders/rotation-render';
+import { FlipRender } from './renders/flip-render';
+import { TilesRender } from './renders/tiles-render';
 
 import { UIElement } from './ui/element';
 import { UIContainer } from './ui/container';
@@ -77,13 +87,16 @@ window.penvas = {
     System,
     Render,
     Viewport,
+    TiledMap,
 
     services: {
         Loader
     },
 
     geometry: {
-        Vector
+        Vector,
+        Rectangle,
+        Point
     },
 
     systems: {
@@ -102,12 +115,18 @@ window.penvas = {
         Gamepad,
         Keyboard,
         Motion,
-        Physic
+        Physic,
+        Rotate,
+        Flip,
+        Tiles
     },
 
     renders: {
         BoxRender,
-        SpriteRender
+        SpriteRender,
+        RotationRender,
+        FlipRender,
+        TilesRender
     },
 
     ui: {
@@ -120,6 +139,7 @@ window.penvas = {
     },
 
     loader,
+    utils: Utils,
     KEYS,
     GAMEPAD
 };

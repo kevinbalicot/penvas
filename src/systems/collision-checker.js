@@ -6,7 +6,7 @@ import { Collision } from './../components/collision';
 
 export class CollisionChecker extends System {
     update() {
-        const entities = this.environment.getEntities([Body.name, Collision.name]);
+        const entities = this.environment.getEntities([Body, Collision]);
 
         entities.forEach(entity => {
             const others = entities.filter(e => e.id != entity.id);

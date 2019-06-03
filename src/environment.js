@@ -76,12 +76,14 @@ export class Environment extends EventEmitter {
         return this;
     }
 
-    update(systemNames, ...args) { // Peut être besoin que de canvas et delta au final
+    update(systemNames, delta) {
         let systems = [];
 
         if (!Array.isArray(systemNames)) {
             systemNames = [systemNames];
         }
+
+        systemNames = systemNames.map(systemName => systemName.name || systemName);
 
         if (!systemNames.length) {
             systems = this.systems;
@@ -93,17 +95,19 @@ export class Environment extends EventEmitter {
             });
         }
 
-        systems.forEach(system => system.update(...args));
+        systems.forEach(system => system.update(delta));
 
         return this;
     }
 
-    render(renderNames, ...args) { // Peut être besoin que de canvas et delta au final
+    render(renderNames, canvas) {
         let renders = [];
 
         if (!Array.isArray(renderNames)) {
             renderNames = [renderNames];
         }
+
+        renderNames = renderNames.map(renderName => renderName.name || renderName);
 
         if (!renderNames.length) {
             renders = this.renders;
@@ -115,13 +119,24 @@ export class Environment extends EventEmitter {
             });
         }
 
-        renders.forEach(render => render.render(...args));
+        this.entities.forEach(entity => {
+            canvas.save();
+            renders.forEach(render => render.render(canvas, entity));
+            canvas.restore();
+        });
 
         return this;
     }
 
     getEntities(componentNames) {
         let entities = [];
+
+        if (!Array.isArray(componentNames)) {
+            componentNames = [componentNames];
+        }
+
+        componentNames = componentNames.map(componentName => componentName.name || componentName);
+
         this.entities.forEach(entity => {
             if (componentNames.every(componentName => entity.components[componentName.toLowerCase()])) {
                 entities.push(entity);

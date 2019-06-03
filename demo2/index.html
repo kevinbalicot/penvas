@@ -69,6 +69,17 @@
                         this.renderer.remove(monster);
                         this.collisions.remove(monster);
                     });
+
+                    this.createUI();
+                }
+
+                createUI() {
+                    const button = new UIButton('Start', ['btn']);
+
+                    this.uiContainer = new UIContainer(this.parent.container);
+                    this.uiContainer.appendChild(button);
+
+                    button.on('click', () => alert('lol'));
                 }
 
                 step(dt) {

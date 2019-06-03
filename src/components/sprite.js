@@ -1,14 +1,20 @@
+import loader from './../services/loader';
+
 import { Component } from './../component';
 
 export class Sprite extends Component {
-    constructor(width, height, image, animations, speed = 1, play = null) {
+    constructor(width, height, image, animations, speed = 100, play = null) {
         super();
 
         this.width = width;
         this.height = height;
-        this.image = image;
         this.animations = animations;
         this.speed = speed;
+
+        this.image = image;
+        if (typeof image === 'string') {
+            this.image = loader.get(image);
+        }
 
         this.time = 1;
         this.stopped = true;

@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>demo3</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-shim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fpsmeter/0.3.1/fpsmeter.min.js"></script>
+        <script src="https://github.com/kevinbalicot/penvas/releases/download/v0.7.0/penvas.js" charset="utf-8"></script>
+    </head>
+    <body>
+        <script type="text/javascript">
+            // https://mattdesl.svbtle.com/generative-art-with-nodejs-and-canvas
+            // https://codeslashslashcomment.com/2012/12/12/dynamic-image-distortion-html5-canvas/
+            // http://jsfiddle.net/9r8z3tqc/
+            class Texture {
+                constructor(image, quality = 5) {
+                    this.image = image;
+                    this.quality = quality;
+                    this.triangles = [];
+                }
+
+                calculate(px1, py1, px2, py2, px3, py3, px4, py4) {
+                    this.triangles = [];
+
+                    var subs = this.quality; // vertical subdivisions
+                	var divs = this.quality; // horizontal subdivisions
+
+                	var p1 = new Point(px1, py1);
+                	var p2 = new Point(px2, py2);
+                	var p3 = new Point(px3, py3);
+                	var p4 = new Point(px4, py4);
+
+                	var dx1 = p4.x - p1.x;
+                	var dy1 = p4.y - p1.y;
+                	var dx2 = p3.x - p2.x;
+                	var dy2 = p3.y - p2.y;
+
+                	var imgW = this.image.naturalWidth;
+                	var imgH = this.image.naturalHeight;
+
+                	for (var sub = 0; sub < subs; ++sub) {
+                		var curRow = sub / subs;
+                		var nextRow = (sub + 1) / subs;
+
+                		var curRowX1 = p1.x + dx1 * curRow;
+                		var curRowY1 = p1.y + dy1 * curRow;
+
+                		var curRowX2 = p2.x + dx2 * curRow;
+                		var curRowY2 = p2.y + dy2 * curRow;
+
+                		var nextRowX1 = p1.x + dx1 * nextRow;
+                		var nextRowY1 = p1.y + dy1 * nextRow;
+
+                		var nextRowX2 = p2.x + dx2 * nextRow;
+                		var nextRowY2 = p2.y + dy2 * nextRow;
+
+                		for (var div = 0; div < divs; ++div) {
+                			var curCol = div / divs;
+                			var nextCol = (div + 1) / divs;
+
+                			var dCurX = curRowX2 - curRowX1;
+                			var dCurY = curRowY2 - curRowY1;
+                			var dNextX = nextRowX2 - nextRowX1;
+                			var dNextY = nextRowY2 - nextRowY1;
+
+                			var p1x = curRowX1 + dCurX * curCol;
+                			var p1y = curRowY1 + dCurY * curCol;
+
+                			var p2x = curRowX1 + (curRowX2 - curRowX1) * nextCol;
+                			var p2y = curRowY1 + (curRowY2 - curRowY1) * nextCol;
+
+                			var p3x = nextRowX1 + dNextX * nextCol;
+                			var p3y = nextRowY1 + dNextY * nextCol;
+
+                			var p4x = nextRowX1 + dNextX * curCol;
+                			var p4y = nextRowY1 + dNextY * curCol;
+
+                			var u1 = curCol * imgW;
+                			var u2 = nextCol * imgW;
+                			var v1 = curRow * imgH;
+                			var v2 = nextRow * imgH;
+
+                			var triangle1 = new Triangle(
+                				new Point(p1x, p1y),
+                				new Point(p3x, p3y),
+                				new Point(p4x, p4y),
+                				new TextureCoordinates(u1, v1),
+                				new TextureCoordinates(u2, v2),
+                				new TextureCoordinates(u1, v2)
+                			);
+
+                			var triangle2 = new Triangle(
+                				new Point(p1x, p1y),
+                				new Point(p2x, p2y),
+                				new Point(p3x, p3y),
+                				new TextureCoordinates(u1, v1),
+                				new TextureCoordinates(u2, v1),
+                				new TextureCoordinates(u2, v2)
+                			);
+
+                			this.triangles.push(triangle1);
+                			this.triangles.push(triangle2);
+                		}
+                    }
+                }
+
+                draw(ctx, p1, p2, p3, p4, opacity = 1) {
+                    this.calculate(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, p4.x, p4.y);
+                    this.triangles.forEach(triangle => triangle.draw(ctx, this.image, opacity));
+                }
+            }
+
+            class Point {
+                constructor(x = 0, y = 0) {
+                    this.x = x;
+                    this.y = y;
+                }
+            }
+
+            class Triangle {
+                constructor(p0, p1, p2, t0, t1, t2) {
+                    this.p0 = p0;
+                    this.p1 = p1;
+                    this.p2 = p2;
+
+                    this.t0 = t0;
+                    this.t1 = t1;
+                    this.t2 = t2;
+                }
+
+                draw(ctx, image, opacity = 1) {
+                    let x0 = this.p0.x;
+                    let y0 = this.p0.y;
+                    let x1 = this.p1.x;
+                    let y1 = this.p1.y;
+                    let x2 = this.p2.x;
+                    let y2 = this.p2.y;
+                    let sx0 = this.t0.u;
+                    let sy0 = this.t0.v;
+                    let sx1 = this.t1.u;
+                    let sy1 = this.t1.v;
+                    let sx2 = this.t2.u;
+                    let sy2 = this.t2.v;
+
+                    ctx.save();
+
+                    // Clip the output to the on-screen triangle boundaries.
+                    ctx.beginPath();
+                    ctx.moveTo(x0, y0);
+                    ctx.lineTo(x1, y1);
+                    ctx.lineTo(x2, y2);
+                    ctx.closePath();
+                    ctx.clip();
+
+                    var denom = sx0 * (sy2 - sy1) - sx1 * sy2 + sx2 * sy1 + (sx1 - sx2) * sy0;
+                    if (denom == 0) {
+                        return;
+                    }
+                    var m11 = -(sy0 * (x2 - x1) - sy1 * x2 + sy2 * x1 + (sy1 - sy2) * x0) / denom;
+                    var m12 = (sy1 * y2 + sy0 * (y1 - y2) - sy2 * y1 + (sy2 - sy1) * y0) / denom;
+                    var m21 = (sx0 * (x2 - x1) - sx1 * x2 + sx2 * x1 + (sx1 - sx2) * x0) / denom;
+                    var m22 = -(sx1 * y2 + sx0 * (y1 - y2) - sx2 * y1 + (sx2 - sx1) * y0) / denom;
+                    var dx = (sx0 * (sy2 * x1 - sy1 * x2) + sy0 * (sx1 * x2 - sx2 * x1) + (sx2 * sy1 - sx1 * sy2) * x0) / denom;
+                    var dy = (sx0 * (sy2 * y1 - sy1 * y2) + sy0 * (sx1 * y2 - sx2 * y1) + (sx2 * sy1 - sx1 * sy2) * y0) / denom;
+
+                    ctx.transform(m11, m12, m21, m22, dx, dy);
+
+                    ctx.globalAlpha = opacity;
+                    ctx.drawImage(image, 0, 0);
+                    ctx.restore();
+                }
+            }
+
+            class TextureCoordinates {
+                constructor(u, v) {
+                    this.u = u;
+                    this.v = v;
+                }
+            }
+
+            class Matrix {
+                constructor(values = [], size = 3) {
+                    this.values = [];
+                    this.elements = values;
+
+                    let index = 0;
+                    for (let i = 0; i < values.length; i++) {
+                        index = i % size === 0 && i !== 0 ? ++index : index;
+                        if (!this.values[index]) {
+                            this.values[index] = [];
+                        }
+
+                        this.values[index].push(values[i]);
+                    }
+                }
+
+                multiply(transform) {
+                    let equation;
+                    let values = [];
+                    if (transform instanceof Vector) {
+                        for (let i = 0; i < this.values.length; i++) {
+                            equation = 0;
+                            for (let j = 0; j < this.values[i].length; j++) {
+                                equation += this.values[i][j] * transform.values[j];
+                            }
+
+                            values.push(equation);
+                        }
+
+                        return new Vector(values);
+
+                    } else if (transform instanceof Matrix) {
+                        for (let i = 0; i < this.values.length; i++) {
+                            for (let k = 0; k < transform.values[i].length; k++) {
+                                equation = 0;
+                                for (let j = 0; j < this.values[i].length; j++) {
+                                    equation += this.values[j][i] * transform.values[k][j];
+                                }
+
+                                values.push(equation);
+                            }
+                        }
+
+                        return new Matrix(values);
+                    }
+                }
+            }
+
+            class Vector {
+                constructor(values) {
+                    this.values = values;
+                }
+            }
+
+            class Vertex extends Vector {
+                constructor(x, y, z) {
+                    super([x, y, z]);
+
+                    this.x = x;
+                    this.y = y;
+                    this.z = z;
+                }
+
+                transform(matrix) {
+                    const vector = matrix.multiply(this);
+
+                    return new Vertex(vector.values[0], vector.values[1], vector.values[2]);
+                }
+            }
+
+            class Polygon {
+                constructor(vertices = [], options = {}) {
+                    this.vertices = vertices;
+                    this.options = options;
+                }
+
+                transform(matrix) {
+                    const vertices = this.vertices.map(vertice => vertice.transform(matrix));
+
+                    return new Polygon(vertices, this.options);
+                }
+
+                get x() {
+                    let sum = 0;
+
+                    this.vertices.map(vertice => sum += vertice.x);
+
+                    return sum;
+                }
+
+                get y() {
+                    let sum = 0;
+
+                    this.vertices.map(vertice => sum += vertice.y);
+
+                    return sum;
+                }
+
+                get z() {
+                    let sum = 0;
+
+                    this.vertices.map(vertice => sum += vertice.z);
+
+                    return sum;
+                }
+
+                shadow(ctx, opacity = .5, fx = null, fy = null) {
+                    fx = fx || (v => v.x);
+                    fy = fy || (v => v.y);
+
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.fillStyle = 'black';
+                    ctx.globalAlpha = opacity;
+
+                    ctx.moveTo(fx(this.vertices[0]), fy(this.vertices[0]));
+
+                    for (var i = 1; i < this.vertices.length; ++i) {
+                        ctx.lineTo(fx(this.vertices[i]), fy(this.vertices[i]));
+                    }
+
+                    ctx.fill();
+                    ctx.restore();
+                }
+
+                texture(ctx, texture, fx = null, fy = null, opacity = 1) {
+                    fx = fx || (v => v.x);
+                    fy = fy || (v => v.y);
+
+                    if (this.vertices.length === 3 || this.vertices.length === 4) {
+                        let points = [];
+                        for (var i = 0; i < this.vertices.length; ++i) {
+                            points.push({ x: fx(this.vertices[i]), y: fy(this.vertices[i]) });
+                        }
+
+                        texture.draw(ctx, points[0], points[1], points[2], points[3] || points[2], opacity);
+                    }
+                }
+
+                draw(ctx, fx = null, fy = null) {
+                    ctx.save();
+                    ctx.beginPath();
+
+                    if (this.options.strokeStyle) {
+                        ctx.strokeStyle = this.options.strokeStyle;
+                    }
+
+                    if (this.options.fillStyle) {
+                        ctx.fillStyle = this.options.fillStyle;
+                    }
+
+                    fx = fx || (v => v.x);
+                    fy = fy || (v => v.y);
+
+                    ctx.moveTo(fx(this.vertices[0]), fy(this.vertices[0]));
+
+                    for (var i = 1; i < this.vertices.length; ++i) {
+                        ctx.lineTo(fx(this.vertices[i]), fy(this.vertices[i]));
+                    }
+
+                    ctx.closePath();
+                    if (this.options.fillStyle) {
+                        ctx.fill();
+                    } else {
+                        ctx.stroke();
+                    }
+                    ctx.restore();
+                }
+            }
+
+            class Polyhedron {
+                constructor(polygones = [], options = {}) {
+                    this.polygones = polygones;
+                    this.options = options;
+
+                    if (this.options.fillStyle) {
+                        this.polygones.forEach(polygone => polygone.options.fillStyle = this.options.fillStyle);
+                    }
+
+                    if (this.options.strokeStyle) {
+                        this.polygones.forEach(polygone => polygone.options.strokeStyle = this.options.strokeStyle);
+                    }
+
+                    if (this.options.texture && this.options.texture.image) {
+                        this.texture = new Texture(this.options.texture.image, this.options.texture.quality);
+                    }
+                }
+
+                transform(matrix) {
+                    let polygones = this.polygones.map(polygone => polygone.transform(matrix));
+
+                    return new Polyhedron(polygones, this.options);
+                }
+
+                draw(ctx, fx = null, fy = null) {
+                    const shadowStep = this.options.shadowStep || 0.1;
+                    const shadowDirection = this.options.shadowDirection || -1;
+
+                    let polygones = [];
+                    let shadow = this.options.shadow || 0;
+
+                    this.polygones.sort((a, b) => a.z < b.z);
+                    this.polygones.forEach(polygone =>  {
+                        polygone.draw(ctx, fx, fy);
+
+                        if (this.texture) {
+                            polygone.texture(ctx, this.texture, fx, fy, this.options.texture.opacity || 1);
+                        }
+
+                        if (shadow > 0) {
+                            polygone.shadow(ctx, shadow, fx, fy);
+                            shadow += shadowDirection * shadowStep;
+                        }
+                    });
+                }
+            }
+
+            var layer = {
+                create: function() {
+                    this.vertices = [
+                        new Vertex(-1, -1, -1),
+                        new Vertex(1, -1, -1),
+                        new Vertex(-1, -1, 1),
+                        new Vertex(1, -1, 1),
+                        new Vertex(-1, 1, -1),
+                        new Vertex(1, 1, -1),
+                        new Vertex(-1, 1, 1),
+                        new Vertex(1, 1, 1)
+                    ];
+
+                    this.cubeVertices = [
+                        new Vertex(0, -1, 0),
+                        new Vertex(1, 0, 0),
+                        new Vertex(0, 1, 0),
+                        new Vertex(-1, 0, 0),
+                        new Vertex(0, 0, 1),
+                        new Vertex(0, 0, -1)
+                    ];
+
+                    this.axesVerticles = [
+                        new Vertex(0, 0, 0),
+                        new Vertex(1, 0, 0),
+                        new Vertex(0, 1, 0),
+                        new Vertex(0, 0, 1)
+                    ];
+
+                    this.triangleVerticles = [
+                        new Vertex(0, -1, 0),
+                        new Vertex(1, 1, 1),
+                        new Vertex(-1, 1, 1),
+                        new Vertex(0, 1, -1)
+                    ];
+
+                    this.polygones = [
+                        new Polygon([this.vertices[0], this.vertices[1], this.vertices[5], this.vertices[4]]),
+                        new Polygon([this.vertices[2], this.vertices[3], this.vertices[7], this.vertices[6]]),
+                        new Polygon([this.vertices[0], this.vertices[1], this.vertices[3], this.vertices[2]]),
+                        new Polygon([this.vertices[4], this.vertices[5], this.vertices[7], this.vertices[6]]),
+                        new Polygon([this.vertices[0], this.vertices[2], this.vertices[6], this.vertices[4]]),
+                        new Polygon([this.vertices[1], this.vertices[3], this.vertices[7], this.vertices[5]])
+                    ];
+
+                    this.axesPolygones = [
+                        new Polygon([this.axesVerticles[0], this.axesVerticles[1]], { strokeStyle: '#F06' }),
+                        new Polygon([this.axesVerticles[0], this.axesVerticles[2]], { strokeStyle: '#F90' }),
+                        new Polygon([this.axesVerticles[0], this.axesVerticles[3]], { strokeStyle: '#09C' }),
+                    ];
+
+                    this.trianglePolygones = [
+                        new Polygon([this.triangleVerticles[0], this.triangleVerticles[1], this.triangleVerticles[2]]),
+                        new Polygon([this.triangleVerticles[0], this.triangleVerticles[1], this.triangleVerticles[3]]),
+                        new Polygon([this.triangleVerticles[0], this.triangleVerticles[2], this.triangleVerticles[3]]),
+                        new Polygon([this.triangleVerticles[1], this.triangleVerticles[2], this.triangleVerticles[3]])
+                    ];
+
+                    /*this.cubeVertices = [
+                        new Vertex(0, -1, 0), ^   0
+                        new Vertex(1, 0, 0), >    1
+                        new Vertex(0, 1, 0), u    2
+                        new Vertex(-1, 0, 0), <   3
+                        new Vertex(0, 0, 1), T    4
+                        new Vertex(0, 0, -1) B    5
+                    ];*/
+
+                    this.cubePolygones = [
+                        new Polygon([this.cubeVertices[0], this.cubeVertices[1], this.cubeVertices[4]]),
+                        new Polygon([this.cubeVertices[0], this.cubeVertices[4], this.cubeVertices[3]]),
+                        new Polygon([this.cubeVertices[0], this.cubeVertices[1], this.cubeVertices[5]]),
+                        new Polygon([this.cubeVertices[0], this.cubeVertices[3], this.cubeVertices[5]]),
+
+                        new Polygon([this.cubeVertices[2], this.cubeVertices[4], this.cubeVertices[1]]),
+                        new Polygon([this.cubeVertices[2], this.cubeVertices[4], this.cubeVertices[3]]),
+                        new Polygon([this.cubeVertices[2], this.cubeVertices[5], this.cubeVertices[1]]),
+                        new Polygon([this.cubeVertices[2], this.cubeVertices[5], this.cubeVertices[3]]),
+                    ];
+
+                    this.cube = new Polyhedron(this.polygones, { shadow: .5, texture: { image: loader.get('image'), quality: 1 } });
+                    //this.littleCube = new Polyhedron(this.cubePolygones, { shadow: .8, fillStyle: 'green' });
+                    //this.triangle = new Polyhedron(this.trianglePolygones, { shadow: .5, fillStyle: 'green' });
+                    //this.triangle = new Polyhedron(this.trianglePolygones, { shadow: .5, texture: { image: loader.get('image'), quality: 1 } });
+
+                    this.angle = 0;
+                },
+
+                step: function(dt) {
+                    this.angle = this.angle + 0.01;
+                },
+
+                render: function() {
+                    let size = this.width / 4;
+
+                    const fx = (vertex) => {
+                        return vertex.x * size;
+                    };
+
+                    const fy = (vertex) => {
+                        return vertex.y * size;
+                    };
+
+                    const a = Math.cos(this.angle);
+                    const b = Math.sin(this.angle);
+
+                    const matrixRx = new Matrix([
+                        1, 0, 0,
+                        0, a, -b,
+                        0, b, a
+                    ]);
+
+                    const matrixRy = new Matrix([
+                        a, 0, b,
+                        0, 1, 0,
+                        -b, 0, a
+                    ]);
+
+                    const matrixRz = new Matrix([
+                        a, -b, 0,
+                        b, a, 0,
+                        0, 0, 1
+                    ]);
+
+                    const matrix = matrixRx.multiply(matrixRy).multiply(matrixRz);
+
+                    this.clearLayer();
+                    this.save();
+                    this.ctx.translate(this.width / 2, this.width / 2);
+
+                    //this.triangle.transform(matrix).draw(this.ctx, fx, fy);
+                    //this.littleCube.transform(matrix).draw(this.ctx, fx, fy);
+                    this.cube.transform(matrix).draw(this.ctx, fx, fy);
+
+                    this.restore();
+
+                    //this.ticker.stop();
+                }
+            };
+
+            var app = new Application({
+                width: 500,
+                height: 500,
+
+                create: function() {
+                    //this.loader.add('http://media.giphy.com/media/NWb6sWXQQTqwg/giphy.gif', 'image', 'image');
+                    this.loader.add('https://media.forgecdn.net/avatars/87/600/636217301574113797.png', 'image', 'image');
+                },
+
+                ready: function() {
+                    this.addLayer('main', layer);
+                    this.changeLayer('main');
+                }
+            });
+        </script>
+    </body>
+</html>

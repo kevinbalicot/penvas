@@ -5,9 +5,7 @@ import { Motion } from './../components/motion';
 
 export class Movement extends System {
     update(delta) {
-        const entities = this.environment.getEntities([Collision.name, Motion.name]);
-
-        entities.forEach(entity => Movement.move(entity, delta));
+        this.environment.getEntities([Collision, Motion]).forEach(entity => Movement.move(entity, delta));
     }
 
     static move(entity, delta, force = null) {

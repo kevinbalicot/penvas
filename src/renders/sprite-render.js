@@ -4,21 +4,13 @@ import { Body } from './../components/body';
 import { Sprite } from './../components/sprite';
 
 export class SpriteRender extends Render {
-    render(canvas) {
-        const ctx = canvas.ctx;
-        const entities = this.environment.getEntities([Body.name, Sprite.name]);
-
-        entities.forEach(entity => {
+    render(canvas, entity) {
+        if (entity.hasComponent(Sprite) && entity.hasComponent(Body)) {
             let currentAnimation = entity.components.sprite.animations[entity.components.sprite.currentAnimation];
 
-            ctx.save();
-            
-            if (currentAnimation && currentAnimation.flip) {
-                ctx.translate((entity.components.body.position.x * 2) + entity.components.body.width, 1);
-                ctx.scale(-1, 1);
-            }
+            canvas.save();
 
-            ctx.drawImage(
+            canvas.drawImage(
                 entity.components.sprite.image,                                     // image
                 entity.components.sprite.frame.x * entity.components.sprite.width,  // source x
                 entity.components.sprite.frame.y * entity.components.sprite.height, // source y
@@ -30,7 +22,7 @@ export class SpriteRender extends Render {
                 entity.components.body.height                                       // destination height
             );
 
-            ctx.restore();
-        });
+            canvas.restore();
+        }
     }
 }

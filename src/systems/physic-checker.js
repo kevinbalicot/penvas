@@ -9,10 +9,9 @@ import { Physic } from './../components/physic';
 
 export class PhysicChecker extends System {
     update(delta) {
-        const entities = this.environment.getEntities([Body.name, Collision.name, Physic.name]);
-        const force = (new Vector(1, 1)).multiply(-1);
+        const force = new Vector(-1, -1);
 
-        entities.forEach(entity => {
+        this.environment.getEntities([Body, Collision, Physic]).forEach(entity => {
             if (
                 entity.components.collision.with &&
                 entity.components.collision.with.components.physic &&

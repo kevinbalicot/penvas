@@ -1,6 +1,6 @@
 export class Utils {
     static angleBetweenPoints(point1, point2) {
-        return Math.atan2(point2.y - point1.y, point2.x - point1.x);
+        return Math.atan2(point2.y - point1.y, point2.x - point1.x) * 180 / Math.PI;
     }
 
     /**

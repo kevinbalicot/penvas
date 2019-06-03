@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-shim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fpsmeter/0.3.1/fpsmeter.min.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=VT323" rel="stylesheet">
+        <script src="https://github.com/kevinbalicot/penvas/releases/download/v0.7.0/penvas.js" charset="utf-8"></script>
+    </head>
+    <body>
+        <div id="fps"></div>
+        <script>
+            class Dialog extends Sprite {
+                constructor(x, y) {
+                    let animations = [
+                        { frames: [1, 2, 3], name: 'waiting', loop: true },
+                        { frames: [6], name: 'smile', loop: false }
+                    ];
+                    let image = loader.get('dialog');
+
+                    super(x, y, 16, 16, image, animations, {});
+                }
+            }
+
+            class Npc extends Sprite {
+                constructor(x, y) {
+                    let animations = [
+                        { frames: [1], name: 'stand_right', loop: false },
+                        { frames: [1], name: 'stand_left', loop: false, flip: true },
+                        { frames: [2], name: 'stand_down', loop: false },
+                        { frames: [3], name: 'stand_up', loop: false },
+                    ];
+                    let image = loader.get('npc');
+
+                    super(x, y, 16, 16, image, animations, { x: 5, y: 8, width: 5, height: 4 });
+
+                    this.actionbox = new Model(this.x - 2, this.y - 2, this.width + 4, this.height + 4);
+                    this.speaking = false;
+                    this.direction = 'right';
+                    this.dialog = new Dialog(this.x, this.y - 16);
+                    this.dialog.play('waiting');
+
+                    events.on('dialog:close', () => {
+                        this.speaking = false;
+                        this.dialog.play('waiting');
+                    });
+                }
+
+                step(td) {
+                    this.stand();
+                    this.dialog.step(td);
+                    super.step(td);
+                }
+
+                stand() {
+                    if (this.direction == 'left') {
+                        this.play('stand_left');
+                    } else if (this.direction == 'right') {
+                        this.play('stand_right');
+                    } else if (this.direction == 'up') {
+                        this.play('stand_up');
+                    } else if (this.direction == 'down') {
+                        this.play('stand_down');
+                    }
+                }
+
+                interact() {
+                    if (!this.speaking) {
+                        this.speaking = true;
+                        this.dialog.play('smile');
+
+                        events.dispatch('dialog:open', 'Hello friend');
+                    }
+                }
+
+                render(drawer) {
+                    this.dialog.render(drawer);
+                    super.render(drawer);
+                }
+            }
+
+            class Player extends Sprite {
+                constructor(x, y) {
+                    let animations = [
+                        { frames: [2, 3], name: 'walk_right', loop: true },
+                        { frames: [1], name: 'stand_right', loop: false },
+                        { frames: [2, 3], name: 'walk_left', loop: true, flip: true },
+                        { frames: [1], name: 'stand_left', loop: false, flip: true },
+                        { frames: [4], name: 'stand_down', loop: false },
+                        { frames: [5, 6], name: 'walk_down', loop: true },
+                        { frames: [7], name: 'stand_up', loop: false },
+                        { frames: [8, 9], name: 'walk_up', loop: true }
+                    ];
+                    let image = loader.get('player');
+
+                    super(x, y, 16, 16, image, animations, { x: 2, y: 8, width: 12, height: 8 });
+
+                    this.direction = 'down';
+                    this.moving = false;
+                    this.interaction = null;
+                }
+
+                step(td) {
+                    if (io[37]) {
+                        this.direction = 'left';
+                        this.play('walk_left');
+                        this.moving = true;
+                    } else if (io[38]) {
+                        this.direction = 'up';
+                        this.play('walk_up');
+                        this.moving = true;
+                    } else if (io[39]) {
+                        this.direction = 'right';
+                        this.play('walk_right');
+                        this.moving = true;
+                    } else if (io[40]) {
+                        this.direction = 'down';
+                        this.play('walk_down');
+                        this.moving = true;
+                    } else {
+                        this.moving = false;
+                        this.stand();
+                    }
+
+                    if (this.interaction !== null && io[65]) {
+                        this.interaction.interact();
+                    }
+
+                    this.move();
+                    super.step(td);
+                }
+
+                move() {
+                    if (this.moving) {
+                        if (this.direction == 'left') {
+                            this.x -= 0.75;
+                        } else if (this.direction == 'right') {
+                            this.x += 0.75;
+                        } else if (this.direction == 'up') {
+                            this.y -= 0.75;
+                        } else if (this.direction == 'down') {
+                            this.y += 0.75;
+                        }
+                    }
+                }
+
+                stand() {
+                    if (this.direction == 'left') {
+                        this.play('stand_left');
+                    } else if (this.direction == 'right') {
+                        this.play('stand_right');
+                    } else if (this.direction == 'up') {
+                        this.play('stand_up');
+                    } else if (this.direction == 'down') {
+                        this.play('stand_down');
+                    }
+                }
+            }
+
+            class Message extends Model {
+                constructor(x, y, width, height) {
+                    super(x, y, width, height);
+                    this.open = false;
+                    this.closable = false;
+                    this.message = '';
+                }
+
+                step(td) {
+                    if (this.closable && io[65]) {
+                        this.open = false;
+                        this.closable = false;
+
+                        setTimeout(() => events.dispatch('dialog:close'), 100);
+                    }
+                }
+
+                openDialog(message) {
+                    if (!this.open) {
+                        this.message = message;
+                        this.open = true;
+
+                        setTimeout(() => this.closable = true, 100);
+                    }
+                }
+
+                render(drawer) {
+                    if (this.open) {
+                        drawer.drawFillRect(this.x, this.y, this.width, this.height, '#D7E894', 2, '#537F39');
+                        drawer.drawRect(this.x + 2, this.y + 2, this.width - 4, this.height - 4, 2, '#AEC340');
+                        drawer.drawText(this.message, this.x + 8, this.y + 16, '8px', 'VT323', '#204632');
+                    }
+                }
+            }
+
+            var meter = new FPSMeter(document.getElementById('fps'));
+            var layer = {
+                create: function() {
+                    let layer = {
+                         data: [473, 473, 473, 473, 473, 473, 473, 473, 473, 473, 473, 473, 473, 473, 473, 473, 473, 473, 473, 473, 473, 205, 206, 467, 468, 207, 207, 207, 207, 211, 212, 207, 207, 207, 207, 469, 470, 208, 209, 473, 473, 237, 238, 499, 500, 239, 239, 239, 239, 243, 244, 239, 239, 239, 239, 501, 502, 240, 241, 473, 473, 237, 270, 531, 532, 271, 271, 271, 271, 275, 276, 271, 271, 271, 271, 533, 534, 272, 241, 473, 473, 237, 41, 42, 43, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 44, 241, 473, 473, 237, 73, 107, 107, 107, 107, 107, 107, 107, 107, 107, 107, 107, 107, 107, 107, 76, 241, 473, 473, 237, 73, 107, 107, 107, 75, 107, 107, 107, 107, 107, 107, 107, 107, 107, 107, 76, 241, 473, 473, 237, 73, 107, 107, 107, 107, 107, 107, 107, 107, 107, 107, 107, 107, 74, 107, 76, 241, 473, 473, 237, 73, 107, 107, 107, 107, 107, 107, 201, 202, 203, 107, 107, 107, 107, 107, 76, 241, 473, 473, 237, 73, 107, 107, 107, 107, 107, 107, 233, 234, 235, 107, 107, 107, 107, 107, 76, 241, 473, 473, 237, 73, 107, 107, 107, 107, 107, 107, 265, 266, 267, 107, 107, 107, 107, 107, 76, 241, 473, 473, 237, 73, 107, 107, 107, 107, 107, 107, 107, 107, 107, 107, 107, 107, 107, 107, 76, 241, 473, 473, 237, 73, 107, 107, 107, 107, 107, 107, 107, 107, 107, 75, 107, 107, 107, 107, 76, 241, 473, 473, 237, 73, 107, 107, 107, 107, 107, 107, 107, 107, 107, 107, 107, 107, 107, 107, 76, 241, 473, 473, 237, 73, 107, 107, 107, 74, 107, 107, 107, 107, 107, 107, 107, 107, 107, 107, 76, 241, 473, 473, 237, 73, 107, 107, 107, 107, 107, 107, 107, 107, 107, 107, 107, 107, 107, 107, 76, 241, 473, 473, 237, 73, 107, 75, 107, 107, 107, 107, 107, 107, 107, 107, 107, 107, 75, 107, 76, 241, 473, 473, 237, 73, 106, 106, 106, 106, 106, 106, 106, 106, 106, 106, 106, 106, 106, 106, 76, 241, 473, 473, 332, 333, 333, 333, 333, 333, 333, 333, 333, 333, 333, 333, 333, 333, 333, 333, 337, 338, 473, 473, 473, 365, 365, 365, 365, 365, 365, 365, 365, 365, 365, 365, 365, 365, 365, 365, 365, 473, 473]
+                    };
+
+                    let collisionLayer = {
+                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 195, 195, 195, 195, 0, 0, 0, 0, 0, 0, 0, 0, 0, 195, 195, 195, 195, 195, 195, 195, 195, 0, 0, 195, 195, 195, 195, 195, 195, 195, 195, 0, 0, 195, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 195, 0, 0, 195, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 195, 0, 0, 195, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 195, 0, 0, 195, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 195, 0, 0, 195, 0, 0, 0, 0, 0, 0, 0, 195, 195, 195, 0, 0, 0, 0, 0, 0, 195, 0, 0, 195, 0, 0, 0, 0, 0, 0, 0, 195, 0, 195, 0, 0, 0, 0, 0, 0, 195, 0, 0, 195, 0, 0, 0, 0, 0, 0, 0, 195, 195, 195, 0, 0, 0, 0, 0, 0, 195, 0, 0, 195, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 195, 0, 0, 195, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 195, 0, 0, 195, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 195, 0, 0, 195, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 195, 0, 0, 195, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 195, 0, 0, 195, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 195, 0, 0, 195, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 195, 0, 0, 195, 195, 195, 195, 195, 195, 195, 195, 195, 195, 195, 195, 195, 195, 195, 195, 195, 195, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    };
+
+                    let tileset = new Tileset(0, 0, 8, 8, loader.get('tileset'));
+
+                    this.map = new Map(8, 8, 20, 20);
+                    this.map.addTileset(tileset, 'main');
+                    this.map.addLayer(layer, 'main');
+                    this.map.addPlatformLayer(collisionLayer, 'collision');
+
+                    this.player = new Player(5 * 8, 5 * 8);
+                    this.npc = new Npc(5 * 8, 10 * 8);
+                    this.message = new Message(8, 80, 144, 72);
+
+                    this.collisionChecker = new CollisionChecker();
+                    this.collisionChecker.add(this.player, this.map.getPlatform('collision'), () => this.player.collision = true);
+                    this.collisionChecker.add(this.player, this.npc, () => this.player.collision = true);
+                    this.collisionChecker.add(this.player, this.npc.actionbox, () => this.player.interaction = this.npc);
+
+                    this.renderer = new Renderer();
+                    this.renderer.add(this.player, function(p) { return p.y });
+                    this.renderer.add(this.npc, function(n) { return n.y });
+
+                    events.on('dialog:open', (message) => {
+                        this.message.openDialog(message);
+                    });
+
+                    this.ctx.imageSmoothingEnabled = false;
+                    this.ctx.imageSmoothingEnabled = false;
+                    this.ctx.scale(4, 4);
+                },
+                step: function(td) {
+                    this.player.interaction = null;
+                    this.player.collision = false;
+                    this.collisionChecker.check(td);
+
+                    if (!this.player.collision) {
+                        this.player.step(td);
+                    }
+
+                    this.npc.step(td);
+                    this.message.step();
+                },
+                render: function() {
+                    meter.tickStart();
+                    this.map.render(this, {});
+                    this.renderer.render(this);
+                    this.message.render(this);
+                    meter.tick();
+
+                    //this.debug(this.player);
+                    //this.debug(this.npc);
+                    //this.debug(this.map.getPlatform('collision'));
+                }
+            }
+
+            var app = new Application({
+                width: 20 * 8 * 4,
+                height: 20 * 8 * 4,
+                create: function() {
+                    loader.add('tileset.png', 'tileset');
+                    loader.add('player.png', 'player');
+                    loader.add('npc.png', 'npc');
+                    loader.add('dialog.png', 'dialog');
+                },
+
+                ready: function() {
+                    this.addLayer('main', layer);
+                    this.changeLayer('main');
+                }
+            });
+
+        </script>
+    </body>
+</html>

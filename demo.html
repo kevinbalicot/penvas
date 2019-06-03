@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+    </head>
+    <body>
+        <section id="game-container"></section>
+        <script src="dist/penvas.js" charset="utf-8"></script>
+        <script type="text/javascript">
+            const { Entity, Layer, Canvas, Viewport, loader } = penvas;
+            const { Vector } = penvas.geometry;
+            const {
+                Body,
+                Sprite,
+                Motion,
+                Collision,
+                Physic,
+                Keyboard,
+                Gamepad
+            } = penvas.components;
+            const {
+                Movement,
+                Animation,
+                CollisionChecker,
+                PhysicChecker,
+                Inputs,
+                GamepadInputs
+            } = penvas.systems;
+            const {
+                BoxRender,
+                SpriteRender
+            } = penvas.renders;
+
+            const viewport = new Viewport(1024, 768, document.querySelector('#game-container'));
+
+            class Test extends Layer {
+                constructor() {
+                    super();
+
+                    const animations = [
+                        { frames: [2, 3], name: 'walk_right', loop: true },
+                        { frames: [1], name: 'stand_right', loop: false },
+                        { frames: [2, 3], name: 'walk_left', loop: true, flip: true },
+                        { frames: [1], name: 'stand_left', loop: false, flip: true },
+                        { frames: [4], name: 'stand_down', loop: false },
+                        { frames: [5, 6], name: 'walk_down', loop: true },
+                        { frames: [7], name: 'stand_up', loop: false },
+                        { frames: [8, 9], name: 'walk_up', loop: true }
+                    ];
+
+                    this.el = new Entity([
+                        new Body(new Vector(10, 20), 16, 16),
+                        new Sprite(16, 16, loader.get('image:player'), animations, 5, 'walk_right'),
+                        new Motion(new Vector(.08, .08), new Vector(0, 0)),
+                        new Collision(0, 0, 16, 16),
+                        new Physic(),
+                        new Keyboard()
+                    ]);
+
+                    this.el2 = new Entity([
+                        new Body(new Vector(100, 10), 50, 50),
+                        new Collision(0, 0, 50, 50),
+                        new Physic(new Vector(5, 5))
+                    ]);
+
+                    this.addEntity(this.el);
+                    this.addEntity(this.el2);
+
+                    this.addSystem(new Movement());
+                    this.addSystem(new CollisionChecker());
+                    this.addSystem(new PhysicChecker());
+                    this.addSystem(new Inputs());
+                    this.addSystem(new GamepadInputs());
+                    this.addSystem(new Animation());
+
+                    this.addRender(new BoxRender());
+                    this.addRender(new SpriteRender());
+                }
+
+                gamepadUp(event) {
+                    this.el.addComponent(new Gamepad(event.gamepad.id));
+                }
+
+                gamepadDown(event) {
+                    this.el.removeComponent(Gamepad.name);
+                }
+
+                step(delta) {
+                    this.update(['inputs', 'gamepadinputs', 'movement', 'animation', 'collisionchecker', 'physicchecker'], delta);
+                }
+
+                stepRender(delta) {
+                    this.canvas.clearLayer();
+                    this.render(['boxrender', 'spriterender'], this.canvas);
+
+                    viewport.render();
+                }
+            }
+
+            loader.add('/demo/player.png', 'image:player');
+            loader.on('loader:ready', () => {
+                const canvas = new Canvas({ width: 500, height: 500 });
+
+                viewport.setWorld(canvas);
+
+                canvas.setLayers(new Test());
+                canvas.start();
+            });
+        </script>
+
+    </body>
+</html>
