@@ -108,6 +108,30 @@ export class Vector {
         return this;
     }
 
+    max(max) {
+        if (this.x > max) {
+            this.x = max;
+        }
+
+        if (this.y > max) {
+            this.y = max;
+        }
+
+        return this;
+    }
+
+    min(min) {
+        if (this.x < min) {
+            this.x = min;
+        }
+
+        if (this.y < min) {
+            this.y = min;
+        }
+
+        return this;
+    }
+
     clone() {
         return new Vector(this.x, this.y);
     }
@@ -153,6 +177,14 @@ export class Vector {
     }
 
     static get DOWN_RIGHT() {
+        return new Vector(1, 1);
+    }
+
+    static get ZERO() {
+        return new Vector(0, 0);
+    }
+
+    static get ONE() {
         return new Vector(1, 1);
     }
 }

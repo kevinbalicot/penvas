@@ -25,7 +25,7 @@ export class Inputs extends System {
         }
 
         this.environment.getEntities([Keyboard, Motion]).forEach(entity => {
-            entity.components.motion.direction = direction.clone().normalize();
+            entity.components.motion.velocity.multiply(direction.clone().normalize());
         });
     }
 }

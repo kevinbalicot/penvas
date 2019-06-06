@@ -37,15 +37,15 @@ export class Viewport extends Drawer {
         }
 
         this.world = world.element;
-        this.deadZoneX = deadZoneX || world.width;
-        this.deadZoneY = deadZoneY || world.height;
+        this.deadZoneX = deadZoneX || this.width / 2;
+        this.deadZoneY = deadZoneY || this.height / 2;
 
         // calculate scaleX and scaleY
     }
 
     follow(target) {
         // Follow target
-        if (target.x - this.x + (this.deadZoneX / this.scaleX) > this.width / this.scaleX) {
+        /*if (target.x - this.x + (this.deadZoneX / this.scaleX) > this.width / this.scaleX) {
             this.x = target.x - ((this.width / this.scaleX) - (this.deadZoneX / this.scaleX));
         } else if (target.x - (this.deadZoneX / this.scaleX) < this.x) {
             this.x = target.x - (this.deadZoneX / this.scaleX);
@@ -55,23 +55,44 @@ export class Viewport extends Drawer {
             this.y = target.y - ((this.height / this.scaleY) - (this.deadZoneY / this.scaleY));
         } else if (target.y - (this.deadZoneY / this.scaleY) < this.y) {
             this.y = target.y - (this.deadZoneY / this.scaleY);
-        }
+        }*/
 
-        // Rest into world
-        if (this.x < 0) {
+        if (this.width < this.world.width) {
+            if (target.x - this.x + this.deadZoneX > this.width) {
+                this.x = target.x - (this.width - this.deadZoneX);
+            } else if (target.x - this.deadZoneX < this.x) {
+                this.x = target.x - this.deadZoneX;
+            }
+
+            // Rest into world
+            if (this.x < 0) {
+                this.x = 0;
+            }
+
+            if (this.x + (this.width / this.scaleX) > this.world.width) {
+                this.x = this.world.width - (this.width / this.scaleX);
+            }
+        } else {
             this.x = 0;
         }
 
-        if (this.x + (this.width / this.scaleX) > this.world.width) {
-            this.x = this.world.width - (this.width / this.scaleX);
-        }
+        if (this.height < this.world.height) {
+            if (target.y - this.y + this.deadZoneY > this.height) {
+                this.y = target.y - (this.height - this.deadZoneY);
+            } else if (target.y - this.deadZoneY < this.y) {
+                this.y = target.y - this.deadZoneY;
+            }
 
-        if (this.y < 0) {
+            // Rest into world
+            if (this.y < 0) {
+                this.y = 0;
+            }
+
+            if (this.y + (this.height / this.scaleY) > this.world.height) {
+                this.y = this.world.height - (this.height / this.scaleY);
+            }
+        } else {
             this.y = 0;
-        }
-
-        if (this.y + (this.height / this.scaleY) > this.world.height) {
-            this.y = this.world.height - (this.height / this.scaleY);
         }
     }
 

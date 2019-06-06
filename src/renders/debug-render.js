@@ -2,9 +2,21 @@ import { Render } from './../render';
 
 import { Body } from './../components/body';
 import { Collision } from './../components/collision';
+import { Motion } from './../components/motion';
+import { Rotate } from './../components/rotate';
 
-export class BoxRender extends Render {
+export class DebugRender extends Render {
     render(canvas, entity) {
+        canvas.save();
+
+        if (entity.hasComponent(Rotate) && entity.hasComponent(Body)) {
+            canvas.rotate(
+                entity.components.body.toRectangle(),
+                entity.components.rotate.angle,
+                entity.components.rotate.pivot
+            );
+        }
+
         if (entity.hasComponent(Body)) {
             canvas.drawText(
                 `[${Math.round(entity.components.body.position.x)}, ${Math.round(entity.components.body.position.y)}]`,
@@ -22,6 +34,8 @@ export class BoxRender extends Render {
                 1
             );
         }
+
+        canvas.restore();
 
         if (entity.hasComponent(Collision)) {
             canvas.drawText(
@@ -42,6 +56,19 @@ export class BoxRender extends Render {
                 entity.components.collision.height,
                 1,
                 entity.components.collision.with ? 'red' : 'blue'
+            );
+        }
+
+        if (entity.hasComponent(Motion) && entity.hasComponent(Body)) {
+            const v = entity.components.motion.velocity.clone();
+            //v.multiply(50);
+            canvas.drawLine(
+                entity.components.body.center.x,
+                entity.components.body.center.y,
+                entity.components.body.center.x + v.x,
+                entity.components.body.center.y + v.y,
+                1,
+                'red'
             );
         }
     }

@@ -44,7 +44,7 @@ export class GameLoop extends EventEmitter {
 
             let numUpdateSteps = 0;
             while (this.delta >= this.timestep) {
-                this.emit('gameloop:step', this.timestep);
+                this.emit('gameloop:step', this.timestep / 1000);
                 this.delta -= this.timestep;
 
                 if (++numUpdateSteps >= 240) {

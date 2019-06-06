@@ -10,6 +10,7 @@
  * https://jsfiddle.net/kevinbalicot/jwfen1tc/
  *
  * https://isaacsukin.com/news/2015/01/detailed-explanation-javascript-game-loops-and-timing
+ * Realtime http://buildnewgames.com/real-time-multiplayer/
  */
 
 import { Drawer } from './drawer';
@@ -50,7 +51,7 @@ import { PhysicChecker } from './systems/physic-checker';
 import { Inputs } from './systems/inputs';
 import { GamepadInputs } from './systems/gamepad-inputs';
 
-import { BoxRender } from './renders/box-render';
+import { DebugRender } from './renders/debug-render';
 import { SpriteRender } from './renders/sprite-render';
 import { RotationRender } from './renders/rotation-render';
 import { FlipRender } from './renders/flip-render';
@@ -122,7 +123,7 @@ window.penvas = {
     },
 
     renders: {
-        BoxRender,
+        DebugRender,
         SpriteRender,
         RotationRender,
         FlipRender,

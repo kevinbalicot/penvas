@@ -149,4 +149,12 @@ export class Environment extends EventEmitter {
     getEntity(id) {
         return this.entities.find(entity => entity.id === id);
     }
+
+    getSystem(system) {
+        return this.systems.find(s => s.constructor.name.toLowerCase() === String(system.name || system).toLowerCase())
+    }
+
+    getRender(render) {
+        return this.renders.find(r => r.constructor.name.toLowerCase() === String(render.name || render).toLowerCase())
+    }
 }

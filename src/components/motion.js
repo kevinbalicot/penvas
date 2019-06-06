@@ -3,14 +3,13 @@ import { Component } from './../component';
 import { Vector } from './../geometry/vector';
 
 export class Motion extends Component {
-    constructor(velocity, direction) {
+    constructor(velocity) {
         super();
 
-        if (!(velocity instanceof Vector) || !(direction instanceof Vector)) {
-            throw new Error(`Velocity and Direction has to be instances of Vector.`);
+        if (!(velocity instanceof Vector)) {
+            throw new Error(`Velocity has to be instances of Vector.`);
         }
 
         this.velocity = velocity;
-        this.direction = direction;
     }
 }
