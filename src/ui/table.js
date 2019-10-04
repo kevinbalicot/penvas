@@ -34,7 +34,7 @@ export class UITable extends UIElement {
         this.thead.appendChild(row);
     }
 
-    addToBody(items) {
+    addToBody(values) {
         if (!Array.isArray(values)) {
             values = [values];
         }
@@ -57,7 +57,7 @@ export class UITable extends UIElement {
         this.tbody.appendChild(row);
     }
 
-    addToFooter(items) {
+    addToFooter(values) {
         if (!Array.isArray(values)) {
             values = [values];
         }
@@ -78,5 +78,23 @@ export class UITable extends UIElement {
         });
 
         this.tfooter.appendChild(row);
+    }
+
+    clearHeader() {
+        this.thead.innerHTML = null;
+    }
+
+    clearBody() {
+        this.tbody.innerHTML = null;
+    }
+
+    clearFooter() {
+        this.tfooter.innerHTML = null;
+    }
+
+    clear() {
+        this.clearHeader();
+        this.clearBody();
+        this.clearFooter();
     }
 }

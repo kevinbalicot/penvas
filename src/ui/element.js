@@ -79,11 +79,13 @@ export class UIElement {
         }
 
         elements.forEach(element => {
-            if (!element instanceof UIElement) {
+            if (element instanceof HTMLElement) {
+                this.element.appendChild(element);
+            } else if (!(element instanceof UIElement)) {
                 throw new Error(`Parameter element has to be an instance of UIElement, it's an instance of ${typeof element} instead.`);
+            } else {
+                this.element.appendChild(element.element);
             }
-
-            this.element.appendChild(element.element);
         });
     }
 

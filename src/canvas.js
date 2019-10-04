@@ -8,12 +8,12 @@ const keyboard = {};
 const gamepads = [];
 const mouse = new Point(0, 0);
 
-document.addEventListener('keydown', (e) => {
-    keyboard[e.which || e.keyCode] = true;
+document.addEventListener('keydown', event => {
+    keyboard[event.which || event.keyCode] = true;
 });
 
-document.addEventListener('keyup', (e) => {
-    keyboard[e.which || e.keyCode] = false;
+document.addEventListener('keyup', event => {
+    keyboard[event.which || event.keyCode] = false;
 });
 
 document.addEventListener('mousedown', () => {
@@ -24,15 +24,15 @@ document.addEventListener('mouseup', () => {
     mouse['left'] = false;
 });
 
-window.addEventListener('gamepadconnected', e => {
-    if (e.gamepad && e.gamepad.id) {
-        gamepads.push(e.gamepad);
+window.addEventListener('gamepadconnected', event => {
+    if (event.gamepad && event.gamepad.id) {
+        gamepads.push(event.gamepad);
     }
 });
 
-window.addEventListener('gamepaddisconnected', e => {
-    if (e.gamepad && e.gamepad.id) {
-        const index = gamepads.findIndex(g => g.id === e.gamepad.id);
+window.addEventListener('gamepaddisconnected', event => {
+    if (event.gamepad && event.gamepad.id) {
+        const index = gamepads.findIndex(g => g.id === event.gamepad.id);
 
         if (index != -1) {
             gamepads.splice(index, 1);
