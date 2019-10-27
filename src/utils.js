@@ -1,6 +1,34 @@
+import { Vector } from './geometry/vector';
+
+Math.degree = function(radians) {
+  return radians * 180 / Math.PI;
+};
+
+Math.radian = function(degrees) {
+  return degrees * Math.PI / 180;
+};
+
 export class Utils {
+    static horizontalFlipPoint(point, center) {
+        const delta = center.x - point.x;
+        point.x = center.x + delta;
+
+        return point;
+    }
+
+    static verticalFlipPoint(point, center) {
+        const delta = center.y - point.y;
+        point.y = center.y + delta;
+
+        return point;
+    }
+
     static angleBetweenPoints(point1, point2) {
         return Math.atan2(point2.y - point1.y, point2.x - point1.x) * 180 / Math.PI;
+    }
+
+    static angleToVector(angle) {
+        return new Vector(Math.cos(Math.radian(angle)), Math.sin(Math.radian(angle)));
     }
 
     /**
@@ -133,6 +161,19 @@ export class Utils {
             rectangleA.x + rectangleA.width > rectangleB.x &&
             rectangleA.y < rectangleB.y + rectangleB.height &&
             rectangleA.y + rectangleA.height > rectangleB.y
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    static outOf(rectangleA, rectangleB) {
+        if (
+            rectangleA.x + rectangleA.width < rectangleB.x ||
+            rectangleA.y + rectangleA.height < rectangleB.y ||
+            rectangleA.x > rectangleB.x + rectangleB.width ||
+            rectangleA.y > rectangleB.y + rectangleB.height
         ) {
             return true;
         }

@@ -1,6 +1,6 @@
 import { Component } from './../component';
 
-import { Vector } from './../geometry/vector';
+import { Point } from './../geometry/point';
 
 export class Rotate extends Component {
     constructor(angle, pivot) {
@@ -23,8 +23,8 @@ export class Rotate extends Component {
     }
 
     set pivot(pivot) {
-        if (!(pivot instanceof Vector)) {
-            throw new Error(`Pivot has to be an instance of Vector.`);
+        if (!(pivot instanceof Point)) {
+            throw new Error(`Pivot has to be an instance of Point.`);
         }
 
         this._pivot = pivot;

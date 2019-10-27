@@ -81,9 +81,9 @@ const KEYS = {
     F11: 122,
     F12: 123,
 
-    LEFT_CLICK: 'left_click',
-    RIGHT_CLICK: 'right_click',
-    MIDDLE_CLICK: 'middle_click'
+    LEFT_CLICK: 0,
+    RIGHT_CLICK: 1,
+    MIDDLE_CLICK: 2
 }
 
 export default KEYS;

@@ -32,6 +32,7 @@ import { Loader } from './services/loader';
 import { Vector } from './geometry/vector';
 import { Rectangle } from './geometry/rectangle';
 import { Point } from './geometry/point';
+import { EntityPoint } from './geometry/entity-point';
 
 import { Body } from './components/body';
 import { Sprite } from './components/sprite';
@@ -43,6 +44,7 @@ import { Physic } from './components/physic';
 import { Rotate } from './components/rotate';
 import { Flip } from './components/flip';
 import { Tiles } from './components/tiles';
+import { Points } from './components/points';
 
 import { CollisionChecker } from './systems/collision-checker';
 import { Movement } from './systems/movement';
@@ -68,14 +70,6 @@ import loader from './services/loader';
 import KEYS from './services/keys';
 import GAMEPAD from './services/gamepad';
 
-Math.degree = function(radians) {
-  return radians * 180 / Math.PI;
-};
-
-Math.radian = function(degrees) {
-  return degrees * Math.PI / 180;
-};
-
 window.penvas = {
     Drawer,
     Canvas,
@@ -97,7 +91,8 @@ window.penvas = {
     geometry: {
         Vector,
         Rectangle,
-        Point
+        Point,
+        EntityPoint
     },
 
     systems: {

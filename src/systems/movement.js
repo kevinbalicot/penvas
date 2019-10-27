@@ -3,6 +3,8 @@ import { System } from './../system';
 import { Body } from './../components/body';
 import { Motion } from './../components/motion';
 
+import { Vector } from './../geometry/vector';
+
 export class Movement extends System {
     update(delta) {
         this.environment.getEntities([Body, Motion]).forEach(entity => Movement.move(entity, delta));

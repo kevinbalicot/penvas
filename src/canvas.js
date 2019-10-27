@@ -16,12 +16,12 @@ document.addEventListener('keyup', event => {
     keyboard[event.which || event.keyCode] = false;
 });
 
-document.addEventListener('mousedown', () => {
-    mouse['left'] = true;
+document.addEventListener('mousedown', event => {
+    mouse[event.button] = true;
 });
 
-document.addEventListener('mouseup', () => {
-    mouse['left'] = false;
+document.addEventListener('mouseup', event => {
+    mouse[event.button] = false;
 });
 
 window.addEventListener('gamepadconnected', event => {
@@ -81,6 +81,14 @@ export class Canvas extends Drawer {
 
         document.addEventListener('keyup', event => {
             this.layers.forEach(layer => layer.keyUp(event));
+        });
+
+        document.addEventListener('mousedown', event => {
+            this.layers.forEach(layer => layer.mouseDown(event));
+        });
+
+        document.addEventListener('mouseup', event => {
+            this.layers.forEach(layer => layer.mouseUp(event));
         });
 
         document.addEventListener('mousemove', event => {

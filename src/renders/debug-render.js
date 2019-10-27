@@ -19,7 +19,7 @@ export class DebugRender extends Render {
 
         if (entity.hasComponent(Body)) {
             canvas.drawText(
-                `[${Math.round(entity.components.body.position.x)}, ${Math.round(entity.components.body.position.y)}]`,
+                `[${Math.round(entity.components.body.position.x)}, ${Math.round(entity.components.body.position.y)}, ${entity.components.rotate ? Math.round(entity.components.rotate.angle) : 0}°]`,
                 entity.components.body.position.x,
                 entity.components.body.position.y - 10,
                 '10px',

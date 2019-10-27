@@ -148,6 +148,14 @@ export class Vector {
         return { x: this.x, y: this.y };
     }
 
+    isEqual(v, y = null) {
+        if (v instanceof Vector) {
+            return v.x === this.x && v.y === this.y;
+        }
+
+        return v === this.x && y === this.y;
+    }
+
     static get UP() {
         return new Vector(0, -1);
     }
