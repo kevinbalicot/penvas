@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <script src="dist/penvas.js"></script>
+    <style>
+        canvas {
+            border: solid 1px;
+            background: lightblue;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        const { Canvas, GameLoop, loader, utils } = penvas;
+        const { Matrix4, Primitive } = penvas.geometry;
+
+        const canvas = new Canvas({
+            context: 'new_2d_webgl',
+            width: 800,
+            height: 800,
+            ambientLight: [1.5, 1.5, 1.5],
+            ambientLightDirection: [5, 5, 5],
+            cameraPosition: [0, 10, 10],
+            lookAt: [0, 0, 0],
+        });
+
+        const game = {
+            objects: {}
+        };
+
+        const loop = new GameLoop();
+        const objects = {};
+        const textures = {};
+        const drawScene = () => {
+            canvas.drawer.clear();
+
+            for (let object in game.objects) {
+                const { w, h, d, x, y, z, rx, ry, rz, mesh } = game.objects[object];
+                canvas.drawer.save();
+                canvas.drawer.translate(x, y, z);
+                canvas.drawer.scale(w, h, d);
+                canvas.drawer.rotateX(rx);
+                canvas.drawer.rotateY(ry);
+                canvas.drawer.rotateZ(rz);
+                canvas.drawer.drawMesh(mesh);
+                canvas.drawer.restore();
+            }
+
+            canvas.drawer.flush();
+        };
+
+        loader.add('pattern.jpg', 'bricks');
+        loader.add('wood.jpg', 'wood');
+
+        loader.on('ready', () => {
+            loop.start();
+
+            textures.bricks = canvas.drawer.createTexture(loader.get('bricks'));
+            textures.wood = canvas.drawer.createTexture(loader.get('wood'));
+
+            const cube = Primitive.cube(canvas.drawer, { texture: textures.bricks, textureScale: 1 });
+            const plan = Primitive.plan(canvas.drawer, { texture: textures.wood, textureScale: 2 });
+
+            game.objects.cube = { w: 1, h: 1, d: 1, x: 0, y: 0, z: 0, rx: 0, ry: 0, rz: 0, mesh: cube };
+            game.objects.cube2 = { w: 1, h: 1, d: 1, x: 3, y: 0, z: 0, rx: 0, ry: 0, rz: 0, mesh: cube };
+            game.objects.cube3 = { w: 1, h: 1, d: 1, x: -3, y: 0, z: 0, rx: 0, ry: 0, rz: 0, mesh: cube };
+
+            game.objects.ground = { w: 4, h: 4, d: 4, x: 0, y: -1, z: 0, rx: 90, ry: 0, rz: 0, mesh: plan };
+        });
+
+        let x = 0;
+        loop.on('step', (dt) => {
+            game.objects.cube.ry += 10 * dt;
+            x += 1 * dt;
+            //canvas.drawer.options.cameraPosition = [x, x, 10];
+        });
+
+        loop.on('render', () => {
+            drawScene();
+        });
+    </script>
+</body>
+</html>

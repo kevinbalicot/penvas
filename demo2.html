@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <script src="dist/penvas.js"></script>
+    <style>
+        canvas {
+            border: solid 1px;
+            background: lightblue;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        const { Canvas, GameLoop, loader } = penvas;
+        const canvas = new Canvas({
+            context: '2d_webgl',
+            width: 800,
+            height: 800,
+        });
+        const loop = new GameLoop();
+
+        let x = 0;
+        let y = 0;
+        let z = 0;
+        let w = 50;
+        let h = 50;
+        let d = 50;
+
+        let degX = 0;
+        let degY = 0;
+        let degZ = 0;
+
+        const colors = [
+            ...penvas.utils.hexToRGB('#FF0000', true),
+            ...penvas.utils.hexToRGB('#FF0000', true),
+            ...penvas.utils.hexToRGB('#FF0000', true),
+            ...penvas.utils.hexToRGB('#FF0000', true),
+            ...penvas.utils.hexToRGB('#FF0000', true),
+            ...penvas.utils.hexToRGB('#FF0000', true),
+
+            ...penvas.utils.hexToRGB('#0048ff', true),
+            ...penvas.utils.hexToRGB('#0048ff', true),
+            ...penvas.utils.hexToRGB('#0048ff', true),
+            ...penvas.utils.hexToRGB('#0048ff', true),
+            ...penvas.utils.hexToRGB('#0048ff', true),
+            ...penvas.utils.hexToRGB('#0048ff', true),
+
+            ...penvas.utils.hexToRGB('#1f7010', true),
+            ...penvas.utils.hexToRGB('#1f7010', true),
+            ...penvas.utils.hexToRGB('#1f7010', true),
+            ...penvas.utils.hexToRGB('#1f7010', true),
+            ...penvas.utils.hexToRGB('#1f7010', true),
+            ...penvas.utils.hexToRGB('#1f7010', true),
+
+            ...penvas.utils.hexToRGB('#ffc800', true),
+            ...penvas.utils.hexToRGB('#ffc800', true),
+            ...penvas.utils.hexToRGB('#ffc800', true),
+            ...penvas.utils.hexToRGB('#ffc800', true),
+            ...penvas.utils.hexToRGB('#ffc800', true),
+            ...penvas.utils.hexToRGB('#ffc800', true),
+
+            ...penvas.utils.hexToRGB('#b300ff', true),
+            ...penvas.utils.hexToRGB('#b300ff', true),
+            ...penvas.utils.hexToRGB('#b300ff', true),
+            ...penvas.utils.hexToRGB('#b300ff', true),
+            ...penvas.utils.hexToRGB('#b300ff', true),
+            ...penvas.utils.hexToRGB('#b300ff', true),
+
+            ...penvas.utils.hexToRGB('#00ffc4', true),
+            ...penvas.utils.hexToRGB('#00ffc4', true),
+            ...penvas.utils.hexToRGB('#00ffc4', true),
+            ...penvas.utils.hexToRGB('#00ffc4', true),
+            ...penvas.utils.hexToRGB('#00ffc4', true),
+            ...penvas.utils.hexToRGB('#00ffc4', true),
+        ];
+
+        loop.on('render', dt => {
+            x += 10 * dt;
+            y += 10 * dt;
+            z += 5 * dt;
+            degX += (90 * dt);
+            degY += (90 * dt);
+            //degY = (degY + 5) % 360;
+            //degZ = (degZ + 0) % 360;
+
+            // 100 = x + w / 2
+            //canvas.drawer.clear();
+
+            canvas.drawer.save();
+            canvas.drawer.rotateX(degX, 0, y + h / 2, z + d / 2);
+            canvas.drawer.rotateY(degY, x + w / 2, 0, z + d / 2);
+            //canvas.drawer.rotateZ(degZ, x + w / 2, y + w / 2, 0);
+
+            canvas.drawer.drawCube(x, y, z, w, h, d, loader.get('mario'));
+            canvas.drawer.restore();
+
+            canvas.drawer.save();
+            canvas.drawer.rotateX(-10, 0, 100 + 100 / 2, 100 + 100 / 2);
+            canvas.drawer.drawRectangle(100, 100, 100, 100, loader.get('mario'));
+            canvas.drawer.restore();
+        });
+
+        loader.add('firefox.png', 'firefox');
+        loader.add('mario.jpg', 'mario');
+        loader.on('ready', () => {
+            loop.start();
+        });
+
+        //const image = new Image();
+        //image.crossOrigin = 'anonymous';
+        //image.src = 'https://webglfundamentals.org/webgl/resources/star.jpg';
+        //image.src = 'https://mdn.github.io/webgl-examples/tutorial/sample6/cubetexture.png';
+        //image.src = 'firefox.png';
+
+        //canvas.drawer.drawRectangle(10, 10, 200, 100, penvas.utils.hexToRGB('#FF0000', true));
+        //canvas.drawer.drawTriangle(300, 10, 200, 100, penvas.utils.hexToRGB('#00FFFF', true));
+        //canvas.drawer.drawCube(10, 200, 100);
+
+        /*setTimeout(() => {
+            setInterval(() => {
+                //canvas.drawer.drawRectangle(10, 10, 200, 100, penvas.utils.hexToRGB('#FF0000', true));
+                //canvas.drawer.drawTriangle(300, 10, 200, 100, penvas.utils.hexToRGB('#00FFFF', true));
+
+                degX = (degX + 10) % 360;
+                degY = (degY + 5) % 360;
+                //degZ = (degZ + 0) % 360;
+
+                // 100 = x + w / 2
+                canvas.drawer.clear();
+
+                canvas.drawer.save();
+                canvas.drawer.rotateX(degX, 0, y + w / 2, w / 2);
+                canvas.drawer.rotateY(degY, x + w / 2, 0, w / 2);
+                canvas.drawer.rotateZ(degZ, x + w / 2, y + w / 2, 0);
+
+                canvas.drawer.drawCube(x, y, w, image);
+                canvas.drawer.restore();
+            }, 60)},
+        1000);*/
+    </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <script src="dist/penvas.js"></script>
+    <style>
+        canvas {
+            border: solid 1px;
+            background: lightblue;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        const { Canvas, GameLoop, loader, utils } = penvas;
+        const canvas = new Canvas({
+            context: '2d_webgl',
+            width: 800,
+            height: 800,
+        });
+
+        loader.add('mario.jpg', 'mario');
+        loader.on('ready', () => {
+            canvas.drawer.drawTriangle(10, 10, 10, 100, 100, null, loader.get('mario'));
+            canvas.drawer.drawRectangle(10, 120, 0, 100, 100, null, loader.get('mario'));
+
+            canvas.drawer.rotateX(10);
+            //canvas.drawer.rotateY(20);
+            canvas.drawer.drawCube(150, 120, 0, 100, 100, 100, null, loader.get('mario'));
+
+            canvas.drawer.drawImage(loader.get('mario'), 0, 0, 200, 300, 10, 300, 0, 100, 200);
+        });
+
+        //canvas.drawer.drawRect(1, -1, 100, 100, utils.hexToRGB('#FF0000'));
+    </script>
+</body>
+</html>
