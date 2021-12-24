@@ -7,7 +7,7 @@ import Vertex from "./geometry/vertex";
 
 import Drawer2D from "./drawers/2d";
 import Drawer2DWebgl from "./drawers/2d-webgl";
-import DrawerNew2DWebgl from "./drawers/new-2d-webgl";
+import DrawerNew2DWebgl from "./drawers/webgl";
 
 import Canvas from './canvas';
 

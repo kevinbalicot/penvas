@@ -5,36 +5,34 @@ const VERTEX_SHADER_SCRIPT = `
     attribute vec3 a_color;
     attribute vec3 a_normal;
     attribute vec2 a_texture_position;
-    
+
     uniform mat4 u_view;
     uniform mat4 u_projection;
-    uniform mat4 u_object;
+    uniform mat4 u_model;
     uniform mat4 u_normal;
     uniform mat4 u_texture;
-    uniform vec3 u_ambientLight;
-    //uniform vec3 u_ambientLightDirection;
-    uniform vec3 u_lightWorldPosition;
-    uniform vec3 u_camera;
+    
+    // sun
+    uniform vec3 u_lightPosition;
 
     varying vec3 v_normal;
+    varying vec3 v_vertex;
+    varying vec4 v_view;
     varying vec3 v_color;
     varying vec2 v_texture_position;
-    varying vec3 v_surfaceToLight;
-    varying vec3 v_surfaceToView;
-    varying vec3 v_ambientLight;
-    
+
+    varying vec3 v_lightPosition;
+
     void main(void) {  
-        gl_Position = u_projection * u_view * u_object * vec4(a_position, 1.0);
+        gl_Position = u_projection * u_view * u_model * vec4(a_position, 1.0);
 
         v_color = a_color;
         v_texture_position = (vec4(a_texture_position, 0, 1) * u_texture).xy;
         v_normal = (u_normal * vec4(a_normal, 1.0)).xyz;
-        
-        vec3 surfaceWorldPosition = (u_object * vec4(a_position, 1.0)).xyz;
-        v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;
-        v_surfaceToView = u_camera - surfaceWorldPosition;
-        
-        v_ambientLight = u_ambientLight;   
+        v_vertex = (u_model * vec4(a_position, 1.0)).xyz;
+        //v_vertex = (u_view * u_model * vec4(a_position, 1.0)).xyz;
+        v_view = vec4(u_view);
+        v_lightPosition = u_lightPosition;
     }
 `;
 
@@ -42,37 +40,36 @@ const FRAGMENT_SHADER_SCRIPT = `
     precision mediump float;
     
     uniform sampler2D u_sampler;
-    uniform vec3 u_lightColor;
-    uniform float u_shininess;
+    
+    uniform vec3 u_ambientLight;
+    uniform vec3 u_diffuseLight;
+    //uniform float u_shininess;
     
     varying vec3 v_color;
     varying vec2 v_texture_position;
     varying vec3 v_normal;
-    varying vec3 v_surfaceToLight;
-    varying vec3 v_surfaceToView;
-    varying vec3 v_ambientLight;
+    varying vec3 v_vertex;
+    varying vec4 v_view;
+
+    varying vec3 v_lightPosition;
     
     void main(void) {
         mediump vec4 texelColor = texture2D(u_sampler, v_texture_position) * vec4(v_color, 1.0);
         
         vec3 normal = normalize(v_normal);
-        vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
-        vec3 surfaceToViewDirection = normalize(v_surfaceToView);
-        vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection);
+        vec3 lightPosition = normalize(v_lightPosition - v_vertex);
 
-        float light = dot(normal, surfaceToLightDirection);
-        //float ambientLight = dot(normal, v_ambientLight);
-        float specular = 0.0;
-        if (light > 0.0) {
-            specular = pow(dot(normal, halfVector), u_shininess);
-        }
+        // Dot product of the light direction and the orientation of a surface (normal)
+        float dotLight = max(dot(lightPosition, normal), 0.0);
+        
+        vec3 diffuse = u_diffuseLight * texelColor.rgb * dotLight;
+        vec3 ambient = u_ambientLight * texelColor.rgb;
 
-        gl_FragColor = vec4(texelColor.rgb * u_lightColor.rgb * light * v_ambientLight, texelColor.a);
-        gl_FragColor.rgb += specular;
+        gl_FragColor = vec4(diffuse + ambient, texelColor.a);
     }
 `;
 
-export default class DrawerNew2DWebgl {
+export default class WebglDrawer {
 
     constructor(gl, width, height, options = {}) {
         this.gl = gl;
@@ -94,16 +91,15 @@ export default class DrawerNew2DWebgl {
         this.uniforms = {
             projection: this.initUniform('u_projection'),
             view: this.initUniform('u_view'),
-            object: this.initUniform('u_object'),
+            object: this.initUniform('u_model'),
             normal: this.initUniform('u_normal'),
             texture: this.initUniform('u_texture'),
             sampler: this.initUniform('u_sampler'),
+
             ambientLight: this.initUniform('u_ambientLight'),
-            //ambientLightDirection: this.initUniform('u_ambientLightDirection'),
-            lightColor: this.initUniform('u_lightColor'),
-            lightWorldPosition: this.initUniform('u_lightWorldPosition'),
+            diffuseLight: this.initUniform('u_diffuseLight'),
+            lightWorldPosition: this.initUniform('u_lightPosition'),
             shininess: this.initUniform('u_shininess'),
-            camera: this.initUniform('u_camera'),
         };
 
         this.attributes = {
@@ -118,12 +114,12 @@ export default class DrawerNew2DWebgl {
             camera: Matrix4.identity(),
         };
 
-        this.setUniformValue(this.uniforms.sampler, 0);
+        this.setUniformValue(this.uniforms.sampler, 0); // Lance un avertissement, vraiment utile ?
+
         this.ambientLight = options.ambientLight || [1, 1, 1];
-        //this.ambientLightDirection = options.ambientLightDirection || [0, 0, 0];
-        this.lightColor = options.lightColor || [1, 1, 1];
-        this.lightWorldPosition = options.lightWorldPosition || [0, 5, 5];
-        this.shininess = options.shininess || 300;
+        this.diffuseLight = options.diffuseLight || [1, 1, 1];
+        this.lightWorldPosition = options.lightPosition || [5, 15, 5];
+        //this.shininess = options.shininess || 5;
 
         this.setUniformValue(this.uniforms.camera, options.cameraPosition || [0, 0, 0]); // ??
 
@@ -138,6 +134,10 @@ export default class DrawerNew2DWebgl {
 
     set ambientLight(vector) {
         this.setUniformValue(this.uniforms.ambientLight, vector);
+    }
+
+    set diffuseLight(vector) {
+        this.setUniformValue(this.uniforms.diffuseLight, vector);
     }
 
     set ambientLightDirection(vector) {
@@ -390,6 +390,7 @@ export default class DrawerNew2DWebgl {
         if (!Array.isArray(values) && type === 'integer') {
             this.gl.uniform1i(uniform, values);
         } else if (!Array.isArray(values) && type === 'float') {
+            console.log(values);
             this.gl.uniform1f(uniform, values);
         } else if (values.length === 2 && type === 'float') {
             this.gl.uniform2fv(uniform, values);
@@ -427,11 +428,11 @@ export default class DrawerNew2DWebgl {
     drawMesh(mesh, type = this.gl.TRIANGLES) {
         this.setTexture(mesh.texture);
 
-        const mObject = this.context;
+        const mModel = this.context;
         const mTexture = Matrix4.identity();
         const mView = Matrix4.inverse(this.camera);
 
-        let mNormal = Matrix4.inverse(mObject);
+        let mNormal = Matrix4.inverse(mModel);
         mNormal = Matrix4.transpose(mNormal);
 
         this.setAttributeValue(this.attributes.position, mesh.vBuffer, 3);
@@ -440,7 +441,7 @@ export default class DrawerNew2DWebgl {
         this.setAttributeValue(this.attributes.normal, mesh.nBuffer, 3);
 
         this.setUniformValue(this.uniforms.view, mView);
-        this.setUniformValue(this.uniforms.object, mObject);
+        this.setUniformValue(this.uniforms.object, mModel);
         this.setUniformValue(this.uniforms.normal, mNormal);
         this.setUniformValue(this.uniforms.texture, mTexture);
 
@@ -460,6 +461,29 @@ export default class DrawerNew2DWebgl {
     }
 }
 
+/**
+ * void main(void) {
+        mediump vec4 texelColor = texture2D(u_sampler, v_texture_position) * vec4(v_color, 1.0);
+
+        vec3 normal = normalize(v_normal);
+        vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
+        vec3 surfaceToViewDirection = normalize(v_surfaceToView);
+
+        vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection);
+
+        float lightDirection = dot(normal, surfaceToLightDirection);
+
+        float specular = 0.0;
+        if (lightDirection > 0.0) {
+            specular = pow(dot(normal, halfVector), u_shininess);
+        }
+
+        vec3 vColor = v_ambientLight * v_color;
+
+        gl_FragColor = vec4(texelColor.rgb * vColor * lightDirection, texelColor.a);
+        gl_FragColor.rgb += specular;
+    }
+ */
 
 /** SAVE
  const VERTEX_SHADER_SCRIPT = `

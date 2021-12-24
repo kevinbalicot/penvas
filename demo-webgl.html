@@ -21,11 +21,14 @@
         const { Matrix4, Primitive } = penvas.geometry;
 
         const canvas = new Canvas({
-            context: 'new_2d_webgl',
+            context: 'webgl',
             width: 800,
             height: 800,
-            ambientLight: [1.5, 1.5, 1.5],
-            ambientLightDirection: [5, 5, 5],
+            ambientLight: [0.5, 0.5, 0.5],
+            diffuseLight: [1, 1, 1],
+            lightPosition: [0, 2, 2],
+            //ambientLightColor: [0.5, 1, 1],
+            //ambientLightDirection: [0.85, 0.8, 0.75],
             cameraPosition: [0, 10, 10],
             lookAt: [0, 0, 0],
         });
@@ -68,8 +71,8 @@
             const plan = Primitive.plan(canvas.drawer, { texture: textures.wood, textureScale: 2 });
 
             game.objects.cube = { w: 1, h: 1, d: 1, x: 0, y: 0, z: 0, rx: 0, ry: 0, rz: 0, mesh: cube };
-            game.objects.cube2 = { w: 1, h: 1, d: 1, x: 3, y: 0, z: 0, rx: 0, ry: 0, rz: 0, mesh: cube };
-            game.objects.cube3 = { w: 1, h: 1, d: 1, x: -3, y: 0, z: 0, rx: 0, ry: 0, rz: 0, mesh: cube };
+            //game.objects.cube2 = { w: 1, h: 1, d: 1, x: 3, y: 0, z: 0, rx: 0, ry: 0, rz: 0, mesh: cube };
+            //game.objects.cube3 = { w: 1, h: 1, d: 1, x: -3, y: 0, z: 0, rx: 0, ry: 0, rz: 0, mesh: cube };
 
             game.objects.ground = { w: 4, h: 4, d: 4, x: 0, y: -1, z: 0, rx: 90, ry: 0, rz: 0, mesh: plan };
         });

@@ -1,6 +1,6 @@
 import Drawer2D from './drawers/2d';
 import Drawer2DWebgl from './drawers/2d-webgl';
-import DrawerNew2DWebgl from "./drawers/new-2d-webgl";
+import WebglDrawer from "./drawers/webgl";
 
 export default class Canvas {
     constructor(options = {}) {
@@ -30,8 +30,8 @@ export default class Canvas {
                 this.element.width,
                 this.element.height
             );
-        } else if (options.context && options.context === 'new_2d_webgl') {
-            this.drawer = new DrawerNew2DWebgl(
+        } else if (options.context && options.context === 'webgl') {
+            this.drawer = new WebglDrawer(
                 this.element.getContext('webgl'),
                 this.element.width,
                 this.element.height,
